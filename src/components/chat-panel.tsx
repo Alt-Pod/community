@@ -2,7 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useState, useRef, useEffect, useMemo, type FormEvent } from "react";
+import { useState, useRef, useEffect, type FormEvent } from "react";
 
 const PROVIDERS = [
   { id: "google", label: "Gemini Flash" },
@@ -16,12 +16,19 @@ export default function ChatPanel() {
   const [provider, setProvider] = useState<Provider>("google");
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const transport = useMemo(
-    () => new DefaultChatTransport({ body: { provider } }),
-    [provider]
+  const providerRef = useRef(provider);
+  providerRef.current = provider;
+
+  const transportRef = useRef(
+    new DefaultChatTransport({
+      api: "/api/chat",
+      body: () => ({ provider: providerRef.current }),
+    })
   );
 
-  const { messages, sendMessage, status, error } = useChat({ transport });
+  const { messages, sendMessage, status, error } = useChat({
+    transport: transportRef.current,
+  });
 
   useEffect(() => {
     scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
