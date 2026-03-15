@@ -153,6 +153,12 @@ packages/i18n/
 - `NextIntlClientProvider` wraps the app in `layout.tsx`
 - next-intl plugin is configured in `apps/web/next.config.ts`
 
+## Frontend Component Rules
+
+- **One component per file** — each `.tsx` file in `apps/web/src/components/` and `packages/ui/src/` must export exactly one React component. No file should define or export multiple components.
+- File name should match the component: `ChatPanel` → `chat-panel.tsx`
+- Small internal helper components (not exported) are acceptable only if they are tightly coupled to the main component and not reusable. When in doubt, extract to a separate file.
+
 ## Key Rules
 
 - **shared** has zero runtime dependencies — types and constants only
