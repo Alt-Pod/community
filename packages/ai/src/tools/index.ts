@@ -1,5 +1,6 @@
 // Import domain modules to trigger registration
 import "./agents";
+import "./google";
 
 // Re-export registry API
 export {

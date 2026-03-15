@@ -129,6 +129,12 @@
       "error": "Errore",
       "toolCall": "Chiamata strumento"
     },
+    "google": {
+      "webSearch": {
+        "name": "Ricerca web",
+        "description": "Cerca informazioni in tempo reale sul web"
+      }
+    },
     "agents": {
       "listAgents": {
         "name": "Elenco agenti",

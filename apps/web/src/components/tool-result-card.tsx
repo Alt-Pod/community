@@ -46,7 +46,7 @@ export default function ToolResultCard({
   }
 
   return (
-    <Card variant="success" className="my-2 max-w-[65%]">
+    <Card variant="success" className="my-2 max-w-[65%] overflow-hidden">
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs font-mono text-text-secondary">
           {toolName}
@@ -54,7 +54,7 @@ export default function ToolResultCard({
         <StatusBadge variant="success" label={t("status.completed")} />
       </div>
       {output != null && (
-        <pre className="text-xs text-text-secondary bg-surface-tertiary rounded-sm p-2 overflow-x-auto">
+        <pre className="text-xs text-text-secondary bg-surface-tertiary rounded-sm p-2 overflow-x-auto whitespace-pre-wrap break-words">
           {typeof output === "string" ? output : JSON.stringify(output, null, 2)}
         </pre>
       )}

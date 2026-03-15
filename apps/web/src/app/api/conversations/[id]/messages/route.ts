@@ -116,6 +116,7 @@ export async function POST(
         "agents.create_agent",
         "agents.update_agent",
         "agents.delete_agent",
+        "google.web_search",
       ];
       const result = await streamDefaultChat(agents, messages, allToolIds);
 
@@ -130,6 +131,8 @@ export async function POST(
       return result.toUIMessageStreamResponse();
     }
   } catch (error: unknown) {
+    console.error("[messages/route] Error:", error);
+    console.error("[messages/route] Messages:", JSON.stringify(messages.map(m => ({ id: m.id, role: m.role, parts: m.parts?.map(p => p.type) })), null, 2));
     const message =
       error instanceof Error ? error.message : "An unexpected error occurred";
     return Response.json({ error: message }, { status: 500 });

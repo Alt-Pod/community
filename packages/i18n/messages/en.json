@@ -129,6 +129,12 @@
       "error": "Error",
       "toolCall": "Tool call"
     },
+    "google": {
+      "webSearch": {
+        "name": "Web search",
+        "description": "Search the web for real-time information"
+      }
+    },
     "agents": {
       "listAgents": {
         "name": "List agents",

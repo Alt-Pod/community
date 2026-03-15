@@ -12,7 +12,9 @@ export async function streamAgentChat(
 ) {
   const system = buildAgentSystemPrompt(agent);
   const tools = buildToolsForAgent(toolIds);
-  const modelMessages = await convertToModelMessages(messages);
+  const modelMessages = await convertToModelMessages(messages, {
+    ignoreIncompleteToolCalls: true,
+  });
 
   return streamText({
     model: getModel(),
@@ -29,7 +31,9 @@ export async function streamDefaultChat(
 ) {
   const system = buildDefaultSystemPrompt(agents);
   const tools = buildToolsForAgent(toolIds);
-  const modelMessages = await convertToModelMessages(messages);
+  const modelMessages = await convertToModelMessages(messages, {
+    ignoreIncompleteToolCalls: true,
+  });
 
   return streamText({
     model: getModel(),

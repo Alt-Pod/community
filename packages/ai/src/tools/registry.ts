@@ -25,7 +25,7 @@ export function buildToolsForAgent(
   const tools: Record<string, Tool> = {};
   for (const id of toolIds) {
     const def = toolRegistry.get(id);
-    if (def) {
+    if (def?.tool) {
       tools[id] = def.tool;
     }
   }

@@ -216,7 +216,7 @@ export default function ChatPanel() {
               const text = textParts.map((p) => p.text).join("");
 
               return (
-                <div key={m.id}>
+                <div key={m.id} className="min-w-0">
                   {text && (
                     <MessageBubble role={m.role as "user" | "assistant"}>
                       {m.role === "assistant" ? (
