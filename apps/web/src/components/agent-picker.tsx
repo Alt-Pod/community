@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Heading } from "@community/ui";
 import type { Agent } from "@community/shared";
+import AgentPickerTools from "./agent-picker-tools";
 
 interface AgentPickerProps {
   agents: Agent[];
@@ -32,6 +33,7 @@ export default function AgentPicker({ agents, onSelect }: AgentPickerProps) {
           <p className="text-sm text-text-secondary mt-1">
             {t("defaultDescription")}
           </p>
+          <AgentPickerTools />
         </button>
 
         {agents.map((agent) => (

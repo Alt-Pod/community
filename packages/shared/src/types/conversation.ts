@@ -2,6 +2,7 @@ export interface Conversation {
   id: string;
   title: string;
   agent_id: string | null;
+  title_generated: boolean;
   created_at: string;
 }
 

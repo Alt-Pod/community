@@ -84,6 +84,7 @@ export default function ChatPanel() {
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
     onFinish: () => {
       queryClient.invalidateQueries({ queryKey: ["agents"] });
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
   });
 

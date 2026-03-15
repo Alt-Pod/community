@@ -7,6 +7,13 @@ export async function GET() {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const tools = getAllToolMetas();
+  const metas = getAllToolMetas();
+  const tools = metas.map((m) => ({
+    id: m.id,
+    category: m.category,
+    name: m.displayName,
+    description: m.description,
+    requiresConfirmation: m.requiresConfirmation,
+  }));
   return Response.json(tools);
 }

@@ -6,7 +6,7 @@ import {
   toolService,
   buildPartsFromSteps,
 } from "@community/backend";
-import { streamAgentChat, streamDefaultChat } from "@community/ai";
+import { streamAgentChat, streamDefaultChat, generateConversationTitle } from "@community/ai";
 import type { UIMessage } from "ai";
 
 function extractText(msg: UIMessage): string {
@@ -60,6 +60,25 @@ export async function POST(
   // Save user message only when there's a new one (not on tool approval continuations)
   if (userMessage) {
     await chatService.saveUserMessage(id, userMessage);
+  }
+
+  // Background: generate a conversation title if not already done
+  if (userMessage && !(conversation as { title_generated?: boolean }).title_generated) {
+    const allMessages = await chatService.getMessages(id);
+    if (allMessages.length >= 2) {
+      generateConversationTitle(
+        allMessages.map((m: { role: string; content: string }) => ({
+          role: m.role as "user" | "assistant",
+          content: m.content,
+        }))
+      )
+        .then(async (title) => {
+          if (title) {
+            await conversationService.updateTitle(id, title);
+          }
+        })
+        .catch(() => {});
+    }
   }
 
   // At least one message is required

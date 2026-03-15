@@ -61,7 +61,8 @@
       "title": "Start a conversation",
       "subtitle": "Choose who you want to talk to",
       "defaultName": "Community Assistant",
-      "defaultDescription": "Your main point of contact. Ask about available agents or manage your organization."
+      "defaultDescription": "Your main point of contact. Ask about available agents or manage your organization.",
+      "availableTools": "Available tools"
     }
   },
   "agents": {
@@ -94,7 +95,13 @@
       "editButton": "Edit agent",
       "deleteButton": "Delete agent",
       "deleteConfirm": "Confirm delete?",
-      "notFound": "Agent not found"
+      "notFound": "Agent not found",
+      "tools": "Tools",
+      "assignedTools": "Assigned tools",
+      "availableTools": "Available tools",
+      "addTool": "Add",
+      "removeTool": "Remove",
+      "noToolsAssigned": "No tools assigned to this agent"
     },
     "edit": {
       "title": "Edit agent",

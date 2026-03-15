@@ -61,7 +61,8 @@
       "title": "Inizia una conversazione",
       "subtitle": "Scegli con chi vuoi parlare",
       "defaultName": "Assistente Community",
-      "defaultDescription": "Il tuo punto di contatto principale. Chiedi informazioni sugli agenti disponibili o gestisci la tua organizzazione."
+      "defaultDescription": "Il tuo punto di contatto principale. Chiedi informazioni sugli agenti disponibili o gestisci la tua organizzazione.",
+      "availableTools": "Strumenti disponibili"
     }
   },
   "agents": {
@@ -94,7 +95,13 @@
       "editButton": "Modifica agente",
       "deleteButton": "Elimina agente",
       "deleteConfirm": "Confermare l'eliminazione?",
-      "notFound": "Agente non trovato"
+      "notFound": "Agente non trovato",
+      "tools": "Strumenti",
+      "assignedTools": "Strumenti assegnati",
+      "availableTools": "Strumenti disponibili",
+      "addTool": "Aggiungi",
+      "removeTool": "Rimuovi",
+      "noToolsAssigned": "Nessuno strumento assegnato a questo agente"
     },
     "edit": {
       "title": "Modifica agente",

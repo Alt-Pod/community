@@ -61,7 +61,8 @@
       "title": "Unterhaltung starten",
       "subtitle": "Wähle deinen Gesprächspartner",
       "defaultName": "Community-Assistent",
-      "defaultDescription": "Dein Hauptansprechpartner. Frage nach verfügbaren Agenten oder verwalte deine Organisation."
+      "defaultDescription": "Dein Hauptansprechpartner. Frage nach verfügbaren Agenten oder verwalte deine Organisation.",
+      "availableTools": "Verfügbare Werkzeuge"
     }
   },
   "agents": {
@@ -94,7 +95,13 @@
       "editButton": "Agent bearbeiten",
       "deleteButton": "Agent löschen",
       "deleteConfirm": "Löschen bestätigen?",
-      "notFound": "Agent nicht gefunden"
+      "notFound": "Agent nicht gefunden",
+      "tools": "Werkzeuge",
+      "assignedTools": "Zugewiesene Werkzeuge",
+      "availableTools": "Verfügbare Werkzeuge",
+      "addTool": "Hinzufügen",
+      "removeTool": "Entfernen",
+      "noToolsAssigned": "Keine Werkzeuge diesem Agenten zugewiesen"
     },
     "edit": {
       "title": "Agent bearbeiten",

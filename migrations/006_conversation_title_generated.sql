@@ -1,0 +1,2 @@
+ALTER TABLE conversations
+ADD COLUMN title_generated BOOLEAN NOT NULL DEFAULT FALSE;

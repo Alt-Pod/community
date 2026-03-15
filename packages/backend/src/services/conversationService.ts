@@ -19,6 +19,10 @@ async create(userId: string, title: string, agentId?: string | null) {
     return this.conversationRepository.findById(id, userId);
   }
 
+  async updateTitle(id: string, title: string) {
+    return this.conversationRepository.updateTitle(id, title);
+  }
+
   async delete(id: string, userId: string) {
     await this.messageRepository.deleteByConversationId(id);
     return this.conversationRepository.deleteById(id, userId);

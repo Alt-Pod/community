@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button, Heading, ErrorBanner, LoadingIndicator } from "@community/ui";
 import { useAgent, useDeleteAgent } from "@/requests/useAgents";
+import AgentToolManager from "@/components/agent-tool-manager";
 
 export default function AgentDetailPage() {
   const t = useTranslations("agents");
@@ -98,6 +99,9 @@ export default function AgentDetailPage() {
             {agent.system_prompt}
           </pre>
         </div>
+
+        {/* Tools */}
+        <AgentToolManager agentId={agent.id} />
 
         {/* Metadata */}
         <div className="flex gap-8 text-sm text-text-tertiary border-t border-border-subtle pt-4">
