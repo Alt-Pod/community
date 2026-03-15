@@ -20,9 +20,10 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json();
-  const { messages, provider } = body as {
+  const { messages, provider, conversationId } = body as {
     messages: UIMessage[];
     provider?: Provider;
+    conversationId?: string;
   };
   const lastMessage = messages[messages.length - 1];
   const userMessage = lastMessage ? extractText(lastMessage) : "";
@@ -31,13 +32,25 @@ export async function POST(req: Request) {
     return new Response("No message provided", { status: 400 });
   }
 
-  // Get or create conversation
-  const [conv] = await sql`
-    INSERT INTO conversations (user_id, title)
-    VALUES (${session.user.id}, ${userMessage.slice(0, 100)})
-    RETURNING id
-  `;
-  const convId = conv.id;
+  // Reuse existing conversation or create a new one
+  let convId: string;
+  if (conversationId) {
+    const [existing] = await sql`
+      SELECT id FROM conversations
+      WHERE id = ${conversationId} AND user_id = ${session.user.id}
+    `;
+    if (!existing) {
+      return new Response("Conversation not found", { status: 404 });
+    }
+    convId = existing.id;
+  } else {
+    const [conv] = await sql`
+      INSERT INTO conversations (user_id, title)
+      VALUES (${session.user.id}, ${userMessage.slice(0, 100)})
+      RETURNING id
+    `;
+    convId = conv.id;
+  }
 
   // Save the user message
   await sql`
@@ -68,7 +81,9 @@ export async function POST(req: Request) {
       })
       .catch(() => {});
 
-    return result.toUIMessageStreamResponse();
+    return result.toUIMessageStreamResponse({
+      headers: { "X-Conversation-Id": convId },
+    });
   } catch (error: unknown) {
     const message =
       error instanceof Error ? error.message : "An unexpected error occurred";
