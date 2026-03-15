@@ -67,9 +67,9 @@ export async function POST(
     const allMessages = await chatService.getMessages(id);
     if (allMessages.length >= 2) {
       generateConversationTitle(
-        allMessages.map((m: { role: string; content: string }) => ({
-          role: m.role as "user" | "assistant",
-          content: m.content,
+        allMessages.map((m) => ({
+          role: String(m.role) as "user" | "assistant",
+          content: String(m.content),
         }))
       )
         .then(async (title) => {
