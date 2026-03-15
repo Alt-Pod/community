@@ -1,13 +1,11 @@
 export interface Agent {
   id: string;
   name: string;
-  department_id: string;
-  purpose: string;
-  responsibilities: string[];
-  reports_to: string | null;
-  triggers: string[];
-  status: "active" | "paused" | "retired";
-  created_at: Date;
+  description: string | null;
+  system_prompt: string;
+  status: "active" | "inactive";
+  created_at: string;
+  updated_at: string;
 }
 
 export interface AgentMessage {

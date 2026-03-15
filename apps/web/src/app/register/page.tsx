@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { Button, TextInput, Heading } from "@community/ui";
 
 export default function RegisterPage() {
   const t = useTranslations("auth.register");
@@ -38,43 +39,40 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-950">
-      <div className="w-full max-w-sm space-y-6 p-8">
-        <h1 className="text-2xl font-bold text-white text-center">{t("title")}</h1>
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-surface-primary via-surface-secondary to-accent-gold-pale/30">
+      <div className="w-full max-w-sm space-y-6 bg-surface-primary shadow-card rounded-lg p-10">
+        <Heading as="h1" className="text-center">{t("title")}</Heading>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
+          <TextInput
             name="name"
             type="text"
             placeholder={t("namePlaceholder")}
-            className="w-full rounded-md border border-gray-700 bg-gray-900 px-4 py-2 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none"
           />
-          <input
+          <TextInput
             name="email"
             type="email"
             placeholder={t("emailPlaceholder")}
             required
-            className="w-full rounded-md border border-gray-700 bg-gray-900 px-4 py-2 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none"
           />
-          <input
+          <TextInput
             name="password"
             type="password"
             placeholder={t("passwordPlaceholder")}
             required
             minLength={8}
-            className="w-full rounded-md border border-gray-700 bg-gray-900 px-4 py-2 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none"
           />
-          {error && <p className="text-sm text-red-400">{error}</p>}
-          <button
+          {error && <p className="text-sm text-error">{error}</p>}
+          <Button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-blue-600 py-2 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
+            className="w-full"
           >
             {loading ? t("submitting") : t("submit")}
-          </button>
+          </Button>
         </form>
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-text-tertiary">
           {t("hasAccount")}{" "}
-          <a href="/login" className="text-blue-400 hover:underline">{t("loginLink")}</a>
+          <a href="/login" className="text-accent-gold hover:text-accent-gold-light hover:underline">{t("loginLink")}</a>
         </p>
       </div>
     </main>

@@ -8,7 +8,7 @@ export class ConversationRepository {
 
   async findByUserId(userId: string) {
     return this.sql`
-      SELECT id, title, created_at
+      SELECT id, title, agent_id, created_at
       FROM ${this.sql(this.table)}
       WHERE user_id = ${userId}
       ORDER BY created_at DESC
@@ -17,17 +17,17 @@ export class ConversationRepository {
 
   async findById(id: string, userId: string) {
     const [conversation] = await this.sql`
-      SELECT id, title, created_at
+      SELECT id, title, agent_id, created_at
       FROM ${this.sql(this.table)}
       WHERE id = ${id} AND user_id = ${userId}
     `;
     return conversation ?? null;
   }
 
-  async create(userId: string, title: string) {
+  async create(userId: string, title: string, agentId?: string | null) {
     const [conversation] = await this.sql`
-      INSERT INTO ${this.sql(this.table)} (user_id, title)
-      VALUES (${userId}, ${title})
+      INSERT INTO ${this.sql(this.table)} (user_id, title, agent_id)
+      VALUES (${userId}, ${title}, ${agentId ?? null})
       RETURNING *
     `;
     return conversation;

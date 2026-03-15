@@ -1,4 +1,4 @@
-import type { Sql } from "postgres";
+import type { Sql, JSONValue } from "postgres";
 
 export class MessageRepository {
   constructor(
@@ -8,7 +8,7 @@ export class MessageRepository {
 
   async findByConversationId(conversationId: string) {
     return this.sql`
-      SELECT id, role, content, agent_id, created_at
+      SELECT id, role, content, parts, agent_id, created_at
       FROM ${this.sql(this.table)}
       WHERE conversation_id = ${conversationId}
       ORDER BY created_at ASC
@@ -20,10 +20,11 @@ export class MessageRepository {
     role: string;
     content: string;
     agentId?: string | null;
+    parts?: unknown[] | null;
   }) {
     const [message] = await this.sql`
-      INSERT INTO ${this.sql(this.table)} (conversation_id, role, content, agent_id)
-      VALUES (${data.conversationId}, ${data.role}, ${data.content}, ${data.agentId ?? null})
+      INSERT INTO ${this.sql(this.table)} (conversation_id, role, content, agent_id, parts)
+      VALUES (${data.conversationId}, ${data.role}, ${data.content}, ${data.agentId ?? null}, ${data.parts ? this.sql.json(data.parts as JSONValue) : null})
       RETURNING *
     `;
     return message;

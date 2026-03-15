@@ -1,6 +1,16 @@
 -- Indexes on foreign key columns
-CREATE INDEX IF NOT EXISTS idx_agents_department_id ON agents(department_id);
-CREATE INDEX IF NOT EXISTS idx_agents_reports_to ON agents(reports_to);
+-- department_id and reports_to are dropped in migration 003, so only create if they exist
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'agents' AND column_name = 'department_id'
+  ) THEN
+    CREATE INDEX IF NOT EXISTS idx_agents_department_id ON agents(department_id);
+    CREATE INDEX IF NOT EXISTS idx_agents_reports_to ON agents(reports_to);
+  END IF;
+END
+$$;
 CREATE INDEX IF NOT EXISTS idx_conversations_user_id ON conversations(user_id);
 CREATE INDEX IF NOT EXISTS idx_messages_conversation_id ON messages(conversation_id);
 CREATE INDEX IF NOT EXISTS idx_messages_agent_id ON messages(agent_id);

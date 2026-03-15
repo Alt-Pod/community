@@ -3,6 +3,22 @@
     "title": "Community",
     "description": "La tua organizzazione IA personale"
   },
+  "nav": {
+    "chat": "Chat",
+    "agents": "Agenti"
+  },
+  "home": {
+    "title": "Community",
+    "subtitle": "La tua organizzazione IA personale",
+    "chat": {
+      "title": "Chat",
+      "description": "Inizia una conversazione con i tuoi agenti."
+    },
+    "agents": {
+      "title": "Agenti",
+      "description": "Crea, configura e gestisci i tuoi agenti IA."
+    }
+  },
   "auth": {
     "login": {
       "title": "Community",
@@ -40,6 +56,89 @@
       "placeholder": "Messaggio...",
       "send": "Invia",
       "loading": "…"
+    },
+    "agentPicker": {
+      "title": "Inizia una conversazione",
+      "subtitle": "Scegli con chi vuoi parlare",
+      "defaultName": "Assistente Community",
+      "defaultDescription": "Il tuo punto di contatto principale. Chiedi informazioni sugli agenti disponibili o gestisci la tua organizzazione."
+    }
+  },
+  "agents": {
+    "title": "Agenti",
+    "createButton": "Nuovo agente",
+    "editButton": "Modifica",
+    "deleteButton": "Elimina",
+    "loading": "Caricamento agenti...",
+    "empty": "Nessun agente ancora. Creane uno per iniziare.",
+    "form": {
+      "name": "Nome",
+      "namePlaceholder": "Nome dell'agente",
+      "description": "Descrizione",
+      "descriptionPlaceholder": "Breve descrizione di cosa fa questo agente",
+      "systemPrompt": "Prompt di sistema",
+      "systemPromptPlaceholder": "Definisci la personalità, il ruolo e il comportamento dell'agente...",
+      "create": "Crea",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "saving": "Salvataggio…"
+    },
+    "detail": {
+      "backToList": "Torna agli agenti",
+      "systemPrompt": "Prompt di sistema",
+      "status": "Stato",
+      "statusActive": "Attivo",
+      "statusInactive": "Inattivo",
+      "createdAt": "Creato",
+      "updatedAt": "Ultimo aggiornamento",
+      "editButton": "Modifica agente",
+      "deleteButton": "Elimina agente",
+      "deleteConfirm": "Confermare l'eliminazione?",
+      "notFound": "Agente non trovato"
+    },
+    "edit": {
+      "title": "Modifica agente",
+      "saveButton": "Salva modifiche"
+    }
+  },
+  "tools": {
+    "status": {
+      "pending": "In attesa",
+      "awaitingConfirmation": "In attesa di conferma",
+      "executing": "Esecuzione in corso...",
+      "completed": "Completato",
+      "failed": "Fallito",
+      "rejected": "Rifiutato"
+    },
+    "confirmation": {
+      "title": "Azione richiede approvazione",
+      "description": "Questa azione modificherà i dati. Verifica i parametri e conferma.",
+      "approve": "Approva",
+      "reject": "Rifiuta"
+    },
+    "card": {
+      "parameters": "Parametri",
+      "result": "Risultato",
+      "error": "Errore",
+      "toolCall": "Chiamata strumento"
+    },
+    "agents": {
+      "listAgents": {
+        "name": "Elenco agenti",
+        "description": "Visualizza tutti gli agenti disponibili"
+      },
+      "createAgent": {
+        "name": "Crea agente",
+        "description": "Crea un nuovo agente con la configurazione specificata"
+      },
+      "updateAgent": {
+        "name": "Aggiorna agente",
+        "description": "Modifica le impostazioni di un agente esistente"
+      },
+      "deleteAgent": {
+        "name": "Elimina agente",
+        "description": "Rimuovi permanentemente un agente"
+      }
     }
   }
 }

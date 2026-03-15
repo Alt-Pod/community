@@ -1,4 +1,10 @@
 export { getModel } from "./model";
-export { buildSystemPrompt } from "./context";
-export { routeMessage } from "./router";
-export { runAgent, streamAgent } from "./engine";
+export { buildAgentSystemPrompt, buildDefaultSystemPrompt } from "./context";
+export { streamAgentChat, streamDefaultChat } from "./engine";
+export {
+  getToolById,
+  getAllTools,
+  getAllToolMetas,
+  buildToolsForAgent,
+} from "./tools";
+export type { ToolMeta, CommunityToolDefinition } from "./tools";

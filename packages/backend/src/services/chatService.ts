@@ -15,12 +15,13 @@ export class ChatService {
     });
   }
 
-  async saveAssistantMessage(conversationId: string, content: string, agentId?: string) {
+  async saveAssistantMessage(conversationId: string, content: string, agentId?: string, parts?: unknown[] | null) {
     return this.messageRepository.create({
       conversationId,
       role: "assistant",
       content,
       agentId,
+      parts,
     });
   }
 }

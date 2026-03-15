@@ -3,6 +3,22 @@
     "title": "Community",
     "description": "Your personal AI organization"
   },
+  "nav": {
+    "chat": "Chat",
+    "agents": "Agents"
+  },
+  "home": {
+    "title": "Community",
+    "subtitle": "Your personal AI organization",
+    "chat": {
+      "title": "Chat",
+      "description": "Start a conversation with your agents."
+    },
+    "agents": {
+      "title": "Agents",
+      "description": "Create, configure, and manage your AI agents."
+    }
+  },
   "auth": {
     "login": {
       "title": "Community",
@@ -40,6 +56,89 @@
       "placeholder": "Message...",
       "send": "Send",
       "loading": "…"
+    },
+    "agentPicker": {
+      "title": "Start a conversation",
+      "subtitle": "Choose who you want to talk to",
+      "defaultName": "Community Assistant",
+      "defaultDescription": "Your main point of contact. Ask about available agents or manage your organization."
+    }
+  },
+  "agents": {
+    "title": "Agents",
+    "createButton": "New agent",
+    "editButton": "Edit",
+    "deleteButton": "Delete",
+    "loading": "Loading agents...",
+    "empty": "No agents yet. Create one to get started.",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Agent name",
+      "description": "Description",
+      "descriptionPlaceholder": "Short description of what this agent does",
+      "systemPrompt": "System prompt",
+      "systemPromptPlaceholder": "Define the agent's personality, role, and behavior...",
+      "create": "Create",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saving": "Saving…"
+    },
+    "detail": {
+      "backToList": "Back to agents",
+      "systemPrompt": "System prompt",
+      "status": "Status",
+      "statusActive": "Active",
+      "statusInactive": "Inactive",
+      "createdAt": "Created",
+      "updatedAt": "Last updated",
+      "editButton": "Edit agent",
+      "deleteButton": "Delete agent",
+      "deleteConfirm": "Confirm delete?",
+      "notFound": "Agent not found"
+    },
+    "edit": {
+      "title": "Edit agent",
+      "saveButton": "Save changes"
+    }
+  },
+  "tools": {
+    "status": {
+      "pending": "Pending",
+      "awaitingConfirmation": "Awaiting confirmation",
+      "executing": "Executing...",
+      "completed": "Completed",
+      "failed": "Failed",
+      "rejected": "Rejected"
+    },
+    "confirmation": {
+      "title": "Action requires approval",
+      "description": "This action will modify data. Please review the parameters and confirm.",
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "card": {
+      "parameters": "Parameters",
+      "result": "Result",
+      "error": "Error",
+      "toolCall": "Tool call"
+    },
+    "agents": {
+      "listAgents": {
+        "name": "List agents",
+        "description": "View all available agents"
+      },
+      "createAgent": {
+        "name": "Create agent",
+        "description": "Create a new agent with the specified configuration"
+      },
+      "updateAgent": {
+        "name": "Update agent",
+        "description": "Modify an existing agent's settings"
+      },
+      "deleteAgent": {
+        "name": "Delete agent",
+        "description": "Permanently remove an agent"
+      }
     }
   }
 }

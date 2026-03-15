@@ -1,6 +1,12 @@
-import { auth, conversationService, chatService } from "@community/backend";
-import { routeMessage, streamAgent } from "@community/ai";
-import type { AgentMessage, Provider } from "@community/shared";
+import {
+  auth,
+  conversationService,
+  chatService,
+  agentService,
+  toolService,
+  buildPartsFromSteps,
+} from "@community/backend";
+import { streamAgentChat, streamDefaultChat } from "@community/ai";
 import type { UIMessage } from "ai";
 
 function extractText(msg: UIMessage): string {
@@ -47,41 +53,63 @@ export async function POST(
   }
 
   const body = await req.json();
-  const { messages, provider } = body as {
-    messages: UIMessage[];
-    provider?: Provider;
-  };
+  const { messages } = body as { messages: UIMessage[] };
   const lastMessage = messages[messages.length - 1];
-  const userMessage = lastMessage ? extractText(lastMessage) : "";
+  const userMessage = lastMessage?.role === "user" ? extractText(lastMessage) : "";
 
-  if (!userMessage) {
-    return Response.json({ error: "No message provided" }, { status: 400 });
+  // Save user message only when there's a new one (not on tool approval continuations)
+  if (userMessage) {
+    await chatService.saveUserMessage(id, userMessage);
   }
 
-  // Save the user message
-  await chatService.saveUserMessage(id, userMessage);
+  // At least one message is required
+  if (messages.length === 0) {
+    return Response.json({ error: "No messages provided" }, { status: 400 });
+  }
 
   try {
-    // Route to the right agent
-    const agent = await routeMessage(userMessage, provider);
+    const agentId = (conversation as { agent_id?: string | null }).agent_id;
 
-    // Build message history for the agent
-    const history: AgentMessage[] = messages.map((m) => ({
-      role: m.role as "user" | "assistant",
-      content: extractText(m),
-    }));
+    if (agentId) {
+      // Agent mode: use the agent's system prompt + its assigned tools
+      const agent = await agentService.findById(agentId);
+      if (!agent) {
+        return Response.json({ error: "Agent not found" }, { status: 404 });
+      }
 
-    // Stream the agent's response
-    const result = streamAgent(agent, history, provider);
+      const toolIds = await toolService.getToolsForAgent(agentId);
+      const result = await streamAgentChat(agent, messages, toolIds);
 
-    // Save assistant message when stream completes
-    Promise.resolve(result.text)
-      .then(async (text) => {
-        await chatService.saveAssistantMessage(id, text, agent.id);
-      })
-      .catch(() => {});
+      Promise.resolve(result.steps)
+        .then(async (steps) => {
+          const text = steps.map((s) => s.text).join("");
+          const parts = buildPartsFromSteps(steps);
+          await chatService.saveAssistantMessage(id, text, agent.id, parts);
+        })
+        .catch(() => {});
 
-    return result.toUIMessageStreamResponse();
+      return result.toUIMessageStreamResponse();
+    } else {
+      // Default mode: concierge with agent management tools
+      const agents = await agentService.getAll();
+      const allToolIds = [
+        "agents.list_agents",
+        "agents.create_agent",
+        "agents.update_agent",
+        "agents.delete_agent",
+      ];
+      const result = await streamDefaultChat(agents, messages, allToolIds);
+
+      Promise.resolve(result.steps)
+        .then(async (steps) => {
+          const text = steps.map((s) => s.text).join("");
+          const parts = buildPartsFromSteps(steps);
+          await chatService.saveAssistantMessage(id, text, undefined, parts);
+        })
+        .catch(() => {});
+
+      return result.toUIMessageStreamResponse();
+    }
   } catch (error: unknown) {
     const message =
       error instanceof Error ? error.message : "An unexpected error occurred";

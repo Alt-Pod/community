@@ -16,12 +16,19 @@ export async function POST(req: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const { title } = (await req.json()) as { title?: string };
+  const { title, agent_id } = (await req.json()) as {
+    title?: string;
+    agent_id?: string | null;
+  };
 
   if (!title) {
     return Response.json({ error: "Title is required" }, { status: 400 });
   }
 
-  const conversation = await conversationService.create(session.user.id, title);
+  const conversation = await conversationService.create(
+    session.user.id,
+    title,
+    agent_id
+  );
   return Response.json(conversation, { status: 201 });
 }

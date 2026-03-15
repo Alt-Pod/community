@@ -3,6 +3,22 @@
     "title": "Community",
     "description": "Deine persönliche KI-Organisation"
   },
+  "nav": {
+    "chat": "Chat",
+    "agents": "Agenten"
+  },
+  "home": {
+    "title": "Community",
+    "subtitle": "Deine persönliche KI-Organisation",
+    "chat": {
+      "title": "Chat",
+      "description": "Starte eine Unterhaltung mit deinen Agenten."
+    },
+    "agents": {
+      "title": "Agenten",
+      "description": "Erstelle, konfiguriere und verwalte deine KI-Agenten."
+    }
+  },
   "auth": {
     "login": {
       "title": "Community",
@@ -40,6 +56,89 @@
       "placeholder": "Nachricht...",
       "send": "Senden",
       "loading": "…"
+    },
+    "agentPicker": {
+      "title": "Unterhaltung starten",
+      "subtitle": "Wähle deinen Gesprächspartner",
+      "defaultName": "Community-Assistent",
+      "defaultDescription": "Dein Hauptansprechpartner. Frage nach verfügbaren Agenten oder verwalte deine Organisation."
+    }
+  },
+  "agents": {
+    "title": "Agenten",
+    "createButton": "Neuer Agent",
+    "editButton": "Bearbeiten",
+    "deleteButton": "Löschen",
+    "loading": "Agenten werden geladen...",
+    "empty": "Noch keine Agenten. Erstelle einen, um loszulegen.",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Name des Agenten",
+      "description": "Beschreibung",
+      "descriptionPlaceholder": "Kurze Beschreibung, was dieser Agent tut",
+      "systemPrompt": "System-Prompt",
+      "systemPromptPlaceholder": "Definiere Persönlichkeit, Rolle und Verhalten des Agenten...",
+      "create": "Erstellen",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "saving": "Speichern…"
+    },
+    "detail": {
+      "backToList": "Zurück zu Agenten",
+      "systemPrompt": "System-Prompt",
+      "status": "Status",
+      "statusActive": "Aktiv",
+      "statusInactive": "Inaktiv",
+      "createdAt": "Erstellt",
+      "updatedAt": "Zuletzt aktualisiert",
+      "editButton": "Agent bearbeiten",
+      "deleteButton": "Agent löschen",
+      "deleteConfirm": "Löschen bestätigen?",
+      "notFound": "Agent nicht gefunden"
+    },
+    "edit": {
+      "title": "Agent bearbeiten",
+      "saveButton": "Änderungen speichern"
+    }
+  },
+  "tools": {
+    "status": {
+      "pending": "Ausstehend",
+      "awaitingConfirmation": "Warte auf Bestätigung",
+      "executing": "Wird ausgeführt...",
+      "completed": "Abgeschlossen",
+      "failed": "Fehlgeschlagen",
+      "rejected": "Abgelehnt"
+    },
+    "confirmation": {
+      "title": "Aktion erfordert Genehmigung",
+      "description": "Diese Aktion wird Daten ändern. Bitte überprüfe die Parameter und bestätige.",
+      "approve": "Genehmigen",
+      "reject": "Ablehnen"
+    },
+    "card": {
+      "parameters": "Parameter",
+      "result": "Ergebnis",
+      "error": "Fehler",
+      "toolCall": "Tool-Aufruf"
+    },
+    "agents": {
+      "listAgents": {
+        "name": "Agenten auflisten",
+        "description": "Alle verfügbaren Agenten anzeigen"
+      },
+      "createAgent": {
+        "name": "Agent erstellen",
+        "description": "Einen neuen Agenten mit der angegebenen Konfiguration erstellen"
+      },
+      "updateAgent": {
+        "name": "Agent aktualisieren",
+        "description": "Einstellungen eines bestehenden Agenten ändern"
+      },
+      "deleteAgent": {
+        "name": "Agent löschen",
+        "description": "Einen Agenten dauerhaft entfernen"
+      }
     }
   }
 }

@@ -1,6 +1,8 @@
 import { auth } from "@community/backend";
 import { redirect } from "next/navigation";
-import ChatPanel from "@/components/chat-panel";
+import { getTranslations } from "next-intl/server";
+import Link from "next/link";
+import AppNavbar from "@/components/app-navbar";
 
 export default async function Home() {
   const session = await auth();
@@ -9,5 +11,47 @@ export default async function Home() {
     redirect("/login");
   }
 
-  return <ChatPanel />;
+  const t = await getTranslations("home");
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-surface-primary via-surface-secondary to-accent-gold-pale/30">
+      <AppNavbar />
+      <main className="flex items-center justify-center" style={{ minHeight: "calc(100vh - 53px)" }}>
+        <div className="w-full max-w-lg px-6">
+          <div className="text-center mb-12">
+            <h1 className="font-heading text-4xl font-semibold tracking-tight text-text-primary">
+              {t("title")}
+            </h1>
+            <p className="mt-3 text-text-secondary">{t("subtitle")}</p>
+          </div>
+
+          <div className="grid gap-4">
+            <Link
+              href="/chat"
+              className="group p-6 rounded-lg bg-surface-primary border border-border-subtle shadow-elevated hover:shadow-card hover:border-accent-gold-muted transition-all duration-150"
+            >
+              <h2 className="font-heading text-xl font-semibold text-text-primary group-hover:text-accent-gold transition-colors duration-150">
+                {t("chat.title")}
+              </h2>
+              <p className="mt-1 text-sm text-text-secondary">
+                {t("chat.description")}
+              </p>
+            </Link>
+
+            <Link
+              href="/agents"
+              className="group p-6 rounded-lg bg-surface-primary border border-border-subtle shadow-elevated hover:shadow-card hover:border-accent-gold-muted transition-all duration-150"
+            >
+              <h2 className="font-heading text-xl font-semibold text-text-primary group-hover:text-accent-gold transition-colors duration-150">
+                {t("agents.title")}
+              </h2>
+              <p className="mt-1 text-sm text-text-secondary">
+                {t("agents.description")}
+              </p>
+            </Link>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
 }

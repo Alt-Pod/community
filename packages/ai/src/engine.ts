@@ -1,38 +1,40 @@
-import { generateText, streamText } from "ai";
+import { streamText, convertToModelMessages } from "ai";
+import type { UIMessage } from "ai";
 import { getModel } from "./model";
-import { buildSystemPrompt } from "./context";
-import type { Agent, AgentMessage, AgentResponse, Provider } from "@community/shared";
+import { buildAgentSystemPrompt, buildDefaultSystemPrompt } from "./context";
+import { buildToolsForAgent } from "./tools";
+import type { Agent } from "@community/shared";
 
-export async function runAgent(
+export async function streamAgentChat(
   agent: Agent,
-  messages: AgentMessage[],
-  provider?: Provider
-): Promise<AgentResponse> {
-  const system = buildSystemPrompt(agent);
-
-  const result = await generateText({
-    model: getModel(provider),
-    system,
-    messages,
-  });
-
-  return {
-    content: result.text,
-    agent_id: agent.id,
-    agent_name: agent.name,
-  };
-}
-
-export function streamAgent(
-  agent: Agent,
-  messages: AgentMessage[],
-  provider?: Provider
+  messages: UIMessage[],
+  toolIds: string[]
 ) {
-  const system = buildSystemPrompt(agent);
+  const system = buildAgentSystemPrompt(agent);
+  const tools = buildToolsForAgent(toolIds);
+  const modelMessages = await convertToModelMessages(messages);
 
   return streamText({
-    model: getModel(provider),
+    model: getModel(),
     system,
-    messages,
+    messages: modelMessages,
+    tools,
+  });
+}
+
+export async function streamDefaultChat(
+  agents: Agent[],
+  messages: UIMessage[],
+  toolIds: string[]
+) {
+  const system = buildDefaultSystemPrompt(agents);
+  const tools = buildToolsForAgent(toolIds);
+  const modelMessages = await convertToModelMessages(messages);
+
+  return streamText({
+    model: getModel(),
+    system,
+    messages: modelMessages,
+    tools,
   });
 }

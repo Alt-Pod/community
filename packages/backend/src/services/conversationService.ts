@@ -11,8 +11,8 @@ export class ConversationService {
     return this.conversationRepository.findByUserId(userId);
   }
 
-async create(userId: string, title: string) {
-    return this.conversationRepository.create(userId, title);
+async create(userId: string, title: string, agentId?: string | null) {
+    return this.conversationRepository.create(userId, title, agentId);
   }
 
   async findById(id: string, userId: string) {
