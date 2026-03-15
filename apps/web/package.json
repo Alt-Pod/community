@@ -1,0 +1,37 @@
+{
+  "name": "@community/web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ai-sdk/react": "^3.0.118",
+    "@community/ai": "*",
+    "@community/backend": "*",
+    "@community/i18n": "*",
+    "@community/shared": "*",
+    "@community/ui": "*",
+    "@tanstack/react-query": "^5.90.21",
+    "ai": "^6.0.116",
+    "next": "^16.1.6",
+    "next-auth": "^5.0.0-beta.30",
+    "next-intl": "^4.8.3",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^10.0.3",
+    "eslint-config-next": "^16.1.6",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "title": "Community",
+    "description": "Votre organisation IA personnelle"
+  },
+  "auth": {
+    "login": {
+      "title": "Community",
+      "emailPlaceholder": "E-mail",
+      "passwordPlaceholder": "Mot de passe",
+      "error": "E-mail ou mot de passe invalide",
+      "submitting": "Connexion en cours...",
+      "submit": "Se connecter",
+      "noAccount": "Pas de compte ?",
+      "registerLink": "S'inscrire"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "namePlaceholder": "Nom",
+      "emailPlaceholder": "E-mail",
+      "passwordPlaceholder": "Mot de passe (min 8 caractères)",
+      "submitting": "Création du compte...",
+      "submit": "S'inscrire",
+      "hasAccount": "Vous avez déjà un compte ?",
+      "loginLink": "Se connecter"
+    }
+  },
+  "chat": {
+    "sidebar": {
+      "title": "Conversations",
+      "newButton": "Nouveau",
+      "untitled": "Sans titre",
+      "empty": "Aucune conversation pour le moment."
+    },
+    "header": {
+      "title": "Community"
+    },
+    "messages": {
+      "empty": "Envoyez un message pour commencer.",
+      "placeholder": "Message...",
+      "send": "Envoyer",
+      "loading": "…"
+    }
+  }
+}

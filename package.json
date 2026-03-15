@@ -1,42 +1,20 @@
 {
   "name": "community",
-  "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
+    "dev": "yarn workspace @community/web dev",
+    "build": "yarn workspace @community/web build",
+    "start": "yarn workspace @community/web start",
+    "lint": "yarn workspace @community/web lint",
     "setup": "bash scripts/setup.sh",
     "db:migrate": "node scripts/migrate.js",
     "db:migrate:prod": "env $(cat .env.prod | xargs) node scripts/migrate.js"
   },
   "repository": "https://github.com/Alt-Pod/community.git",
   "author": "Michael Dornic <michael@m-work.co>",
-  "license": "MIT",
-  "dependencies": {
-    "@ai-sdk/anthropic": "^3.0.58",
-    "@ai-sdk/google": "^3.0.43",
-    "@ai-sdk/react": "^3.0.118",
-    "ai": "^6.0.116",
-    "bcryptjs": "^3.0.3",
-    "next": "^16.1.6",
-    "next-auth": "^5.0.0-beta.30",
-    "postgres": "^3.4.8",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "zod": "^4.3.6"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4.2.1",
-    "@types/bcryptjs": "^3.0.0",
-    "@types/node": "^25.5.0",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "eslint": "^10.0.3",
-    "eslint-config-next": "^16.1.6",
-    "postcss": "^8.5.8",
-    "tailwindcss": "^4.2.1",
-    "typescript": "^5.9.3"
-  }
+  "license": "MIT"
 }

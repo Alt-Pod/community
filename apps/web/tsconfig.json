@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "plugins": [{ "name": "next" }],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@community/ui": ["../../packages/ui/src"],
+      "@community/ui/*": ["../../packages/ui/src/*"],
+      "@community/backend": ["../../packages/backend/src"],
+      "@community/backend/*": ["../../packages/backend/src/*"],
+      "@community/ai": ["../../packages/ai/src"],
+      "@community/ai/*": ["../../packages/ai/src/*"],
+      "@community/shared": ["../../packages/shared/src"],
+      "@community/shared/*": ["../../packages/shared/src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
+}

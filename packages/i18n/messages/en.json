@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "title": "Community",
+    "description": "Your personal AI organization"
+  },
+  "auth": {
+    "login": {
+      "title": "Community",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Password",
+      "error": "Invalid email or password",
+      "submitting": "Signing in...",
+      "submit": "Sign in",
+      "noAccount": "No account?",
+      "registerLink": "Register"
+    },
+    "register": {
+      "title": "Create account",
+      "namePlaceholder": "Name",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Password (min 8 characters)",
+      "submitting": "Creating account...",
+      "submit": "Register",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in"
+    }
+  },
+  "chat": {
+    "sidebar": {
+      "title": "Conversations",
+      "newButton": "New",
+      "untitled": "Untitled",
+      "empty": "No conversations yet."
+    },
+    "header": {
+      "title": "Community"
+    },
+    "messages": {
+      "empty": "Send a message to get started.",
+      "placeholder": "Message...",
+      "send": "Send",
+      "loading": "…"
+    }
+  }
+}

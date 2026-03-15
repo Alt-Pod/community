@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "title": "Community",
+    "description": "Deine persönliche KI-Organisation"
+  },
+  "auth": {
+    "login": {
+      "title": "Community",
+      "emailPlaceholder": "E-Mail",
+      "passwordPlaceholder": "Passwort",
+      "error": "Ungültige E-Mail oder ungültiges Passwort",
+      "submitting": "Anmeldung...",
+      "submit": "Anmelden",
+      "noAccount": "Kein Konto?",
+      "registerLink": "Registrieren"
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "namePlaceholder": "Name",
+      "emailPlaceholder": "E-Mail",
+      "passwordPlaceholder": "Passwort (min. 8 Zeichen)",
+      "submitting": "Konto wird erstellt...",
+      "submit": "Registrieren",
+      "hasAccount": "Bereits ein Konto?",
+      "loginLink": "Anmelden"
+    }
+  },
+  "chat": {
+    "sidebar": {
+      "title": "Unterhaltungen",
+      "newButton": "Neu",
+      "untitled": "Ohne Titel",
+      "empty": "Noch keine Unterhaltungen."
+    },
+    "header": {
+      "title": "Community"
+    },
+    "messages": {
+      "empty": "Sende eine Nachricht, um loszulegen.",
+      "placeholder": "Nachricht...",
+      "send": "Senden",
+      "loading": "…"
+    }
+  }
+}

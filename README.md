@@ -22,11 +22,30 @@ Superstar-level people hire teams of human agents to manage everything that grav
 
 A chat-based website where you interact with the organization, not individual agents. The system routes your conversations to the right agents internally.
 
+## Architecture
+
+Yarn workspaces monorepo with hexagonal architecture:
+
+```
+community/
+├── apps/
+│   └── web/                  # Next.js app (pages, API routes, middleware)
+├── packages/
+│   ├── ui/                   # Design system (React components)
+│   ├── backend/              # Backend adapters (database, auth)
+│   ├── ai/                   # Agent system (model, routing, execution)
+│   └── shared/               # Shared types and constants
+├── migrations/               # PostgreSQL migrations
+└── scripts/                  # Setup and migration scripts
+```
+
 ## Tech Stack
 
 - **Framework:** Next.js (App Router)
-- **Database:** PostgreSQL (Neon)
+- **Monorepo:** Yarn Workspaces
+- **Database:** PostgreSQL (Neon for production)
 - **Auth:** NextAuth.js v5
+- **AI:** Vercel AI SDK (Anthropic Claude, Google Gemini)
 - **Styling:** Tailwind CSS
 - **Language:** TypeScript
 
@@ -116,6 +135,8 @@ Set these in Vercel project settings:
 |----------------|---------------------------------|
 | `DATABASE_URL` | Neon PostgreSQL connection string |
 | `AUTH_SECRET`   | NextAuth secret key              |
+| `ANTHROPIC_API_KEY` | Anthropic Claude API key    |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | Google Gemini API key |
 
 ### Workflow
 
@@ -131,8 +152,20 @@ Set these in Vercel project settings:
 |-----------------------|--------------------------------------|
 | `yarn dev`          | Start dev server (Turbopack)         |
 | `yarn build`        | Production build                     |
+| `yarn start`        | Run production server                |
+| `yarn lint`         | ESLint                               |
 | `yarn db:migrate`   | Run migrations (uses `DATABASE_URL`) |
 | `yarn db:migrate:prod` | Run migrations against Neon       |
+
+## Packages
+
+| Package | Scope | Description |
+|---------|-------|-------------|
+| `@community/web` | `apps/web` | Next.js application |
+| `@community/ui` | `packages/ui` | Design system & React components |
+| `@community/backend` | `packages/backend` | Database, auth adapters |
+| `@community/ai` | `packages/ai` | Agent system, AI model routing |
+| `@community/shared` | `packages/shared` | Shared types & constants |
 
 ## Version
 

@@ -1,0 +1,17 @@
+{
+  "name": "@community/ai",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@community/shared": "*",
+    "@community/backend": "*",
+    "@ai-sdk/anthropic": "^3.0.58",
+    "@ai-sdk/google": "^3.0.43",
+    "ai": "^6.0.116"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
