@@ -10,7 +10,9 @@ async function migrate() {
   for (const file of files) {
     console.log(`Running ${file}...`);
     const content = fs.readFileSync(path.join(migrationsDir, file), "utf8");
-    await sql.unsafe(content);
+    await sql.begin(async (tx) => {
+      await tx.unsafe(content);
+    });
   }
   console.log("Migrations complete.");
   await sql.end();

@@ -18,16 +18,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!email || !password) return null;
 
-        const [user] = await sql`
-          SELECT id, email, name, password_hash FROM users WHERE email = ${email}
-        `;
+        try {
+          const [user] = await sql`
+            SELECT id, email, name, password_hash FROM users WHERE email = ${email}
+          `;
 
-        if (!user) return null;
+          if (!user) return null;
 
-        const valid = await bcrypt.compare(password, user.password_hash);
-        if (!valid) return null;
+          const valid = await bcrypt.compare(password, user.password_hash);
+          if (!valid) return null;
 
-        return { id: user.id, email: user.email, name: user.name };
+          return { id: user.id, email: user.email, name: user.name };
+        } catch {
+          console.error("Auth: database error during login");
+          return null;
+        }
       },
     }),
   ],

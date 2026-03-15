@@ -11,7 +11,12 @@ export const authConfig: NextAuthConfig = {
       const isLoggedIn = !!auth?.user;
       const isPublic = ["/login", "/register"].includes(nextUrl.pathname);
 
-      if (isPublic) return true;
+      if (isPublic) {
+        if (isLoggedIn) {
+          return Response.redirect(new URL("/", nextUrl));
+        }
+        return true;
+      }
       return isLoggedIn;
     },
     jwt({ token, user }) {

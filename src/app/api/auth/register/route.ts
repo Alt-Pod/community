@@ -17,18 +17,27 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
   }
 
-  const [existing] = await sql`SELECT id FROM users WHERE email = ${email}`;
-  if (existing) {
-    return NextResponse.json({ error: "Email already registered" }, { status: 409 });
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return NextResponse.json({ error: "Invalid email format" }, { status: 400 });
   }
 
-  const passwordHash = await bcrypt.hash(password, 12);
+  try {
+    const [existing] = await sql`SELECT id FROM users WHERE email = ${email}`;
+    if (existing) {
+      return NextResponse.json({ message: "Registration processed" }, { status: 201 });
+    }
 
-  const [user] = await sql`
-    INSERT INTO users (email, password_hash, name)
-    VALUES (${email}, ${passwordHash}, ${name || null})
-    RETURNING id, email, name
-  `;
+    const passwordHash = await bcrypt.hash(password, 12);
 
-  return NextResponse.json({ user }, { status: 201 });
+    await sql`
+      INSERT INTO users (email, password_hash, name)
+      VALUES (${email}, ${passwordHash}, ${name || null})
+    `;
+
+    return NextResponse.json({ message: "Registration processed" }, { status: 201 });
+  } catch {
+    console.error("Registration: database error");
+    return NextResponse.json({ error: "Registration failed" }, { status: 500 });
+  }
 }

@@ -3,10 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-if (process.env.NODE_ENV !== "development") {
-  throw new Error("Registration is disabled in production");
-}
-
 export default function RegisterPage() {
   const router = useRouter();
   const [error, setError] = useState("");
