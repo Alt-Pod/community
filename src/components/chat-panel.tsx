@@ -1,0 +1,127 @@
+"use client";
+
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { useState, useRef, useEffect, useMemo, type FormEvent } from "react";
+
+const PROVIDERS = [
+  { id: "google", label: "Gemini Flash" },
+  { id: "anthropic", label: "Claude Sonnet" },
+] as const;
+
+type Provider = (typeof PROVIDERS)[number]["id"];
+
+export default function ChatPanel() {
+  const [input, setInput] = useState("");
+  const [provider, setProvider] = useState<Provider>("google");
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const transport = useMemo(
+    () => new DefaultChatTransport({ body: { provider } }),
+    [provider]
+  );
+
+  const { messages, sendMessage, status, error } = useChat({ transport });
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
+  }, [messages]);
+
+  const isLoading = status === "streaming" || status === "submitted";
+
+  function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    const text = input.trim();
+    if (!text || isLoading) return;
+    setInput("");
+    sendMessage({ text });
+  }
+
+  return (
+    <div className="flex flex-col h-screen bg-gray-950">
+      {/* Header */}
+      <header className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
+        <h1 className="text-lg font-semibold text-white">Community</h1>
+        <select
+          value={provider}
+          onChange={(e) => setProvider(e.target.value as Provider)}
+          className="rounded-md bg-gray-900 border border-gray-700 px-3 py-1.5 text-sm text-gray-300 focus:outline-none focus:border-blue-500"
+        >
+          {PROVIDERS.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.label}
+            </option>
+          ))}
+        </select>
+      </header>
+
+      {/* Error banner */}
+      {error && (
+        <div className="mx-6 mt-4 rounded-lg bg-red-900/50 border border-red-700 px-4 py-3 text-sm text-red-200">
+          {error.message}
+        </div>
+      )}
+
+      {/* Messages */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+        {messages.length === 0 && (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-gray-600 text-sm">Send a message to get started.</p>
+          </div>
+        )}
+        {messages.map((m) => {
+          const text = m.parts
+            .filter((p): p is { type: "text"; text: string } => p.type === "text")
+            .map((p) => p.text)
+            .join("");
+
+          if (!text) return null;
+
+          return (
+            <div
+              key={m.id}
+              className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+            >
+              <div
+                className={`max-w-[70%] rounded-lg px-4 py-2.5 text-sm whitespace-pre-wrap ${
+                  m.role === "user"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-800 text-gray-200"
+                }`}
+              >
+                {text}
+              </div>
+            </div>
+          );
+        })}
+        {isLoading && messages[messages.length - 1]?.role === "user" && (
+          <div className="flex justify-start">
+            <div className="bg-gray-800 text-gray-400 rounded-lg px-4 py-2.5 text-sm">
+              …
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Input */}
+      <form onSubmit={onSubmit} className="px-6 py-4 border-t border-gray-800">
+        <div className="flex gap-3">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Message..."
+            className="flex-1 rounded-lg bg-gray-900 border border-gray-700 px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+            autoFocus
+          />
+          <button
+            type="submit"
+            disabled={isLoading || !input.trim()}
+            className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Send
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
