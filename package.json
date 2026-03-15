@@ -1,0 +1,40 @@
+{
+  "name": "community",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "setup": "bash scripts/setup.sh",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:migrate": "for f in migrations/*.sql; do echo \"Running $f...\"; docker exec -i community-db psql -U community -d community < $f; done",
+    "db:reset": "docker compose down -v && docker compose up -d && sleep 2 && yarn db:migrate",
+    "db:shell": "docker exec -it community-db psql -U community -d community"
+  },
+  "repository": "https://github.com/Alt-Pod/community.git",
+  "author": "Michael Dornic <michael@m-work.co>",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "next": "^16.1.6",
+    "next-auth": "^5.0.0-beta.30",
+    "postgres": "^3.4.8",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/bcryptjs": "^3.0.0",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^10.0.3",
+    "eslint-config-next": "^16.1.6",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.9.3"
+  }
+}
