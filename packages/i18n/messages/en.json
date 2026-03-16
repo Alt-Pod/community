@@ -6,7 +6,9 @@
   "nav": {
     "chat": "Chat",
     "agents": "Agents",
+    "tools": "Tools",
     "planning": "Planning",
+    "admin": "Admin",
     "billing": "Billing",
     "logout": "Log out",
     "profile": "Profile"
@@ -26,6 +28,10 @@
       "title": "This Week",
       "viewAll": "View full calendar",
       "today": "Today"
+    },
+    "tools": {
+      "title": "Tools",
+      "description": "Browse available tools and see which agents use them."
     },
     "billing": {
       "title": "Billing",
@@ -146,7 +152,8 @@
       "completed": "Completed",
       "failed": "Failed",
       "cancelled": "Cancelled"
-    }
+    },
+    "loading": "Loading activities..."
   },
   "tools": {
     "status": {
@@ -245,6 +252,10 @@
         "name": "List tools",
         "description": "List all available tools and their IDs"
       },
+      "getAgentDetails": {
+        "name": "Get agent details",
+        "description": "Get an agent's details including assigned tools"
+      },
       "myJobs": {
         "name": "My jobs",
         "description": "List your background jobs"
@@ -316,6 +327,13 @@
       }
     }
   },
+  "toolsPage": {
+    "title": "Tools",
+    "loading": "Loading tools...",
+    "empty": "No tools available.",
+    "noAgents": "Not assigned to any agent",
+    "requiresApproval": "Requires approval"
+  },
   "profile": {
     "title": "Profile",
     "subtitle": "Manage your account settings",
@@ -352,6 +370,49 @@
       "errorLength": "Password must be at least 8 characters"
     }
   },
+  "admin": {
+    "title": "User Management",
+    "createButton": "Add user",
+    "loading": "Loading users...",
+    "empty": "No users found.",
+    "role": "Role",
+    "roleUser": "User",
+    "roleAdmin": "Admin",
+    "createdAt": "Joined",
+    "form": {
+      "email": "Email",
+      "emailPlaceholder": "user@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "Minimum 8 characters",
+      "name": "Name",
+      "namePlaceholder": "Full name (optional)",
+      "create": "Create user",
+      "creating": "Creating...",
+      "cancel": "Cancel"
+    },
+    "resetPassword": {
+      "button": "Reset password",
+      "title": "Reset password",
+      "newPassword": "New password",
+      "newPasswordPlaceholder": "Minimum 8 characters",
+      "submit": "Update password",
+      "submitting": "Updating...",
+      "success": "Password updated",
+      "cancel": "Cancel"
+    },
+    "delete": {
+      "button": "Delete",
+      "confirm": "Are you sure you want to delete this user? This cannot be undone.",
+      "confirmButton": "Yes, delete",
+      "cancel": "Cancel",
+      "selfError": "Cannot delete your own account"
+    },
+    "errors": {
+      "createFailed": "Failed to create user",
+      "deleteFailed": "Failed to delete user",
+      "resetFailed": "Failed to reset password"
+    }
+  },
   "billing": {
     "title": "Billing & Usage",
     "subtitle": "Monitor your platform costs and token usage",
@@ -375,6 +436,7 @@
     "vercelDashboard": "Vercel",
     "inngestDashboard": "Inngest",
     "googleAiStudioDashboard": "Google AI Studio",
-    "cloudflareR2Dashboard": "Cloudflare R2"
+    "cloudflareR2Dashboard": "Cloudflare R2",
+    "loading": "Loading usage data..."
   }
 }

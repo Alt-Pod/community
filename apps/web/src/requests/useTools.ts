@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   fetchToolDefinitions,
+  fetchToolAssignments,
   fetchAgentTools,
   setAgentTools,
 } from "./api/toolsApi";
@@ -9,6 +10,13 @@ export function useToolDefinitions() {
   return useQuery({
     queryKey: ["tool-definitions"],
     queryFn: fetchToolDefinitions,
+  });
+}
+
+export function useToolAssignments() {
+  return useQuery({
+    queryKey: ["tool-assignments"],
+    queryFn: fetchToolAssignments,
   });
 }
 

@@ -27,6 +27,20 @@ export class ToolRepository {
     `;
   }
 
+  async findAllAssignments(): Promise<
+    { tool_id: string; agent_id: string; agent_name: string }[]
+  > {
+    const rows = await this.sql<
+      { tool_id: string; agent_id: string; agent_name: string }[]
+    >`
+      SELECT at.tool_id, at.agent_id, a.name AS agent_name
+      FROM agent_tools at
+      JOIN agents a ON a.id = at.agent_id
+      ORDER BY at.tool_id, a.name
+    `;
+    return rows;
+  }
+
   async setAgentTools(agentId: string, toolIds: string[]): Promise<void> {
     await this.sql`DELETE FROM agent_tools WHERE agent_id = ${agentId}`;
     if (toolIds.length > 0) {

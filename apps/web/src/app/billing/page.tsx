@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Heading } from "@community/ui";
+import { Heading, LoadingIndicator } from "@community/ui";
 import { useUsageStats } from "@/requests/useUsage";
 import AppNavbar from "@/components/app-navbar";
 import UsageSummaryCards from "@/components/usage-summary-cards";
@@ -60,9 +60,9 @@ export default function BillingPage() {
         </div>
 
         {isLoading && (
-          <p className="text-text-tertiary text-sm py-8 text-center">
-            Loading...
-          </p>
+          <div className="py-8 flex justify-center">
+            <LoadingIndicator variant="inline" text={t("loading")} />
+          </div>
         )}
 
         {data && (

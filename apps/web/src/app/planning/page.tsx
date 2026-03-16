@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
-import { Button, Heading, Select } from "@community/ui";
+import { Button, Heading, LoadingIndicator, Select } from "@community/ui";
 import { useScheduledActivities } from "@/requests/useScheduledActivities";
 import { useAgents } from "@/requests/useAgents";
 import PlanningCalendar from "@/components/planning-calendar";
@@ -19,12 +19,12 @@ export default function PlanningPage() {
   const from = new Date(year, month, 1).toISOString();
   const to = new Date(year, month + 1, 1).toISOString();
 
-  const { data: activities = [] } = useScheduledActivities(
+  const { data: activities = [], isLoading: activitiesLoading } = useScheduledActivities(
     from,
     to,
     agentFilter || undefined
   );
-  const { data: agents = [] } = useAgents();
+  const { data: agents = [], isLoading: agentsLoading } = useAgents();
 
   const agentNames = useMemo(() => {
     const map: Record<string, string> = {};
@@ -111,6 +111,10 @@ export default function PlanningPage() {
           {monthLabel}
         </Heading>
       </div>
+
+      {(activitiesLoading || agentsLoading) && (
+        <LoadingIndicator variant="inline" text={t("loading")} className="mb-4" />
+      )}
 
       <PlanningCalendar
         year={year}

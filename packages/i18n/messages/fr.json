@@ -6,7 +6,9 @@
   "nav": {
     "chat": "Discussion",
     "agents": "Agents",
+    "tools": "Outils",
     "planning": "Planning",
+    "admin": "Admin",
     "billing": "Facturation",
     "logout": "Se déconnecter",
     "profile": "Profil"
@@ -26,6 +28,10 @@
       "title": "Cette semaine",
       "viewAll": "Voir le calendrier complet",
       "today": "Aujourd'hui"
+    },
+    "tools": {
+      "title": "Outils",
+      "description": "Parcourez les outils disponibles et voyez quels agents les utilisent."
     },
     "billing": {
       "title": "Facturation",
@@ -146,7 +152,8 @@
       "completed": "Terminé",
       "failed": "Échoué",
       "cancelled": "Annulé"
-    }
+    },
+    "loading": "Chargement des activités..."
   },
   "tools": {
     "status": {
@@ -245,6 +252,10 @@
         "name": "Lister les outils",
         "description": "Lister tous les outils disponibles et leurs identifiants"
       },
+      "getAgentDetails": {
+        "name": "Détails de l'agent",
+        "description": "Obtenir les détails d'un agent, y compris les outils assignés"
+      },
       "myJobs": {
         "name": "Mes tâches",
         "description": "Lister vos tâches en arrière-plan"
@@ -316,6 +327,13 @@
       }
     }
   },
+  "toolsPage": {
+    "title": "Outils",
+    "loading": "Chargement des outils...",
+    "empty": "Aucun outil disponible.",
+    "noAgents": "Non assigné à aucun agent",
+    "requiresApproval": "Nécessite une approbation"
+  },
   "profile": {
     "title": "Profil",
     "subtitle": "Gérez les paramètres de votre compte",
@@ -352,6 +370,49 @@
       "errorLength": "Le mot de passe doit contenir au moins 8 caractères"
     }
   },
+  "admin": {
+    "title": "Gestion des utilisateurs",
+    "createButton": "Ajouter un utilisateur",
+    "loading": "Chargement des utilisateurs...",
+    "empty": "Aucun utilisateur trouvé.",
+    "role": "Rôle",
+    "roleUser": "Utilisateur",
+    "roleAdmin": "Admin",
+    "createdAt": "Inscrit le",
+    "form": {
+      "email": "Email",
+      "emailPlaceholder": "utilisateur@exemple.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "Minimum 8 caractères",
+      "name": "Nom",
+      "namePlaceholder": "Nom complet (optionnel)",
+      "create": "Créer l'utilisateur",
+      "creating": "Création...",
+      "cancel": "Annuler"
+    },
+    "resetPassword": {
+      "button": "Réinitialiser le mot de passe",
+      "title": "Réinitialiser le mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "newPasswordPlaceholder": "Minimum 8 caractères",
+      "submit": "Mettre à jour",
+      "submitting": "Mise à jour...",
+      "success": "Mot de passe mis à jour",
+      "cancel": "Annuler"
+    },
+    "delete": {
+      "button": "Supprimer",
+      "confirm": "Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.",
+      "confirmButton": "Oui, supprimer",
+      "cancel": "Annuler",
+      "selfError": "Impossible de supprimer votre propre compte"
+    },
+    "errors": {
+      "createFailed": "Échec de la création de l'utilisateur",
+      "deleteFailed": "Échec de la suppression de l'utilisateur",
+      "resetFailed": "Échec de la réinitialisation du mot de passe"
+    }
+  },
   "billing": {
     "title": "Facturation & Utilisation",
     "subtitle": "Surveillez les coûts et l'utilisation des tokens de votre plateforme",
@@ -375,6 +436,7 @@
     "vercelDashboard": "Vercel",
     "inngestDashboard": "Inngest",
     "googleAiStudioDashboard": "Google AI Studio",
-    "cloudflareR2Dashboard": "Cloudflare R2"
+    "cloudflareR2Dashboard": "Cloudflare R2",
+    "loading": "Chargement des données..."
   }
 }

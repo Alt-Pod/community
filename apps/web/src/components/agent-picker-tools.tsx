@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { ToolBadge } from "@community/ui";
+import { LoadingIndicator, ToolBadge } from "@community/ui";
 import { useToolDefinitions, useAgentTools } from "@/requests/useTools";
 
 interface AgentPickerToolsProps {
@@ -14,7 +14,8 @@ export default function AgentPickerTools({ agentId }: AgentPickerToolsProps) {
   const { data: allTools } = useToolDefinitions();
   const { data: agentToolIds } = useAgentTools(agentId ?? null);
 
-  if (!allTools || allTools.length === 0) return null;
+  if (!allTools) return <LoadingIndicator variant="inline" />;
+  if (allTools.length === 0) return null;
 
   const tools = agentId && agentToolIds
     ? allTools.filter((tool) => agentToolIds.includes(tool.id))

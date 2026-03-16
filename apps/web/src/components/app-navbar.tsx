@@ -64,12 +64,22 @@ export default function AppNavbar() {
       active: pathname.startsWith("/agents"),
     },
     {
+      href: "/tools",
+      label: t("tools"),
+      active: pathname.startsWith("/tools"),
+    },
+    {
       href: "/planning",
       label: t("planning"),
       active: pathname.startsWith("/planning"),
     },
     ...(session?.user?.role === USER_ROLES.ADMIN
       ? [
+          {
+            href: "/admin",
+            label: t("admin"),
+            active: pathname.startsWith("/admin"),
+          },
           {
             href: "/billing",
             label: t("billing"),

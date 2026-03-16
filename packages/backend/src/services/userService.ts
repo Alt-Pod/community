@@ -107,6 +107,39 @@ export class UserService {
     await this.userRepository.updateAvatarUrl(userId, null);
   }
 
+  async updateRole(userId: string, role: string) {
+    const validRoles = ["admin", "user"];
+    if (!validRoles.includes(role)) throw new Error("INVALID_ROLE");
+
+    const updated = await this.userRepository.updateRole(userId, role);
+    if (!updated) throw new Error("USER_NOT_FOUND");
+    return updated;
+  }
+
+  async listUsers() {
+    return this.userRepository.findAll();
+  }
+
+  async adminResetPassword(userId: string, newPassword: string) {
+    const user = await this.userRepository.findById(userId);
+    if (!user) throw new Error("USER_NOT_FOUND");
+
+    const hash = await bcrypt.hash(newPassword, 12);
+    await this.userRepository.updatePasswordHash(userId, hash);
+  }
+
+  async deleteUser(userId: string) {
+    const profile = await this.userRepository.findProfileById(userId);
+    if (!profile) throw new Error("USER_NOT_FOUND");
+
+    if (profile.avatar_url) {
+      await deleteFromStorage(profile.avatar_url);
+    }
+
+    const deleted = await this.userRepository.deleteById(userId);
+    if (!deleted) throw new Error("USER_NOT_FOUND");
+  }
+
   async register(email: string, password: string, name?: string) {
     const existing = await this.userRepository.findByEmail(email);
     if (existing) return { alreadyExists: true };

@@ -64,6 +64,33 @@ export class UserRepository {
     `;
   }
 
+  async updateRole(id: string, role: string) {
+    const [user] = await this.sql`
+      UPDATE ${this.sql(this.table)}
+      SET role = ${role}
+      WHERE id = ${id}
+      RETURNING id, email, name, role, created_at
+    `;
+    return user ?? null;
+  }
+
+  async findAll() {
+    return this.sql`
+      SELECT id, email, name, role, created_at
+      FROM ${this.sql(this.table)}
+      ORDER BY created_at DESC
+    `;
+  }
+
+  async deleteById(id: string) {
+    const [deleted] = await this.sql`
+      DELETE FROM ${this.sql(this.table)}
+      WHERE id = ${id}
+      RETURNING id
+    `;
+    return deleted ?? null;
+  }
+
   async create(data: { email: string; passwordHash: string; name?: string | null }) {
     const [user] = await this.sql`
       INSERT INTO ${this.sql(this.table)} (email, password_hash, name)

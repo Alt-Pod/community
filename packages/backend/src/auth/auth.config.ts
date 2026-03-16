@@ -22,7 +22,10 @@ export const authConfig: NextAuthConfig = {
       if (!isLoggedIn) return false;
 
       // Admin-only routes
-      if (nextUrl.pathname.startsWith("/billing")) {
+      if (
+        nextUrl.pathname.startsWith("/billing") ||
+        nextUrl.pathname.startsWith("/admin")
+      ) {
         const role = auth?.user?.role;
         if (role !== USER_ROLES.ADMIN) {
           return Response.redirect(new URL("/", nextUrl));

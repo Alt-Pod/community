@@ -52,6 +52,18 @@ export default async function Home() {
               </p>
             </Link>
 
+            <Link
+              href="/tools"
+              className="group p-6 rounded-lg bg-surface-primary border border-border-subtle shadow-elevated hover:shadow-card hover:border-accent-gold-muted transition-all duration-150"
+            >
+              <h2 className="font-heading text-xl font-semibold text-text-primary group-hover:text-accent-gold transition-colors duration-150">
+                {t("tools.title")}
+              </h2>
+              <p className="mt-1 text-sm text-text-secondary">
+                {t("tools.description")}
+              </p>
+            </Link>
+
             {session?.user?.role === USER_ROLES.ADMIN && (
               <Link
                 href="/billing"

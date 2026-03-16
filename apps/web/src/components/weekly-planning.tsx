@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Card, StatusBadge } from "@community/ui";
+import { Card, LoadingIndicator, StatusBadge } from "@community/ui";
 import { ACTIVITIES } from "@community/shared";
 import type { ScheduledActivity } from "@community/shared";
 import { useScheduledActivities } from "@/requests/useScheduledActivities";
@@ -61,11 +61,11 @@ export default function WeeklyPlanning() {
   const tHome = useTranslations("home");
 
   const { start, end, days } = useMemo(() => getWeekRange(), []);
-  const { data: activities = [] } = useScheduledActivities(
+  const { data: activities = [], isLoading: activitiesLoading } = useScheduledActivities(
     start.toISOString(),
     end.toISOString()
   );
-  const { data: agents = [] } = useAgents();
+  const { data: agents = [], isLoading: agentsLoading } = useAgents();
 
   const agentNames = useMemo(() => {
     const map: Record<string, string> = {};
@@ -104,6 +104,10 @@ export default function WeeklyPlanning() {
           {tHome("planning.viewAll")}
         </Link>
       </div>
+
+      {(activitiesLoading || agentsLoading) && (
+        <LoadingIndicator variant="inline" className="mb-4" />
+      )}
 
       {/* Week strip */}
       <div className="grid grid-cols-7 gap-1 mb-6">

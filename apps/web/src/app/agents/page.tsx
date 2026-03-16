@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Button, Heading } from "@community/ui";
+import { Button, Heading, LoadingIndicator } from "@community/ui";
 import { useAgents, useCreateAgent } from "@/requests/useAgents";
 import AgentForm from "@/components/agent-form";
 import AgentPickerTools from "@/components/agent-picker-tools";
@@ -42,7 +42,7 @@ export default function AgentsPage() {
       )}
 
       {isLoading && (
-        <p className="text-text-tertiary text-sm">{t("loading")}</p>
+        <LoadingIndicator variant="inline" text={t("loading")} />
       )}
 
       <div className="space-y-4">

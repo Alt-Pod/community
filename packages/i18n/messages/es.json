@@ -6,7 +6,9 @@
   "nav": {
     "chat": "Chat",
     "agents": "Agentes",
+    "tools": "Herramientas",
     "planning": "Planificación",
+    "admin": "Admin",
     "billing": "Facturación",
     "logout": "Cerrar sesión",
     "profile": "Perfil"
@@ -26,6 +28,10 @@
       "title": "Esta semana",
       "viewAll": "Ver calendario completo",
       "today": "Hoy"
+    },
+    "tools": {
+      "title": "Herramientas",
+      "description": "Explora las herramientas disponibles y ve qué agentes las usan."
     },
     "billing": {
       "title": "Facturación",
@@ -146,7 +152,8 @@
       "completed": "Completado",
       "failed": "Fallido",
       "cancelled": "Cancelado"
-    }
+    },
+    "loading": "Cargando actividades..."
   },
   "tools": {
     "status": {
@@ -245,6 +252,10 @@
         "name": "Listar herramientas",
         "description": "Listar todas las herramientas disponibles y sus identificadores"
       },
+      "getAgentDetails": {
+        "name": "Detalles del agente",
+        "description": "Obtener los detalles de un agente, incluyendo las herramientas asignadas"
+      },
       "myJobs": {
         "name": "Mis trabajos",
         "description": "Listar tus trabajos en segundo plano"
@@ -316,6 +327,13 @@
       }
     }
   },
+  "toolsPage": {
+    "title": "Herramientas",
+    "loading": "Cargando herramientas...",
+    "empty": "No hay herramientas disponibles.",
+    "noAgents": "No asignado a ningún agente",
+    "requiresApproval": "Requiere aprobación"
+  },
   "profile": {
     "title": "Perfil",
     "subtitle": "Gestiona la configuración de tu cuenta",
@@ -352,6 +370,49 @@
       "errorLength": "La contraseña debe tener al menos 8 caracteres"
     }
   },
+  "admin": {
+    "title": "Gestión de usuarios",
+    "createButton": "Añadir usuario",
+    "loading": "Cargando usuarios...",
+    "empty": "No se encontraron usuarios.",
+    "role": "Rol",
+    "roleUser": "Usuario",
+    "roleAdmin": "Admin",
+    "createdAt": "Registrado",
+    "form": {
+      "email": "Email",
+      "emailPlaceholder": "usuario@ejemplo.com",
+      "password": "Contraseña",
+      "passwordPlaceholder": "Mínimo 8 caracteres",
+      "name": "Nombre",
+      "namePlaceholder": "Nombre completo (opcional)",
+      "create": "Crear usuario",
+      "creating": "Creando...",
+      "cancel": "Cancelar"
+    },
+    "resetPassword": {
+      "button": "Restablecer contraseña",
+      "title": "Restablecer contraseña",
+      "newPassword": "Nueva contraseña",
+      "newPasswordPlaceholder": "Mínimo 8 caracteres",
+      "submit": "Actualizar contraseña",
+      "submitting": "Actualizando...",
+      "success": "Contraseña actualizada",
+      "cancel": "Cancelar"
+    },
+    "delete": {
+      "button": "Eliminar",
+      "confirm": "¿Estás seguro de que quieres eliminar este usuario? Esta acción no se puede deshacer.",
+      "confirmButton": "Sí, eliminar",
+      "cancel": "Cancelar",
+      "selfError": "No puedes eliminar tu propia cuenta"
+    },
+    "errors": {
+      "createFailed": "Error al crear el usuario",
+      "deleteFailed": "Error al eliminar el usuario",
+      "resetFailed": "Error al restablecer la contraseña"
+    }
+  },
   "billing": {
     "title": "Facturación y Uso",
     "subtitle": "Monitorea los costos y el uso de tokens de tu plataforma",
@@ -375,6 +436,7 @@
     "vercelDashboard": "Vercel",
     "inngestDashboard": "Inngest",
     "googleAiStudioDashboard": "Google AI Studio",
-    "cloudflareR2Dashboard": "Cloudflare R2"
+    "cloudflareR2Dashboard": "Cloudflare R2",
+    "loading": "Cargando datos de uso..."
   }
 }

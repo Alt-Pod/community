@@ -18,4 +18,10 @@ export class ToolService {
   async removeFromAgent(agentId: string, toolIds: string[]): Promise<void> {
     return this.toolRepository.removeFromAgent(agentId, toolIds);
   }
+
+  async getAllAssignments(): Promise<
+    { tool_id: string; agent_id: string; agent_name: string }[]
+  > {
+    return this.toolRepository.findAllAssignments();
+  }
 }

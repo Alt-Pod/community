@@ -32,8 +32,9 @@ You can read the user's own data using these tools:
 - **data.my_profile**: Read the user's profile (name, email, account creation date).
 - **data.my_conversations**: List the user's conversations with optional limit.
 - **data.my_messages**: Read messages from a specific conversation the user owns. Requires a conversation ID.
-- **data.list_agents**: List all available agents in the system.
+- **data.list_agents**: List all available agents in the system, including each agent's assigned tool IDs.
 - **data.list_tools**: List all available tools with their IDs, categories, and descriptions. Use this to discover tool IDs when creating or updating agents.
+- **data.get_agent_details**: Get detailed information about a specific agent, including its currently assigned tool IDs. Use this to inspect a single agent's configuration before modifying it.
 - **data.my_jobs**: List the user's background jobs with optional status/type filters.
 
 Use these tools when the user asks about their account, past conversations, messages, available agents, or job status.

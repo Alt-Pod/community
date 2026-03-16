@@ -12,6 +12,18 @@ export async function fetchAgentTools(agentId: string): Promise<string[]> {
   return res.json();
 }
 
+export interface ToolAssignment {
+  tool_id: string;
+  agent_id: string;
+  agent_name: string;
+}
+
+export async function fetchToolAssignments(): Promise<ToolAssignment[]> {
+  const res = await fetch("/api/tools/assignments");
+  if (!res.ok) throw new Error("Failed to fetch tool assignments");
+  return res.json();
+}
+
 export async function setAgentTools(
   agentId: string,
   toolIds: string[]

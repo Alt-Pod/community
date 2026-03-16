@@ -6,7 +6,9 @@
   "nav": {
     "chat": "Chat",
     "agents": "Agenti",
+    "tools": "Strumenti",
     "planning": "Pianificazione",
+    "admin": "Admin",
     "billing": "Fatturazione",
     "logout": "Disconnetti",
     "profile": "Profilo"
@@ -26,6 +28,10 @@
       "title": "Questa settimana",
       "viewAll": "Vedi calendario completo",
       "today": "Oggi"
+    },
+    "tools": {
+      "title": "Strumenti",
+      "description": "Esplora gli strumenti disponibili e vedi quali agenti li utilizzano."
     },
     "billing": {
       "title": "Fatturazione",
@@ -146,7 +152,8 @@
       "completed": "Completato",
       "failed": "Fallito",
       "cancelled": "Annullato"
-    }
+    },
+    "loading": "Caricamento attività..."
   },
   "tools": {
     "status": {
@@ -245,6 +252,10 @@
         "name": "Elenco strumenti",
         "description": "Elencare tutti gli strumenti disponibili e i loro identificativi"
       },
+      "getAgentDetails": {
+        "name": "Dettagli agente",
+        "description": "Ottenere i dettagli di un agente, inclusi gli strumenti assegnati"
+      },
       "myJobs": {
         "name": "I miei lavori",
         "description": "Elencare i tuoi lavori in background"
@@ -316,6 +327,13 @@
       }
     }
   },
+  "toolsPage": {
+    "title": "Strumenti",
+    "loading": "Caricamento strumenti...",
+    "empty": "Nessuno strumento disponibile.",
+    "noAgents": "Non assegnato a nessun agente",
+    "requiresApproval": "Richiede approvazione"
+  },
   "profile": {
     "title": "Profilo",
     "subtitle": "Gestisci le impostazioni del tuo account",
@@ -352,6 +370,49 @@
       "errorLength": "La password deve contenere almeno 8 caratteri"
     }
   },
+  "admin": {
+    "title": "Gestione utenti",
+    "createButton": "Aggiungi utente",
+    "loading": "Caricamento utenti...",
+    "empty": "Nessun utente trovato.",
+    "role": "Ruolo",
+    "roleUser": "Utente",
+    "roleAdmin": "Admin",
+    "createdAt": "Iscritto",
+    "form": {
+      "email": "Email",
+      "emailPlaceholder": "utente@esempio.com",
+      "password": "Password",
+      "passwordPlaceholder": "Minimo 8 caratteri",
+      "name": "Nome",
+      "namePlaceholder": "Nome completo (opzionale)",
+      "create": "Crea utente",
+      "creating": "Creazione...",
+      "cancel": "Annulla"
+    },
+    "resetPassword": {
+      "button": "Reimposta password",
+      "title": "Reimposta password",
+      "newPassword": "Nuova password",
+      "newPasswordPlaceholder": "Minimo 8 caratteri",
+      "submit": "Aggiorna password",
+      "submitting": "Aggiornamento...",
+      "success": "Password aggiornata",
+      "cancel": "Annulla"
+    },
+    "delete": {
+      "button": "Elimina",
+      "confirm": "Sei sicuro di voler eliminare questo utente? Questa azione è irreversibile.",
+      "confirmButton": "Sì, elimina",
+      "cancel": "Annulla",
+      "selfError": "Non puoi eliminare il tuo account"
+    },
+    "errors": {
+      "createFailed": "Impossibile creare l'utente",
+      "deleteFailed": "Impossibile eliminare l'utente",
+      "resetFailed": "Impossibile reimpostare la password"
+    }
+  },
   "billing": {
     "title": "Fatturazione e Utilizzo",
     "subtitle": "Monitora i costi e l'utilizzo dei token della piattaforma",
@@ -375,6 +436,7 @@
     "vercelDashboard": "Vercel",
     "inngestDashboard": "Inngest",
     "googleAiStudioDashboard": "Google AI Studio",
-    "cloudflareR2Dashboard": "Cloudflare R2"
+    "cloudflareR2Dashboard": "Cloudflare R2",
+    "loading": "Caricamento dati di utilizzo..."
   }
 }

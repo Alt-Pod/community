@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Button } from "@community/ui";
+import { Button, LoadingIndicator } from "@community/ui";
 import { useToolDefinitions, useAgentTools, useSetAgentTools } from "@/requests/useTools";
 
 interface AgentToolManagerProps {
@@ -29,7 +29,7 @@ export default function AgentToolManager({ agentId }: AgentToolManagerProps) {
     setToolsMutation.mutate({ agentId, toolIds: updated });
   }
 
-  if (!allTools) return null;
+  if (!allTools) return <LoadingIndicator variant="inline" />;
 
   return (
     <div>
