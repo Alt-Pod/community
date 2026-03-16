@@ -13,7 +13,7 @@ export function MessageBubble({ role, children }: MessageBubbleProps) {
       <div
         className={`rounded-md px-4 py-2.5 text-sm ${
           isUser
-            ? "max-w-[65%] bg-accent-gold-pale border border-accent-gold-muted/40 text-text-primary whitespace-pre-wrap"
+            ? "max-w-[85%] md:max-w-[65%] bg-accent-gold-pale border border-accent-gold-muted/40 text-text-primary whitespace-pre-wrap"
             : "bg-surface-primary shadow-elevated text-text-primary border border-border-subtle"
         }`}
         style={

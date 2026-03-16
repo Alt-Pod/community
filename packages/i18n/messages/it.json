@@ -11,7 +11,9 @@
     "admin": "Admin",
     "billing": "Fatturazione",
     "logout": "Disconnetti",
-    "profile": "Profilo"
+    "profile": "Profilo",
+    "menuOpen": "Apri menu",
+    "menuClose": "Chiudi menu"
   },
   "home": {
     "title": "Community",
@@ -65,7 +67,8 @@
       "title": "Conversazioni",
       "newButton": "Nuovo",
       "untitled": "Senza titolo",
-      "empty": "Nessuna conversazione ancora."
+      "empty": "Nessuna conversazione ancora.",
+      "toggle": "Mostra conversazioni"
     },
     "header": {
       "title": "Community"

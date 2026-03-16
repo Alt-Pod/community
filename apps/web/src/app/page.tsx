@@ -19,15 +19,15 @@ export default async function Home() {
     <div className="min-h-screen bg-gradient-to-br from-surface-primary via-surface-secondary to-accent-gold-pale/30">
       <AppNavbar />
       <main className="py-10" style={{ minHeight: "calc(100vh - 53px)" }}>
-        <div className="w-full max-w-3xl mx-auto px-6">
+        <div className="w-full max-w-3xl mx-auto px-4 md:px-6">
           <div className="text-center mb-12">
-            <h1 className="font-heading text-4xl font-semibold tracking-tight text-text-primary">
+            <h1 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight text-text-primary">
               {t("title")}
             </h1>
             <p className="mt-3 text-text-secondary">{t("subtitle")}</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
             <Link
               href="/chat"
               className="group p-6 rounded-lg bg-surface-primary border border-border-subtle shadow-elevated hover:shadow-card hover:border-accent-gold-muted transition-all duration-150"
@@ -67,7 +67,7 @@ export default async function Home() {
             {session?.user?.role === USER_ROLES.ADMIN && (
               <Link
                 href="/billing"
-                className="group p-6 rounded-lg bg-surface-primary border border-border-subtle shadow-elevated hover:shadow-card hover:border-accent-gold-muted transition-all duration-150 col-span-2"
+                className="group p-6 rounded-lg bg-surface-primary border border-border-subtle shadow-elevated hover:shadow-card hover:border-accent-gold-muted transition-all duration-150 md:col-span-2"
               >
                 <h2 className="font-heading text-xl font-semibold text-text-primary group-hover:text-accent-gold transition-colors duration-150">
                   {t("billing.title")}

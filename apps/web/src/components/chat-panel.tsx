@@ -45,7 +45,7 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
   const [pendingAgentId, setPendingAgentId] = useState<string | null | undefined>(
     conversationId ? null : undefined
   );
-  const sidebarOpen = true;
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [initialLoaded, setInitialLoaded] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -123,6 +123,7 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
   const loadConversation = useCallback(async (id: string) => {
     const msgs = await prefetchMessages(id);
     setPendingAgentId(null); // not in picker mode
+    setSidebarOpen(false); // close sidebar (overlay on mobile)
     setMessages(
       msgs.map((m: DbMessage) => ({
         id: m.id,
@@ -197,10 +198,25 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
     <SidebarLayout
       navbar={<AppNavbar />}
       sidebarOpen={sidebarOpen}
+      onCloseSidebar={() => setSidebarOpen(false)}
+      sidebarToggle={
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 text-sm text-text-secondary hover:text-text-primary border-b border-border-subtle"
+          aria-label={t("sidebar.toggle")}
+        >
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <line x1="3" y1="5" x2="17" y2="5" />
+            <line x1="3" y1="10" x2="17" y2="10" />
+            <line x1="3" y1="15" x2="17" y2="15" />
+          </svg>
+          {t("sidebar.title")}
+        </button>
+      }
       sidebar={sidebarContent}
       footer={
         !showAgentPicker ? (
-          <form onSubmit={onSubmit} className="px-8 py-5 border-t border-border-subtle">
+          <form onSubmit={onSubmit} className="px-4 py-3 md:px-8 md:py-5 border-t border-border-subtle">
             <div className="flex gap-3 items-end">
               <TextArea
                 value={input}
@@ -234,7 +250,7 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
         <>
           {error && <ErrorBanner message={error.message} />}
 
-          <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-thin px-8 py-6 space-y-6">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-thin px-4 py-4 md:px-8 md:py-6 space-y-6">
             {messages.length === 0 && <EmptyState message={t("messages.empty")} />}
             {messages.map((m) => {
               const parts = m.parts ?? [];

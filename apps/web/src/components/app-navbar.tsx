@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -51,6 +52,12 @@ export default function AppNavbar() {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const { data: session } = useSession();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Auto-close mobile menu on navigation
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   const links = [
     {
@@ -94,6 +101,10 @@ export default function AppNavbar() {
       brand="Community"
       links={links}
       linkComponent={Link}
+      mobileMenuOpen={mobileMenuOpen}
+      onMobileMenuToggle={() => setMobileMenuOpen((v) => !v)}
+      menuOpenLabel={t("menuOpen")}
+      menuCloseLabel={t("menuClose")}
       right={
         <div className="flex items-center gap-2">
           <NavbarAvatar />

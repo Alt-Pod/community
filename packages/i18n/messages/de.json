@@ -11,7 +11,9 @@
     "admin": "Admin",
     "billing": "Abrechnung",
     "logout": "Abmelden",
-    "profile": "Profil"
+    "profile": "Profil",
+    "menuOpen": "Menü öffnen",
+    "menuClose": "Menü schließen"
   },
   "home": {
     "title": "Community",
@@ -65,7 +67,8 @@
       "title": "Unterhaltungen",
       "newButton": "Neu",
       "untitled": "Ohne Titel",
-      "empty": "Noch keine Unterhaltungen."
+      "empty": "Noch keine Unterhaltungen.",
+      "toggle": "Unterhaltungen anzeigen"
     },
     "header": {
       "title": "Community"

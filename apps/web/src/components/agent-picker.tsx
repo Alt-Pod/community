@@ -14,7 +14,7 @@ export default function AgentPicker({ agents, onSelect }: AgentPickerProps) {
   const t = useTranslations("chat.agentPicker");
 
   return (
-    <div className="flex-1 overflow-y-auto scrollbar-thin px-8 py-12">
+    <div className="flex-1 overflow-y-auto scrollbar-thin px-4 py-8 md:px-8 md:py-12">
       <div className="flex flex-col items-center">
         <Heading as="h2" className="text-2xl mb-2">
           {t("title")}

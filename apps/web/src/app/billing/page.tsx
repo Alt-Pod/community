@@ -34,7 +34,7 @@ export default function BillingPage() {
   return (
     <div className="min-h-screen bg-surface-primary">
       <AppNavbar />
-      <div className="max-w-3xl mx-auto px-6 py-10">
+      <div className="max-w-3xl mx-auto px-4 md:px-6 py-6 md:py-10">
         <div className="mb-8">
           <Heading as="h1" className="text-2xl">
             {t("title")}
