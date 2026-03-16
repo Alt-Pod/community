@@ -2,14 +2,25 @@
 
 import { useTranslations } from "next-intl";
 import { ToolBadge } from "@community/ui";
-import { useToolDefinitions } from "@/requests/useTools";
+import { useToolDefinitions, useAgentTools } from "@/requests/useTools";
 
-export default function AgentPickerTools() {
+interface AgentPickerToolsProps {
+  agentId?: string;
+}
+
+export default function AgentPickerTools({ agentId }: AgentPickerToolsProps) {
   const t = useTranslations("chat.agentPicker");
   const tRoot = useTranslations();
-  const { data: tools } = useToolDefinitions();
+  const { data: allTools } = useToolDefinitions();
+  const { data: agentToolIds } = useAgentTools(agentId ?? null);
 
-  if (!tools || tools.length === 0) return null;
+  if (!allTools || allTools.length === 0) return null;
+
+  const tools = agentId && agentToolIds
+    ? allTools.filter((tool) => agentToolIds.includes(tool.id))
+    : allTools;
+
+  if (tools.length === 0) return null;
 
   return (
     <div className="mt-3 border-t border-border-subtle pt-3">

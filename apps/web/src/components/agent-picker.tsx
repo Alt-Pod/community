@@ -50,6 +50,7 @@ export default function AgentPicker({ agents, onSelect }: AgentPickerProps) {
                 {agent.description}
               </p>
             )}
+            <AgentPickerTools agentId={agent.id} />
           </button>
         ))}
       </div>
