@@ -1,0 +1,29 @@
+import { tool, zodSchema } from "ai";
+import { z } from "zod";
+import { agentService } from "@community/backend";
+import type { CommunityToolDefinition } from "../types";
+
+export const listAgentsDataTool: CommunityToolDefinition = {
+  meta: {
+    id: "data.list_agents",
+    category: "data",
+    displayName: "tools.data.listAgents.name",
+    description: "List all available agents",
+    requiresConfirmation: false,
+  },
+  tool: tool({
+    description:
+      "List all active agents in the system with their names and descriptions. Does not expose internal system prompts.",
+    inputSchema: zodSchema(z.object({})),
+    execute: async () => {
+      const agents = await agentService.getAll();
+      return agents.map((a) => ({
+        id: a.id,
+        name: a.name,
+        description: a.description,
+        status: a.status,
+        created_at: a.created_at,
+      }));
+    },
+  }),
+};

@@ -4,6 +4,7 @@ import { useChat } from "@ai-sdk/react";
 import {
   DefaultChatTransport,
   lastAssistantMessageIsCompleteWithApprovalResponses,
+  lastAssistantMessageIsCompleteWithToolCalls,
 } from "ai";
 import type { UIMessage } from "ai";
 import { useState, useRef, useEffect, type FormEvent } from "react";
@@ -32,6 +33,7 @@ import AppNavbar from "@/components/app-navbar";
 import ToolCallCard from "@/components/tool-call-card";
 import ToolConfirmationCard from "@/components/tool-confirmation-card";
 import ToolResultCard from "@/components/tool-result-card";
+import PromptToolRenderer from "@/components/prompt-tool-renderer";
 
 export default function ChatPanel() {
   const t = useTranslations("chat");
@@ -79,9 +81,11 @@ export default function ChatPanel() {
     })
   );
 
-  const { messages, setMessages, sendMessage, addToolApprovalResponse, status, error } = useChat({
+  const { messages, setMessages, sendMessage, addToolApprovalResponse, addToolOutput, status, error } = useChat({
     transport: transportRef.current,
-    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
+    sendAutomaticallyWhen: (opts) =>
+      lastAssistantMessageIsCompleteWithApprovalResponses(opts) ||
+      lastAssistantMessageIsCompleteWithToolCalls(opts),
     onFinish: () => {
       queryClient.invalidateQueries({ queryKey: ["agents"] });
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
@@ -217,14 +221,8 @@ export default function ChatPanel() {
 
               return (
                 <div key={m.id} className="min-w-0">
-                  {text && (
-                    <MessageBubble role={m.role as "user" | "assistant"}>
-                      {m.role === "assistant" ? (
-                        <MarkdownMessage content={text} />
-                      ) : (
-                        text
-                      )}
-                    </MessageBubble>
+                  {m.role === "user" && text && (
+                    <MessageBubble role="user">{text}</MessageBubble>
                   )}
                   {toolParts.map((part, i) => {
                     const toolPart = part as unknown as {
@@ -242,6 +240,25 @@ export default function ChatPanel() {
                       };
                     };
                     const toolName = toolPart.type.replace(/^tool-/, "");
+
+                    if (toolName.startsWith("prompt.")) {
+                      return (
+                        <PromptToolRenderer
+                          key={toolPart.toolCallId || i}
+                          toolName={toolName}
+                          input={toolPart.input ?? {}}
+                          state={toolPart.state}
+                          output={toolPart.output}
+                          onSubmit={(output) =>
+                            addToolOutput({
+                              tool: toolPart.type as any,
+                              toolCallId: toolPart.toolCallId,
+                              output: output as any,
+                            })
+                          }
+                        />
+                      );
+                    }
 
                     if (toolPart.state === "approval-requested") {
                       return (
@@ -302,6 +319,11 @@ export default function ChatPanel() {
                       />
                     );
                   })}
+                  {m.role === "assistant" && text && (
+                    <MessageBubble role="assistant">
+                      <MarkdownMessage content={text} />
+                    </MessageBubble>
+                  )}
                 </div>
               );
             })}

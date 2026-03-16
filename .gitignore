@@ -1,6 +1,17 @@
+# dependencies
 node_modules
+
+# build outputs
 .next
-.env
-.env.local
-.env.prod
+dist
 *.tsbuildinfo
+
+# environment files
+.env
+.env.*
+
+# OS files
+.DS_Store
+
+# Next.js auto-generated
+next-env.d.ts

@@ -152,6 +152,78 @@
         "name": "Eliminar agente",
         "description": "Eliminar permanentemente un agente"
       }
+    },
+    "knowledge": {
+      "saveEntry": {
+        "name": "Guardar conocimiento",
+        "description": "Guardar un dato o información en la base de conocimientos"
+      },
+      "getEntries": {
+        "name": "Consultar conocimientos",
+        "description": "Recuperar entradas de la base de conocimientos"
+      },
+      "deleteEntry": {
+        "name": "Eliminar conocimiento",
+        "description": "Eliminar una entrada de la base de conocimientos"
+      }
+    },
+    "github": {
+      "readFile": {
+        "name": "Leer archivo",
+        "description": "Leer un archivo del repositorio de GitHub"
+      },
+      "listDirectory": {
+        "name": "Listar directorio",
+        "description": "Listar el contenido de un directorio del repositorio de GitHub"
+      },
+      "searchCode": {
+        "name": "Buscar código",
+        "description": "Buscar patrones de código en el repositorio de GitHub"
+      }
+    },
+    "data": {
+      "myProfile": {
+        "name": "Mi perfil",
+        "description": "Leer tu perfil de usuario"
+      },
+      "myConversations": {
+        "name": "Mis conversaciones",
+        "description": "Listar tus conversaciones"
+      },
+      "myMessages": {
+        "name": "Mis mensajes",
+        "description": "Leer mensajes de una conversación"
+      },
+      "listAgents": {
+        "name": "Listar agentes",
+        "description": "Listar todos los agentes disponibles"
+      },
+      "myJobs": {
+        "name": "Mis trabajos",
+        "description": "Listar tus trabajos en segundo plano"
+      }
+    },
+    "prompt": {
+      "submit": "Enviar",
+      "select": {
+        "name": "Selección"
+      },
+      "multiSelect": {
+        "name": "Selección múltiple",
+        "minRequired": "Selecciona al menos {min}",
+        "maxAllowed": "Selecciona como máximo {max}"
+      },
+      "textInput": {
+        "name": "Entrada de texto"
+      },
+      "confirm": {
+        "name": "Confirmación",
+        "yes": "Sí",
+        "no": "No"
+      },
+      "form": {
+        "name": "Formulario"
+      }
     }
   }
 }

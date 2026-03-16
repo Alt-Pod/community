@@ -159,6 +159,67 @@ packages/i18n/
 - File name should match the component: `ChatPanel` → `chat-panel.tsx`
 - Small internal helper components (not exported) are acceptable only if they are tightly coupled to the main component and not reusable. When in doubt, extract to a separate file.
 
+## AI Tool Conventions
+
+Tools live in `packages/ai/src/tools/<category>/` and follow the `CommunityToolDefinition` pattern.
+
+### Tool Types
+
+| Type | `execute` | `meta.universal` | Example |
+|------|-----------|-------------------|---------|
+| **Server-side** | Yes — runs on server | `false` | `agents.create_agent` |
+| **Client-side (prompt)** | No — UI collects input, `addToolOutput()` returns result | `true` | `prompt.select` |
+| **Context-aware** | Via `toolFactory(ctx)` | `false` | Tools needing `userId`/`agentId` |
+
+### Approval Rules
+
+**Any tool that writes, updates, or deletes data must require user approval.** Set both:
+- `meta.requiresConfirmation: true` — frontend renders a warning-style confirmation card
+- `tool.needsApproval: true` — AI SDK pauses execution until the user approves or rejects
+
+Read-only tools (search, list, retrieve) execute automatically without approval.
+
+### Universal vs Assignable Tools
+
+- **Universal** (`meta.universal: true`): Automatically available to ALL agents. Not shown in the agent tool assignment UI. Injected by `buildToolsForAgent()` in the registry. The prompt tools (`prompt.select`, `prompt.multi_select`, `prompt.text_input`, `prompt.confirm`, `prompt.form`) are universal.
+- **Assignable** (`meta.universal: false` or omitted): Appear in `/api/tools` and can be assigned per-agent via the tool management UI.
+
+### Checklist: Adding a New Tool
+
+1. **Define the tool** in `packages/ai/src/tools/<category>/<tool-name>.ts`
+   - Create a `CommunityToolDefinition` with `meta` + `tool` (or `toolFactory`)
+   - Use `zodSchema()` for `inputSchema` (and `outputSchema` for client-side tools)
+   - Server-side tools: provide `execute` function
+   - Client-side tools: omit `execute`, provide `outputSchema`
+
+2. **Register the tool** — export and call `registerTool(def)` in the category's `index.ts`
+
+3. **Import the category** in `packages/ai/src/tools/index.ts` (if new category)
+
+4. **Wire the tool ID into the route** (if not universal)
+   - Add the tool ID to `allToolIds` in `apps/web/src/app/api/conversations/[id]/messages/route.ts` for the default assistant
+   - For agent-specific tools, ensure they can be assigned via the tool management UI
+   - Universal tools (`meta.universal: true`) are injected automatically — skip this step
+
+5. **Update the system prompt** in `packages/ai/src/context.ts`
+   - Add instructions explaining what the tool does and when to use it
+   - Add to the shared instructions block if universal, or to specific prompts if category-specific
+   - **Without this, the AI will not know it can use the tool** — it won't call tools it doesn't know about
+
+6. **Frontend rendering** (if the tool needs custom UI beyond the default cards)
+   - Create component(s) in `apps/web/src/components/`
+   - Add rendering branch in `chat-panel.tsx` tool parts section
+
+7. **Persistence** (for client-side tools)
+   - Ensure `buildPartsFromSteps` in `packages/backend/src/helpers/partsHelper.ts` handles the tool's parts correctly
+   - If the tool uses `addToolOutput`, the continuation POST must update stored parts (see `chatService.updatePromptToolOutputs`)
+
+8. **i18n** — Add translation keys to **all 5 locale files** under `tools.<category>.<toolName>`
+
+9. **Filter from assignment UI** (if universal) — Verify `GET /api/tools` excludes tools with `meta.universal: true`
+
+10. **Build** — Run `yarn build` to verify no type errors
+
 ## Key Rules
 
 - **shared** has zero runtime dependencies — types and constants only
@@ -169,6 +230,21 @@ packages/i18n/
 - Tailwind CSS lives in `apps/web` only — UI components use class names, app compiles CSS
 - `.env.local` lives at repo root, symlinked into `apps/web/`
 - `auth.config.ts` must stay Edge-compatible (no Node.js-only imports)
+
+## Migrations
+
+Migration files live in `migrations/` and are numbered sequentially (`001_init.sql`, `002_...`, etc.).
+
+**Every migration must be idempotent.** The migrate script re-runs all migrations from the start on every invocation — there is no migration-tracking table. If a statement is not idempotent, it will fail on the second run.
+
+- `CREATE TABLE` → use `CREATE TABLE IF NOT EXISTS`
+- `CREATE INDEX` → use `CREATE INDEX IF NOT EXISTS`
+- `ADD COLUMN` → use `ADD COLUMN IF NOT EXISTS`
+- `DROP COLUMN` → use `DROP COLUMN IF EXISTS`
+- `DROP CONSTRAINT` → use `DROP CONSTRAINT IF EXISTS`
+- `DROP INDEX` → use `DROP INDEX IF NOT EXISTS`
+
+Never use bare `ALTER TABLE ... ADD COLUMN` without `IF NOT EXISTS`.
 
 ## Commands
 

@@ -5,8 +5,9 @@ import {
   agentService,
   toolService,
   buildPartsFromSteps,
+  jobService,
 } from "@community/backend";
-import { streamAgentChat, streamDefaultChat, generateConversationTitle } from "@community/ai";
+import { streamAgentChat, streamDefaultChat } from "@community/ai";
 import type { UIMessage } from "ai";
 
 function extractText(msg: UIMessage): string {
@@ -62,22 +63,22 @@ export async function POST(
     await chatService.saveUserMessage(id, userMessage);
   }
 
+  // If this is a tool-output continuation (no new user message),
+  // update the stored assistant message with prompt tool outputs
+  if (!userMessage) {
+    await chatService.updatePromptToolOutputs(id, messages);
+  }
+
   // Background: generate a conversation title if not already done
   if (userMessage && !(conversation as { title_generated?: boolean }).title_generated) {
     const allMessages = await chatService.getMessages(id);
     if (allMessages.length >= 2) {
-      generateConversationTitle(
-        allMessages.map((m) => ({
-          role: String(m.role) as "user" | "assistant",
-          content: String(m.content),
-        }))
-      )
-        .then(async (title) => {
-          if (title) {
-            await conversationService.updateTitle(id, title);
-          }
-        })
-        .catch(() => {});
+      jobService.createJob(
+        "title.generate",
+        {},
+        { conversationId: id, userId: session.user.id },
+        { userId: session.user.id }
+      ).catch(() => {});
     }
   }
 
@@ -97,7 +98,10 @@ export async function POST(
       }
 
       const toolIds = await toolService.getToolsForAgent(agentId);
-      const result = await streamAgentChat(agent, messages, toolIds);
+      const result = await streamAgentChat(agent, messages, toolIds, {
+        userId: session.user.id,
+        agentId,
+      });
 
       Promise.resolve(result.steps)
         .then(async (steps) => {
@@ -117,8 +121,21 @@ export async function POST(
         "agents.update_agent",
         "agents.delete_agent",
         "google.web_search",
+        "knowledge.save_entry",
+        "knowledge.get_entries",
+        "knowledge.delete_entry",
+        "github.read_file",
+        "github.list_directory",
+        "github.search_code",
+        "data.my_profile",
+        "data.my_conversations",
+        "data.my_messages",
+        "data.list_agents",
+        "data.my_jobs",
       ];
-      const result = await streamDefaultChat(agents, messages, allToolIds);
+      const result = await streamDefaultChat(agents, messages, allToolIds, {
+        userId: session.user.id,
+      });
 
       Promise.resolve(result.steps)
         .then(async (steps) => {

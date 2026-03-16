@@ -152,6 +152,78 @@
         "name": "Elimina agente",
         "description": "Rimuovi permanentemente un agente"
       }
+    },
+    "knowledge": {
+      "saveEntry": {
+        "name": "Salva conoscenza",
+        "description": "Salvare un fatto o un'informazione nella base di conoscenze"
+      },
+      "getEntries": {
+        "name": "Consulta conoscenze",
+        "description": "Recuperare le voci della base di conoscenze"
+      },
+      "deleteEntry": {
+        "name": "Elimina conoscenza",
+        "description": "Eliminare una voce dalla base di conoscenze"
+      }
+    },
+    "github": {
+      "readFile": {
+        "name": "Leggi file",
+        "description": "Leggere un file dal repository GitHub"
+      },
+      "listDirectory": {
+        "name": "Elenca directory",
+        "description": "Elencare il contenuto di una directory del repository GitHub"
+      },
+      "searchCode": {
+        "name": "Cerca codice",
+        "description": "Cercare pattern di codice nel repository GitHub"
+      }
+    },
+    "data": {
+      "myProfile": {
+        "name": "Il mio profilo",
+        "description": "Leggere il tuo profilo utente"
+      },
+      "myConversations": {
+        "name": "Le mie conversazioni",
+        "description": "Elencare le tue conversazioni"
+      },
+      "myMessages": {
+        "name": "I miei messaggi",
+        "description": "Leggere i messaggi di una conversazione"
+      },
+      "listAgents": {
+        "name": "Elenco agenti",
+        "description": "Elencare tutti gli agenti disponibili"
+      },
+      "myJobs": {
+        "name": "I miei lavori",
+        "description": "Elencare i tuoi lavori in background"
+      }
+    },
+    "prompt": {
+      "submit": "Invia",
+      "select": {
+        "name": "Selezione"
+      },
+      "multiSelect": {
+        "name": "Selezione multipla",
+        "minRequired": "Seleziona almeno {min}",
+        "maxAllowed": "Seleziona al massimo {max}"
+      },
+      "textInput": {
+        "name": "Inserimento testo"
+      },
+      "confirm": {
+        "name": "Conferma",
+        "yes": "Sì",
+        "no": "No"
+      },
+      "form": {
+        "name": "Modulo"
+      }
     }
   }
 }

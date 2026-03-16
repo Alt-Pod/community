@@ -8,12 +8,14 @@ export async function GET() {
   }
 
   const metas = getAllToolMetas();
-  const tools = metas.map((m) => ({
-    id: m.id,
-    category: m.category,
-    name: m.displayName,
-    description: m.description,
-    requiresConfirmation: m.requiresConfirmation,
-  }));
+  const tools = metas
+    .filter((m) => !m.universal)
+    .map((m) => ({
+      id: m.id,
+      category: m.category,
+      name: m.displayName,
+      description: m.description,
+      requiresConfirmation: m.requiresConfirmation,
+    }));
   return Response.json(tools);
 }

@@ -152,6 +152,78 @@
         "name": "Agent löschen",
         "description": "Einen Agenten dauerhaft entfernen"
       }
+    },
+    "knowledge": {
+      "saveEntry": {
+        "name": "Wissen speichern",
+        "description": "Eine Tatsache oder Information in der Wissensdatenbank speichern"
+      },
+      "getEntries": {
+        "name": "Wissen abrufen",
+        "description": "Gespeicherte Wissenseinträge abrufen"
+      },
+      "deleteEntry": {
+        "name": "Wissen löschen",
+        "description": "Einen Wissenseintrag löschen"
+      }
+    },
+    "github": {
+      "readFile": {
+        "name": "Datei lesen",
+        "description": "Eine Datei aus dem GitHub-Repository lesen"
+      },
+      "listDirectory": {
+        "name": "Verzeichnis auflisten",
+        "description": "Inhalte eines Verzeichnisses im GitHub-Repository auflisten"
+      },
+      "searchCode": {
+        "name": "Code suchen",
+        "description": "Nach Code-Mustern im GitHub-Repository suchen"
+      }
+    },
+    "data": {
+      "myProfile": {
+        "name": "Mein Profil",
+        "description": "Dein Benutzerprofil lesen"
+      },
+      "myConversations": {
+        "name": "Meine Unterhaltungen",
+        "description": "Deine Unterhaltungen auflisten"
+      },
+      "myMessages": {
+        "name": "Meine Nachrichten",
+        "description": "Nachrichten einer Unterhaltung lesen"
+      },
+      "listAgents": {
+        "name": "Agenten auflisten",
+        "description": "Alle verfügbaren Agenten auflisten"
+      },
+      "myJobs": {
+        "name": "Meine Aufträge",
+        "description": "Deine Hintergrundaufträge auflisten"
+      }
+    },
+    "prompt": {
+      "submit": "Absenden",
+      "select": {
+        "name": "Auswahl"
+      },
+      "multiSelect": {
+        "name": "Mehrfachauswahl",
+        "minRequired": "Wähle mindestens {min}",
+        "maxAllowed": "Wähle höchstens {max}"
+      },
+      "textInput": {
+        "name": "Texteingabe"
+      },
+      "confirm": {
+        "name": "Bestätigung",
+        "yes": "Ja",
+        "no": "Nein"
+      },
+      "form": {
+        "name": "Formular"
+      }
     }
   }
 }

@@ -123,6 +123,63 @@ All API data fetching uses `@tanstack/react-query`. Never use raw `fetch` + `use
 - File name should match the component: `ChatPanel` → `chat-panel.tsx`
 - Small internal helper components (not exported) are acceptable only if they are tightly coupled to the main component and not reusable. When in doubt, extract to a separate file.
 
+## AI Tool Conventions
+
+Tools live in `packages/ai/src/tools/<category>/` and follow the `CommunityToolDefinition` pattern.
+
+### Tool Approval Rule
+
+**Any tool that writes, updates, or deletes data must require user approval before execution.** This ensures users always see a confirmation card in the chat UI before any mutation happens.
+
+To enforce this, set **both** flags:
+```ts
+{
+  meta: {
+    requiresConfirmation: true,   // Frontend metadata — UI styling hint
+  },
+  tool: tool({
+    needsApproval: true,          // AI SDK flag — pauses execution until user approves
+    execute: async (params) => { /* ... */ },
+  }),
+}
+```
+
+- `requiresConfirmation: true` — tells the frontend to render the tool card with a warning style
+- `needsApproval: true` — tells the AI SDK to pause and wait for user approval before calling `execute`
+
+Read-only tools (search, list, retrieve) should **not** require approval — they execute automatically.
+
+### Tool Context (`toolFactory`)
+
+Tools that need per-request context (e.g., `userId`, `agentId`) use `toolFactory` instead of `tool`:
+```ts
+{
+  meta: { /* ... */ },
+  toolFactory: (ctx: ToolContext) => tool({
+    execute: async (params) => {
+      // ctx.userId and ctx.agentId are available here
+    },
+  }),
+}
+```
+
+`ToolContext` is passed from the API route through the engine to `buildToolsForAgent(toolIds, ctx)`.
+
+## Migrations
+
+Migration files live in `migrations/` and are numbered sequentially (`001_init.sql`, `002_...`, etc.).
+
+**Every migration must be idempotent.** The migrate script re-runs all migrations from the start on every invocation — there is no migration-tracking table. If a statement is not idempotent, it will fail on the second run.
+
+- `CREATE TABLE` → use `CREATE TABLE IF NOT EXISTS`
+- `CREATE INDEX` → use `CREATE INDEX IF NOT EXISTS`
+- `ADD COLUMN` → use `ADD COLUMN IF NOT EXISTS`
+- `DROP COLUMN` → use `DROP COLUMN IF EXISTS`
+- `DROP CONSTRAINT` → use `DROP CONSTRAINT IF EXISTS`
+- `DROP INDEX` → use `DROP INDEX IF NOT EXISTS`
+
+Never use bare `ALTER TABLE ... ADD COLUMN` without `IF NOT EXISTS`.
+
 ## Import Rules
 
 - Always import types from `@community/shared`, not from sibling packages

@@ -3,15 +3,17 @@ import type { UIMessage } from "ai";
 import { getModel } from "./model";
 import { buildAgentSystemPrompt, buildDefaultSystemPrompt } from "./context";
 import { buildToolsForAgent } from "./tools";
+import type { ToolContext } from "./tools";
 import type { Agent } from "@community/shared";
 
 export async function streamAgentChat(
   agent: Agent,
   messages: UIMessage[],
-  toolIds: string[]
+  toolIds: string[],
+  ctx: ToolContext
 ) {
   const system = buildAgentSystemPrompt(agent);
-  const tools = buildToolsForAgent(toolIds);
+  const tools = buildToolsForAgent(toolIds, ctx);
   const modelMessages = await convertToModelMessages(messages, {
     ignoreIncompleteToolCalls: true,
   });
@@ -27,10 +29,11 @@ export async function streamAgentChat(
 export async function streamDefaultChat(
   agents: Agent[],
   messages: UIMessage[],
-  toolIds: string[]
+  toolIds: string[],
+  ctx: ToolContext
 ) {
   const system = buildDefaultSystemPrompt(agents);
-  const tools = buildToolsForAgent(toolIds);
+  const tools = buildToolsForAgent(toolIds, ctx);
   const modelMessages = await convertToModelMessages(messages, {
     ignoreIncompleteToolCalls: true,
   });

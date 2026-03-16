@@ -1,6 +1,10 @@
 // Import domain modules to trigger registration
 import "./agents";
 import "./google";
+import "./github";
+import "./knowledge";
+import "./prompt";
+import "./data";
 
 // Re-export registry API
 export {
@@ -9,4 +13,4 @@ export {
   getAllToolMetas,
   buildToolsForAgent,
 } from "./registry";
-export type { ToolMeta, CommunityToolDefinition } from "./types";
+export type { ToolMeta, ToolContext, CommunityToolDefinition } from "./types";

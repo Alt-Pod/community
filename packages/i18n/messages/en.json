@@ -152,6 +152,78 @@
         "name": "Delete agent",
         "description": "Permanently remove an agent"
       }
+    },
+    "knowledge": {
+      "saveEntry": {
+        "name": "Save knowledge",
+        "description": "Save a fact or piece of information to the knowledge base"
+      },
+      "getEntries": {
+        "name": "Retrieve knowledge",
+        "description": "Retrieve stored knowledge entries"
+      },
+      "deleteEntry": {
+        "name": "Delete knowledge",
+        "description": "Delete a knowledge entry"
+      }
+    },
+    "github": {
+      "readFile": {
+        "name": "Read file",
+        "description": "Read a file from the GitHub repository"
+      },
+      "listDirectory": {
+        "name": "List directory",
+        "description": "List contents of a directory in the GitHub repository"
+      },
+      "searchCode": {
+        "name": "Search code",
+        "description": "Search for code patterns in the GitHub repository"
+      }
+    },
+    "data": {
+      "myProfile": {
+        "name": "My profile",
+        "description": "Read your own user profile"
+      },
+      "myConversations": {
+        "name": "My conversations",
+        "description": "List your conversations"
+      },
+      "myMessages": {
+        "name": "My messages",
+        "description": "Read messages from a conversation"
+      },
+      "listAgents": {
+        "name": "List agents",
+        "description": "List all available agents"
+      },
+      "myJobs": {
+        "name": "My jobs",
+        "description": "List your background jobs"
+      }
+    },
+    "prompt": {
+      "submit": "Submit",
+      "select": {
+        "name": "Selection"
+      },
+      "multiSelect": {
+        "name": "Multi-selection",
+        "minRequired": "Select at least {min}",
+        "maxAllowed": "Select at most {max}"
+      },
+      "textInput": {
+        "name": "Text input"
+      },
+      "confirm": {
+        "name": "Confirmation",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "form": {
+        "name": "Form"
+      }
     }
   }
 }

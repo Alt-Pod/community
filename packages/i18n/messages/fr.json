@@ -152,6 +152,78 @@
         "name": "Supprimer un agent",
         "description": "Supprimer définitivement un agent"
       }
+    },
+    "knowledge": {
+      "saveEntry": {
+        "name": "Sauvegarder une connaissance",
+        "description": "Enregistrer un fait ou une information dans la base de connaissances"
+      },
+      "getEntries": {
+        "name": "Consulter les connaissances",
+        "description": "Récupérer les entrées de la base de connaissances"
+      },
+      "deleteEntry": {
+        "name": "Supprimer une connaissance",
+        "description": "Supprimer une entrée de la base de connaissances"
+      }
+    },
+    "github": {
+      "readFile": {
+        "name": "Lire un fichier",
+        "description": "Lire un fichier du dépôt GitHub"
+      },
+      "listDirectory": {
+        "name": "Lister un répertoire",
+        "description": "Lister le contenu d'un répertoire du dépôt GitHub"
+      },
+      "searchCode": {
+        "name": "Rechercher du code",
+        "description": "Rechercher des patterns de code dans le dépôt GitHub"
+      }
+    },
+    "data": {
+      "myProfile": {
+        "name": "Mon profil",
+        "description": "Lire votre profil utilisateur"
+      },
+      "myConversations": {
+        "name": "Mes conversations",
+        "description": "Lister vos conversations"
+      },
+      "myMessages": {
+        "name": "Mes messages",
+        "description": "Lire les messages d'une conversation"
+      },
+      "listAgents": {
+        "name": "Lister les agents",
+        "description": "Lister tous les agents disponibles"
+      },
+      "myJobs": {
+        "name": "Mes tâches",
+        "description": "Lister vos tâches en arrière-plan"
+      }
+    },
+    "prompt": {
+      "submit": "Envoyer",
+      "select": {
+        "name": "Sélection"
+      },
+      "multiSelect": {
+        "name": "Sélection multiple",
+        "minRequired": "Sélectionnez au moins {min}",
+        "maxAllowed": "Sélectionnez au plus {max}"
+      },
+      "textInput": {
+        "name": "Saisie de texte"
+      },
+      "confirm": {
+        "name": "Confirmation",
+        "yes": "Oui",
+        "no": "Non"
+      },
+      "form": {
+        "name": "Formulaire"
+      }
     }
   }
 }

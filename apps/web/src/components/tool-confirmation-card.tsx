@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Card, Button, StatusBadge } from "@community/ui";
 import ToolArgsDisplay from "./tool-args-display";
+import { getToolDisplayName } from "./tool-display-name";
 
 interface ToolConfirmationCardProps {
   toolName: string;
@@ -22,12 +23,13 @@ export default function ToolConfirmationCard({
   disabled,
 }: ToolConfirmationCardProps) {
   const t = useTranslations("tools");
+  const displayName = getToolDisplayName(toolName, t);
 
   return (
     <Card variant="warning" className="my-2 max-w-[65%]">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-mono text-text-secondary">
-          {toolName}
+        <span className="text-xs font-medium text-text-secondary">
+          {displayName}
         </span>
         <StatusBadge
           variant="pending"

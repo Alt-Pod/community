@@ -30,6 +30,14 @@ export class MessageRepository {
     return message;
   }
 
+  async updateParts(id: string, parts: unknown[]) {
+    await this.sql`
+      UPDATE ${this.sql(this.table)}
+      SET parts = ${this.sql.json(parts as JSONValue)}
+      WHERE id = ${id}
+    `;
+  }
+
   async deleteByConversationId(conversationId: string) {
     await this.sql`
       DELETE FROM ${this.sql(this.table)}

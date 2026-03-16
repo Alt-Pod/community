@@ -17,6 +17,7 @@
     "@community/ui": "*",
     "@tanstack/react-query": "^5.90.21",
     "ai": "^6.0.116",
+    "inngest": "^3.52.6",
     "next": "^16.1.6",
     "next-auth": "^5.0.0-beta.30",
     "next-intl": "^4.8.3",

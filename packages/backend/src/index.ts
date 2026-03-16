@@ -8,6 +8,9 @@ export { ConversationRepository } from "./repositories/conversationRepository";
 export { MessageRepository } from "./repositories/messageRepository";
 export { AgentRepository } from "./repositories/agentRepository";
 export { ToolRepository } from "./repositories/toolRepository";
+export { KnowledgeRepository } from "./repositories/knowledgeRepository";
+export { JobRepository } from "./repositories/jobRepository";
+export type { JobStatus } from "./repositories/jobRepository";
 
 // Services
 export { UserService } from "./services/userService";
@@ -15,9 +18,15 @@ export { ConversationService } from "./services/conversationService";
 export { ChatService } from "./services/chatService";
 export { AgentService } from "./services/agentService";
 export { ToolService } from "./services/toolService";
+export { KnowledgeService } from "./services/knowledgeService";
+export { JobService } from "./services/jobService";
 
 // Helpers
 export { buildPartsFromSteps } from "./helpers/partsHelper";
+
+// Inngest
+export { inngest } from "./inngest/client";
+export type { Events } from "./inngest/client";
 
 // Wired instances — ready to use in API routes
 import sql from "./db/client";
@@ -31,6 +40,10 @@ import { ChatService } from "./services/chatService";
 import { AgentService } from "./services/agentService";
 import { ToolRepository } from "./repositories/toolRepository";
 import { ToolService } from "./services/toolService";
+import { KnowledgeRepository } from "./repositories/knowledgeRepository";
+import { KnowledgeService } from "./services/knowledgeService";
+import { JobRepository } from "./repositories/jobRepository";
+import { JobService } from "./services/jobService";
 
 const userRepository = new UserRepository(sql, "users");
 const conversationRepository = new ConversationRepository(sql, "conversations");
@@ -43,6 +56,10 @@ const chatService = new ChatService(messageRepository);
 const agentService = new AgentService(agentRepository);
 const toolRepository = new ToolRepository(sql);
 const toolService = new ToolService(toolRepository);
+const knowledgeRepository = new KnowledgeRepository(sql, "knowledge_entries");
+const knowledgeService = new KnowledgeService(knowledgeRepository);
+const jobRepository = new JobRepository(sql, "jobs");
+const jobService = new JobService(jobRepository);
 
 export {
   userRepository,
@@ -55,4 +72,8 @@ export {
   chatService,
   agentService,
   toolService,
+  knowledgeRepository,
+  knowledgeService,
+  jobRepository,
+  jobService,
 };

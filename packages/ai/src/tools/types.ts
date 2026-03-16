@@ -6,9 +6,16 @@ export interface ToolMeta {
   displayName: string;
   description: string;
   requiresConfirmation: boolean;
+  universal?: boolean;
+}
+
+export interface ToolContext {
+  userId: string;
+  agentId?: string;
 }
 
 export interface CommunityToolDefinition {
   meta: ToolMeta;
-  tool: Tool;
+  tool?: Tool;
+  toolFactory?: (ctx: ToolContext) => Tool;
 }

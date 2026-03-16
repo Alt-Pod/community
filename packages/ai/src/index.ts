@@ -8,4 +8,5 @@ export {
   getAllToolMetas,
   buildToolsForAgent,
 } from "./tools";
-export type { ToolMeta, CommunityToolDefinition } from "./tools";
+export type { ToolMeta, ToolContext, CommunityToolDefinition } from "./tools";
+export { allFunctions as inngestFunctions } from "./tasks";

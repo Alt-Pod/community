@@ -1,5 +1,5 @@
 import type { Tool } from "ai";
-import type { CommunityToolDefinition, ToolMeta } from "./types";
+import type { CommunityToolDefinition, ToolContext, ToolMeta } from "./types";
 
 const toolRegistry = new Map<string, CommunityToolDefinition>();
 
@@ -20,12 +20,21 @@ export function getAllToolMetas(): ToolMeta[] {
 }
 
 export function buildToolsForAgent(
-  toolIds: string[]
+  toolIds: string[],
+  ctx?: ToolContext
 ): Record<string, Tool> {
+  const universalIds = Array.from(toolRegistry.values())
+    .filter((d) => d.meta.universal)
+    .map((d) => d.meta.id);
+  const allIds = [...new Set([...toolIds, ...universalIds])];
+
   const tools: Record<string, Tool> = {};
-  for (const id of toolIds) {
+  for (const id of allIds) {
     const def = toolRegistry.get(id);
-    if (def?.tool) {
+    if (!def) continue;
+    if (def.toolFactory && ctx) {
+      tools[id] = def.toolFactory(ctx);
+    } else if (def.tool) {
       tools[id] = def.tool;
     }
   }
