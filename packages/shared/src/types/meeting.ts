@@ -5,4 +5,5 @@ export interface MeetingPayload {
   timezone: string;
   conversation_id?: string;
   summary?: string;
+  summary_title?: string;
 }

@@ -77,13 +77,6 @@ export async function POST(req: Request) {
     );
   }
 
-  if (participant_agent_ids.length < 2) {
-    return Response.json(
-      { error: "At least 2 participant agents are required" },
-      { status: 400 }
-    );
-  }
-
   const payload: MeetingPayload = {
     participant_agent_ids,
     agenda,

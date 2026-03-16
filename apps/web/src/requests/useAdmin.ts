@@ -4,6 +4,7 @@ import {
   createUser,
   updateUserPassword,
   updateUserRole,
+  updateUserPreferences,
   deleteUser,
 } from "@/requests/api/adminApi";
 
@@ -36,6 +37,22 @@ export function useUpdateUserRole() {
   return useMutation({
     mutationFn: ({ id, role }: { id: string; role: string }) =>
       updateUserRole(id, role),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+    },
+  });
+}
+
+export function useUpdateUserPreferences() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: { timezone?: string; lang?: string };
+    }) => updateUserPreferences(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
     },

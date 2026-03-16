@@ -15,3 +15,4 @@ export { Card } from "./components/card";
 export { StatusBadge } from "./components/status-badge";
 export { ToolBadge } from "./components/tool-badge";
 export { SearchInput } from "./components/search-input";
+export { Collapsible } from "./components/collapsible";

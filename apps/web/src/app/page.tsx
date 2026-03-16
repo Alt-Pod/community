@@ -6,6 +6,7 @@ import Link from "next/link";
 import AppNavbar from "@/components/app-navbar";
 import WeeklyPlanning from "@/components/weekly-planning";
 import LiveMeetings from "@/components/live-meetings";
+import HomeNotifications from "@/components/home-notifications";
 
 export default async function Home() {
   const session = await auth();
@@ -78,6 +79,10 @@ export default async function Home() {
                 </p>
               </Link>
             )}
+          </div>
+
+          <div className="rounded-lg bg-surface-primary border border-border-subtle shadow-elevated p-6 mb-6">
+            <HomeNotifications />
           </div>
 
           <div className="rounded-lg bg-surface-primary border border-border-subtle shadow-elevated p-6 mb-6">

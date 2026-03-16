@@ -4,6 +4,7 @@ import { getModel } from "../model";
 import { MEETING_MASTER_PROMPT, MEETING_SUPERVISOR_PROMPT, SUMMARY_AGENT_PROMPT } from "./meetingAgents";
 import { getToolById } from "../tools";
 import type { Agent, DbMessage } from "@community/shared";
+import { DEFAULT_ASSISTANT_ID } from "@community/shared";
 import { chatService } from "@community/backend";
 
 // --- Types ---
@@ -26,7 +27,11 @@ export async function loadMeetingHistory(
   const agentMap = new Map(agents.map((a) => [a.id, a.name]));
 
   return messages.map((msg) => ({
-    speaker: msg.agent_id ? agentMap.get(msg.agent_id) ?? "Unknown Agent" : "Meeting Master",
+    speaker: msg.agent_id === DEFAULT_ASSISTANT_ID
+      ? "Assistant"
+      : msg.agent_id
+        ? agentMap.get(msg.agent_id) ?? "Unknown Agent"
+        : "Meeting Master",
     content: msg.content,
   }));
 }
@@ -212,7 +217,67 @@ export async function generateAgentTurnWithTools(
   return { text: result.text, toolActions };
 }
 
+// --- Default assistant turn ---
+
+export async function generateDefaultAssistantTurn(
+  systemPrompt: string,
+  history: { speaker: string; content: string }[],
+  agenda: string,
+  participantNames: string[],
+  tools: Record<string, Tool>
+): Promise<{ text: string; toolActions: ToolAction[] }> {
+  const meetingContext = `You are the default Assistant participating in a meeting. The agenda is:\n\n${agenda}\n\nOther participants: ${participantNames.join(", ")}\n\nContribute meaningfully to the discussion based on the conversation so far. Be concise and on-topic. You have access to a wide range of tools — use them if relevant to the discussion.`;
+
+  const transcript = formatTranscript(history);
+
+  const toolActions: ToolAction[] = [];
+
+  const result = await generateText({
+    model: getModel(),
+    system: `${systemPrompt}\n\n${meetingContext}`,
+    messages: [
+      {
+        role: "user",
+        content: `Here is the meeting transcript so far:\n\n${transcript}\n\nIt's your turn to speak. Respond to the discussion.`,
+      },
+    ],
+    tools: Object.keys(tools).length > 0 ? tools : undefined,
+  });
+
+  for (const s of result.steps) {
+    const stepAny = s as any;
+    if (stepAny.toolCalls) {
+      for (const tc of stepAny.toolCalls) {
+        const toolResult = stepAny.toolResults?.find(
+          (tr: any) => tr.toolCallId === tc.toolCallId
+        );
+        const resultValue = toolResult?.result;
+        const rejected = resultValue && typeof resultValue === "object" && "rejected" in resultValue;
+        toolActions.push({
+          toolName: tc.toolName,
+          args: tc.args as Record<string, unknown>,
+          approved: !rejected,
+          reason: rejected ? String(resultValue?.reason ?? "") : "auto-approved or read-only",
+          result: resultValue,
+        });
+      }
+    }
+  }
+
+  return { text: result.text, toolActions };
+}
+
 // --- Summary ---
+
+export async function generateSummaryTitle(summary: string): Promise<string> {
+  const { text } = await generateText({
+    model: getModel(),
+    system:
+      "Generate a concise title (5-10 words) for the following meeting summary. Output only the title, no quotes or punctuation at the end.",
+    messages: [{ role: "user", content: summary }],
+  });
+  return text.trim();
+}
 
 export async function generateSummary(
   history: { speaker: string; content: string }[],

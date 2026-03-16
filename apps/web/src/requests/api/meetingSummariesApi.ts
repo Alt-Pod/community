@@ -3,6 +3,7 @@ export interface MeetingSummaryItem {
   content: string;
   activityId: string | null;
   activityTitle: string | null;
+  summaryTitle: string | null;
   scheduledAt: string | null;
   created_at: string;
 }

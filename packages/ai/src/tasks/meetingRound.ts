@@ -5,13 +5,17 @@ import {
   toolService,
   jobService,
   scheduledActivityRepository,
+  agentService,
   withJobTracking,
 } from "@community/backend";
-import { buildToolsForAgent } from "../tools";
+import { buildToolsForAgent, DEFAULT_ASSISTANT_TOOL_IDS } from "../tools";
+import { buildDefaultSystemPrompt } from "../context";
 import type { Agent } from "@community/shared";
+import { DEFAULT_ASSISTANT_ID } from "@community/shared";
 import {
   loadMeetingHistory,
   generateAgentTurnWithTools,
+  generateDefaultAssistantTurn,
   generateMasterTransition,
   wrapToolsWithSupervisor,
 } from "./meetingHelper";
@@ -53,7 +57,7 @@ export const meetingRound = inngest.createFunction(
             if (agent) agents.push(agent);
           }
 
-          const participantNames = agents.map((a) => a.name);
+          const participantNames = [...agents.map((a) => a.name), "Assistant"];
           let timeUp = false;
 
           for (const agent of agents) {
@@ -103,7 +107,46 @@ export const meetingRound = inngest.createFunction(
             });
           }
 
-          return { timeUp, agentsSpoken: agents.length };
+          // Default assistant turn (always participates)
+          if (!timeUp && Date.now() < endTime) {
+            const assistantHistory = await loadMeetingHistory(conversationId, agents);
+            const allAgents = await agentService.getAll();
+            const assistantSystemPrompt = buildDefaultSystemPrompt(allAgents);
+            const assistantRawTools = buildToolsForAgent(DEFAULT_ASSISTANT_TOOL_IDS, { userId });
+            const assistantTools = wrapToolsWithSupervisor(
+              assistantRawTools,
+              agenda,
+              () => assistantHistory
+            );
+
+            const { text: assistantText, toolActions: assistantToolActions } =
+              await generateDefaultAssistantTurn(
+                assistantSystemPrompt,
+                assistantHistory,
+                agenda,
+                participantNames,
+                assistantTools
+              );
+
+            const assistantParts = assistantToolActions.length > 0
+              ? assistantToolActions.map((ta) => ({
+                  type: "tool-action",
+                  toolName: ta.toolName,
+                  approved: ta.approved,
+                  reason: ta.reason,
+                }))
+              : undefined;
+
+            await messageRepository.create({
+              conversationId,
+              role: "assistant",
+              content: assistantText,
+              agentId: DEFAULT_ASSISTANT_ID,
+              parts: assistantParts as unknown[] | undefined,
+            });
+          }
+
+          return { timeUp, agentsSpoken: agents.length + 1 };
         }
       );
     });

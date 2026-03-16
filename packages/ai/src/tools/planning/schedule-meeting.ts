@@ -26,9 +26,8 @@ export const scheduleMeetingTool: CommunityToolDefinition = {
             ),
           participant_agent_ids: z
             .array(z.string())
-            .min(2)
             .describe(
-              "Array of agent IDs that will participate in the meeting (minimum 2)"
+              "Array of agent IDs that will participate in the meeting. A default assistant with all tools is always included automatically."
             ),
           scheduled_at: z
             .string()
@@ -58,10 +57,6 @@ export const scheduleMeetingTool: CommunityToolDefinition = {
         duration_minutes,
         timezone,
       }) => {
-        if (participant_agent_ids.length < 2) {
-          return { success: false, error: "At least 2 participant agents are required" };
-        }
-
         const meetingPayload: MeetingPayload = {
           participant_agent_ids,
           agenda,

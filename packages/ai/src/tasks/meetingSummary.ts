@@ -7,10 +7,11 @@ import {
   jobService,
   knowledgeService,
   auditLogService,
+  notificationService,
   withJobTracking,
 } from "@community/backend";
 import type { Agent } from "@community/shared";
-import { loadMeetingHistory, generateSummary } from "./meetingHelper";
+import { loadMeetingHistory, generateSummary, generateSummaryTitle } from "./meetingHelper";
 
 export const meetingSummary = inngest.createFunction(
   { id: "meeting-summary", retries: 1 },
@@ -39,7 +40,7 @@ export const meetingSummary = inngest.createFunction(
             if (agent) agents.push(agent);
           }
 
-          const participantNames = agents.map((a) => a.name);
+          const participantNames = [...agents.map((a) => a.name), "Assistant"];
           const history = await loadMeetingHistory(conversationId, agents);
 
           // Generate summary
@@ -49,6 +50,9 @@ export const meetingSummary = inngest.createFunction(
             participantNames,
             durationMinutes
           );
+
+          // Generate a short title for the summary
+          const summaryTitle = await generateSummaryTitle(summary);
 
           // Save summary as final message
           await messageRepository.create({
@@ -70,6 +74,7 @@ export const meetingSummary = inngest.createFunction(
           await scheduledActivityRepository.markCompleted(activityId, {
             conversation_id: conversationId,
             summary,
+            summary_title: summaryTitle,
             participants: participantNames,
           });
           await jobService.markCompleted(jobId, {
@@ -77,6 +82,16 @@ export const meetingSummary = inngest.createFunction(
             conversation_id: conversationId,
             executed: true,
           });
+
+          // Notify user
+          await notificationService.create(userId, {
+            title: `Meeting completed: ${agenda.slice(0, 60)}`,
+            body: `Your meeting with ${participantNames.join(", ")} has ended. A summary has been generated.`,
+            type: "meeting",
+            link: `/meetings/${activityId}`,
+            conversationId,
+            metadata: { activityId, participantNames },
+          }).catch(() => {});
 
           // Audit log
           await auditLogService.log(

@@ -51,6 +51,7 @@ export async function GET(
     duration_minutes: payload.duration_minutes,
     timezone: payload.timezone,
     summary: payload.summary ?? (activity.output as Record<string, unknown>)?.summary ?? null,
+    summary_title: payload.summary_title ?? (activity.output as Record<string, unknown>)?.summary_title ?? null,
     conversation_id: payload.conversation_id ?? null,
   });
 }

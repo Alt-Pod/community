@@ -12,6 +12,7 @@ export interface MeetingDetail {
   duration_minutes: number;
   timezone: string;
   summary: string | null;
+  summary_title: string | null;
   conversation_id: string | null;
 }
 

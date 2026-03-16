@@ -78,7 +78,7 @@ export class UserRepository {
 
   async findAll() {
     return this.sql`
-      SELECT id, email, name, role, created_at
+      SELECT id, email, name, role, timezone, lang, created_at
       FROM ${this.sql(this.table)}
       ORDER BY created_at DESC
     `;

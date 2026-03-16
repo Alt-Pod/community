@@ -14,6 +14,7 @@
     "billing": "Fatturazione",
     "logout": "Disconnetti",
     "profile": "Profilo",
+    "notifications": "Notifiche",
     "menuOpen": "Apri menu",
     "menuClose": "Chiudi menu"
   },
@@ -46,6 +47,21 @@
       "viewAll": "Vedi tutto",
       "noMeetings": "Nessuna riunione nella prossima ora.",
       "live": "In diretta"
+    },
+    "notifications": {
+      "title": "Notifiche",
+      "viewAll": "Vedi tutto",
+      "empty": "Nessuna nuova notifica."
+    }
+  },
+  "notifications": {
+    "title": "Notifiche",
+    "empty": "Nessuna notifica ancora.",
+    "emptyUnread": "Nessuna notifica non letta.",
+    "markAllRead": "Segna tutto come letto",
+    "filters": {
+      "all": "Tutte",
+      "unread": "Non lette"
     }
   },
   "auth": {
@@ -352,6 +368,12 @@
         "description": "Programma una riunione tra più agenti"
       }
     },
+    "notifications": {
+      "sendNotification": {
+        "name": "Invia notifica",
+        "description": "Invia una notifica all'utente"
+      }
+    },
     "files": {
       "uploadFile": {
         "name": "Carica file",
@@ -469,6 +491,8 @@
     "roleUser": "Utente",
     "roleAdmin": "Admin",
     "createdAt": "Iscritto",
+    "language": "Lingua",
+    "timezone": "Fuso orario",
     "form": {
       "email": "Email",
       "emailPlaceholder": "utente@esempio.com",

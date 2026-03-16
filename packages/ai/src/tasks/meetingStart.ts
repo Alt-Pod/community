@@ -100,11 +100,7 @@ export const meetingStart = inngest.createFunction(
             if (agent) agents.push(agent);
           }
 
-          if (agents.length < 2) {
-            throw new Error("At least 2 valid participant agents are required");
-          }
-
-          const participantNames = agents.map((a) => a.name);
+          const participantNames = [...agents.map((a) => a.name), "Assistant"];
 
           // Create meeting conversation
           const conversation = await conversationService.createMeetingConversation(

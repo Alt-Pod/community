@@ -16,6 +16,8 @@ export type { ScheduledActivityStatus } from "./repositories/scheduledActivityRe
 export { UsageRepository } from "./repositories/usageRepository";
 export { FileRepository } from "./repositories/fileRepository";
 export { AuditLogRepository } from "./repositories/auditLogRepository";
+export { NotificationRepository } from "./repositories/notificationRepository";
+export { PushSubscriptionRepository } from "./repositories/pushSubscriptionRepository";
 
 // Services
 export { UserService } from "./services/userService";
@@ -30,12 +32,14 @@ export { UsageService } from "./services/usageService";
 export { FileService } from "./services/fileService";
 export type { FileWithUrl } from "./services/fileService";
 export { AuditLogService } from "./services/auditLogService";
+export { NotificationService } from "./services/notificationService";
 
 // Helpers
 export { buildPartsFromSteps } from "./helpers/partsHelper";
 export { uploadToStorage, deleteFromStorage, downloadFromStorage, getSignedUrl } from "./helpers/storageHelper";
 export { extractFileContent } from "./helpers/contentExtractionHelper";
 export { withJobTracking } from "./helpers/jobTrackingHelper";
+export { sendPushToUser } from "./helpers/pushHelper";
 
 // Inngest
 export { inngest } from "./inngest/client";
@@ -65,6 +69,9 @@ import { FileRepository } from "./repositories/fileRepository";
 import { FileService } from "./services/fileService";
 import { AuditLogRepository } from "./repositories/auditLogRepository";
 import { AuditLogService } from "./services/auditLogService";
+import { NotificationRepository } from "./repositories/notificationRepository";
+import { PushSubscriptionRepository } from "./repositories/pushSubscriptionRepository";
+import { NotificationService } from "./services/notificationService";
 
 const userRepository = new UserRepository(sql, "users");
 const conversationRepository = new ConversationRepository(sql, "conversations");
@@ -89,6 +96,9 @@ const fileRepository = new FileRepository(sql, "files");
 const fileService = new FileService(fileRepository);
 const auditLogRepository = new AuditLogRepository(sql, "audit_logs");
 const auditLogService = new AuditLogService(auditLogRepository);
+const notificationRepository = new NotificationRepository(sql, "notifications");
+const pushSubscriptionRepository = new PushSubscriptionRepository(sql, "push_subscriptions");
+const notificationService = new NotificationService(notificationRepository, pushSubscriptionRepository);
 
 export {
   userRepository,
@@ -113,4 +123,7 @@ export {
   fileService,
   auditLogRepository,
   auditLogService,
+  notificationRepository,
+  pushSubscriptionRepository,
+  notificationService,
 };

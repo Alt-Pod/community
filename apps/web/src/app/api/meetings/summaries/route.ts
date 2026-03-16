@@ -17,6 +17,7 @@ export async function GET() {
       let activityTitle = null;
       let activityId = null;
       let scheduledAt = null;
+      let summaryTitle = null;
 
       if (entry.source?.startsWith("meeting:")) {
         activityId = entry.source.replace("meeting:", "");
@@ -24,6 +25,8 @@ export async function GET() {
         if (activity) {
           activityTitle = activity.title;
           scheduledAt = activity.scheduled_at;
+          const output = activity.output as Record<string, unknown> | null;
+          summaryTitle = (output?.summary_title as string) ?? null;
         }
       }
 
@@ -32,6 +35,7 @@ export async function GET() {
         content: entry.content,
         activityId,
         activityTitle,
+        summaryTitle,
         scheduledAt,
         created_at: entry.created_at,
       };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Card, StatusBadge, Heading, LoadingIndicator } from "@community/ui";
+import { Card, StatusBadge, Heading, LoadingIndicator, Collapsible } from "@community/ui";
 import { useMeeting } from "@/requests/useMeetings";
 import MarkdownMessage from "@/components/markdown-message";
 import type { DbMessage } from "@community/shared";
@@ -41,7 +41,7 @@ export default function MeetingViewer({ meetingId }: MeetingViewerProps) {
     return <p className="text-red-500">{t("viewer.error")}</p>;
   }
 
-  const { activity, participants, messages, agenda, duration_minutes, timezone, summary } =
+  const { activity, participants, messages, agenda, duration_minutes, timezone, summary, summary_title } =
     meeting;
 
   // Build a map of agent_id -> agent name for message attribution
@@ -156,12 +156,18 @@ export default function MeetingViewer({ meetingId }: MeetingViewerProps) {
       {/* Summary */}
       {summary && (
         <Card>
-          <Heading as="h3" className="text-sm font-semibold mb-2">
-            {t("summary")}
-          </Heading>
-          <div className="text-sm text-text-secondary">
-            <MarkdownMessage content={summary} />
-          </div>
+          <Collapsible
+            defaultOpen
+            title={
+              <Heading as="h3" className="text-sm font-semibold">
+                {summary_title ?? t("summary")}
+              </Heading>
+            }
+          >
+            <div className="text-sm text-text-secondary">
+              <MarkdownMessage content={summary} />
+            </div>
+          </Collapsible>
         </Card>
       )}
     </div>

@@ -14,6 +14,7 @@
     "billing": "Facturation",
     "logout": "Se déconnecter",
     "profile": "Profil",
+    "notifications": "Notifications",
     "menuOpen": "Ouvrir le menu",
     "menuClose": "Fermer le menu"
   },
@@ -46,6 +47,21 @@
       "viewAll": "Voir tout",
       "noMeetings": "Aucune réunion dans la prochaine heure.",
       "live": "En direct"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "viewAll": "Voir tout",
+      "empty": "Aucune nouvelle notification."
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "Aucune notification pour le moment.",
+    "emptyUnread": "Aucune notification non lue.",
+    "markAllRead": "Tout marquer comme lu",
+    "filters": {
+      "all": "Toutes",
+      "unread": "Non lues"
     }
   },
   "auth": {
@@ -352,6 +368,12 @@
         "description": "Planifier une réunion entre plusieurs agents"
       }
     },
+    "notifications": {
+      "sendNotification": {
+        "name": "Envoyer une notification",
+        "description": "Envoyer une notification à l'utilisateur"
+      }
+    },
     "files": {
       "uploadFile": {
         "name": "Téléverser un fichier",
@@ -469,6 +491,8 @@
     "roleUser": "Utilisateur",
     "roleAdmin": "Admin",
     "createdAt": "Inscrit le",
+    "language": "Langue",
+    "timezone": "Fuseau",
     "form": {
       "email": "Email",
       "emailPlaceholder": "utilisateur@exemple.com",

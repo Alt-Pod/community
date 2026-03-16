@@ -3,6 +3,8 @@ export interface AdminUser {
   email: string;
   name: string | null;
   role: string;
+  timezone: string;
+  lang: string;
   created_at: string;
 }
 
@@ -58,6 +60,21 @@ export async function updateUserRole(
     throw new Error(body.error ?? "Failed to update role");
   }
   return res.json();
+}
+
+export async function updateUserPreferences(
+  id: string,
+  data: { timezone?: string; lang?: string }
+): Promise<void> {
+  const res = await fetch(`/api/admin/users/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const body = await res.json();
+    throw new Error(body.error ?? "Failed to update preferences");
+  }
 }
 
 export async function deleteUser(id: string): Promise<void> {

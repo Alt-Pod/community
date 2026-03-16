@@ -7,6 +7,7 @@ import "./prompt";
 import "./data";
 import "./planning";
 import "./files";
+import "./notifications";
 
 // Re-export registry API
 export {
@@ -14,5 +15,6 @@ export {
   getAllTools,
   getAllToolMetas,
   buildToolsForAgent,
+  DEFAULT_ASSISTANT_TOOL_IDS,
 } from "./registry";
 export type { ToolMeta, ToolContext, CommunityToolDefinition } from "./types";

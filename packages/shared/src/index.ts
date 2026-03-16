@@ -34,8 +34,17 @@ export {
   ALLOWED_MIME_TYPES,
   MAX_FILE_SIZE,
 } from "./types/file";
+export type {
+  Notification,
+  NotificationType,
+  PushSubscriptionRecord,
+} from "./types/notification";
+export { NOTIFICATION_TYPES } from "./types/notification";
 export {
   levenshteinDistance,
   fuzzyMatch,
   fuzzySearchItems,
 } from "./fuzzySearch";
+
+/** Sentinel agentId used for the default assistant in meetings */
+export const DEFAULT_ASSISTANT_ID = "default-assistant";

@@ -14,6 +14,7 @@
     "billing": "Facturación",
     "logout": "Cerrar sesión",
     "profile": "Perfil",
+    "notifications": "Notificaciones",
     "menuOpen": "Abrir menú",
     "menuClose": "Cerrar menú"
   },
@@ -46,6 +47,21 @@
       "viewAll": "Ver todo",
       "noMeetings": "No hay reuniones en la próxima hora.",
       "live": "En vivo"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "viewAll": "Ver todo",
+      "empty": "Sin notificaciones nuevas."
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "empty": "Sin notificaciones todavía.",
+    "emptyUnread": "Sin notificaciones sin leer.",
+    "markAllRead": "Marcar todo como leído",
+    "filters": {
+      "all": "Todas",
+      "unread": "Sin leer"
     }
   },
   "auth": {
@@ -352,6 +368,12 @@
         "description": "Programar una reunión entre varios agentes"
       }
     },
+    "notifications": {
+      "sendNotification": {
+        "name": "Enviar notificación",
+        "description": "Enviar una notificación al usuario"
+      }
+    },
     "files": {
       "uploadFile": {
         "name": "Subir archivo",
@@ -469,6 +491,8 @@
     "roleUser": "Usuario",
     "roleAdmin": "Admin",
     "createdAt": "Registrado",
+    "language": "Idioma",
+    "timezone": "Zona horaria",
     "form": {
       "email": "Email",
       "emailPlaceholder": "usuario@ejemplo.com",

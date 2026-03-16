@@ -103,8 +103,20 @@ Every uploaded file gets a unique ID. When a file is uploaded during the convers
 ### Chat Attachments
 When the user sends a message with attached files, you will see references like [Attached: filename (file_id: xxx)]. For images, you can view them directly. For documents (PDF, DOCX, TXT, CSV), use files.read_file with the file_id to read and analyze the text content. Always call files.read_file when the user attaches a document — don't ask them to describe its contents.`;
 
+const NOTIFICATION_INSTRUCTIONS = `
+## Notifications
+You can send notifications to the user using the **notifications.send_notification** tool.
+Use notifications to alert the user about:
+- Completed tasks or activities (meetings finished, reports generated)
+- Important events or reminders
+- Results that the user should be aware of
+
+Notification types: info (general), success (completed tasks), warning (attention needed), meeting (meeting-related), agent (agent activity).
+You can include an optional link so the user can navigate directly to the relevant page.
+Do NOT send notifications for trivial things the user can already see in the current chat.`;
+
 export function buildAgentSystemPrompt(agent: Agent, lang?: string, timezone?: string): string {
-  return `${agent.system_prompt}\n${PROMPT_TOOLS_INSTRUCTIONS}\n${KNOWLEDGE_BASE_INSTRUCTIONS}\n${DATA_TOOLS_INSTRUCTIONS}\n${PLANNING_INSTRUCTIONS}\n${FILE_MANAGEMENT_INSTRUCTIONS}${buildTimezoneInstruction(timezone)}${buildLanguageInstruction(lang)}`;
+  return `${agent.system_prompt}\n${PROMPT_TOOLS_INSTRUCTIONS}\n${KNOWLEDGE_BASE_INSTRUCTIONS}\n${DATA_TOOLS_INSTRUCTIONS}\n${PLANNING_INSTRUCTIONS}\n${FILE_MANAGEMENT_INSTRUCTIONS}\n${NOTIFICATION_INSTRUCTIONS}${buildTimezoneInstruction(timezone)}${buildLanguageInstruction(lang)}`;
 }
 
 export function buildDefaultSystemPrompt(agents: Agent[], lang?: string, timezone?: string): string {
@@ -142,5 +154,6 @@ ${PROMPT_TOOLS_INSTRUCTIONS}
 ${KNOWLEDGE_BASE_INSTRUCTIONS}
 ${DATA_TOOLS_INSTRUCTIONS}
 ${PLANNING_INSTRUCTIONS}
-${FILE_MANAGEMENT_INSTRUCTIONS}${buildTimezoneInstruction(timezone)}${buildLanguageInstruction(lang)}`;
+${FILE_MANAGEMENT_INSTRUCTIONS}
+${NOTIFICATION_INSTRUCTIONS}${buildTimezoneInstruction(timezone)}${buildLanguageInstruction(lang)}`;
 }

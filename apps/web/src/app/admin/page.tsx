@@ -9,6 +9,7 @@ import {
   useCreateUser,
   useUpdateUserPassword,
   useUpdateUserRole,
+  useUpdateUserPreferences,
   useDeleteUser,
 } from "@/requests/useAdmin";
 import { useFuzzySearch } from "@/hooks/use-fuzzy-search";
@@ -21,6 +22,7 @@ export default function AdminPage() {
   const createMutation = useCreateUser();
   const resetMutation = useUpdateUserPassword();
   const roleMutation = useUpdateUserRole();
+  const prefsMutation = useUpdateUserPreferences();
   const deleteMutation = useDeleteUser();
 
   const fieldExtractor = useCallback(
@@ -187,6 +189,55 @@ export default function AdminPage() {
                     {t("createdAt")}{" "}
                     {new Date(user.created_at).toLocaleDateString()}
                   </p>
+                  <div className="flex gap-3 mt-2">
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-text-tertiary">{t("language")}:</span>
+                      <select
+                        value={user.lang}
+                        onChange={(e) =>
+                          prefsMutation.mutate({
+                            id: user.id,
+                            data: { lang: e.target.value },
+                          })
+                        }
+                        disabled={prefsMutation.isPending}
+                        className="text-xs px-1.5 py-0.5 rounded-md border border-border-subtle bg-surface-secondary text-text-primary cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent-gold"
+                      >
+                        <option value="en">English</option>
+                        <option value="fr">Français</option>
+                        <option value="es">Español</option>
+                        <option value="it">Italiano</option>
+                        <option value="de">Deutsch</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-text-tertiary">{t("timezone")}:</span>
+                      <select
+                        value={user.timezone}
+                        onChange={(e) =>
+                          prefsMutation.mutate({
+                            id: user.id,
+                            data: { timezone: e.target.value },
+                          })
+                        }
+                        disabled={prefsMutation.isPending}
+                        className="text-xs px-1.5 py-0.5 rounded-md border border-border-subtle bg-surface-secondary text-text-primary cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent-gold"
+                      >
+                        <option value="UTC">UTC</option>
+                        <option value="Europe/Paris">Europe/Paris</option>
+                        <option value="Europe/London">Europe/London</option>
+                        <option value="Europe/Berlin">Europe/Berlin</option>
+                        <option value="Europe/Rome">Europe/Rome</option>
+                        <option value="Europe/Madrid">Europe/Madrid</option>
+                        <option value="America/New_York">America/New York</option>
+                        <option value="America/Chicago">America/Chicago</option>
+                        <option value="America/Denver">America/Denver</option>
+                        <option value="America/Los_Angeles">America/Los Angeles</option>
+                        <option value="Asia/Tokyo">Asia/Tokyo</option>
+                        <option value="Asia/Shanghai">Asia/Shanghai</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
                 <div className="flex gap-2 ml-4 shrink-0">
                   <Button

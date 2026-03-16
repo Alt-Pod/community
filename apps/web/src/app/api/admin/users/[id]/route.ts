@@ -14,7 +14,34 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  const body = (await req.json()) as { password?: string; role?: string };
+  const body = (await req.json()) as {
+    password?: string;
+    role?: string;
+    timezone?: string;
+    lang?: string;
+  };
+
+  // Update preferences (timezone / lang)
+  if (body.timezone !== undefined || body.lang !== undefined) {
+    try {
+      const updated = await userService.updateProfile(id, {
+        ...(body.timezone !== undefined && { timezone: body.timezone }),
+        ...(body.lang !== undefined && { lang: body.lang }),
+      });
+      if (!updated) {
+        return Response.json({ error: "User not found" }, { status: 404 });
+      }
+      return Response.json(updated);
+    } catch (err) {
+      if (err instanceof Error && err.message === "INVALID_TIMEZONE") {
+        return Response.json({ error: "Invalid timezone" }, { status: 400 });
+      }
+      if (err instanceof Error && err.message === "INVALID_LANG") {
+        return Response.json({ error: "Invalid language" }, { status: 400 });
+      }
+      throw err;
+    }
+  }
 
   // Update role
   if (body.role) {

@@ -9,7 +9,7 @@ import {
   usageService,
   userService,
 } from "@community/backend";
-import { streamAgentChat, streamDefaultChat } from "@community/ai";
+import { streamAgentChat, streamDefaultChat, DEFAULT_ASSISTANT_TOOL_IDS } from "@community/ai";
 import type { UIMessage } from "ai";
 
 function extractText(msg: UIMessage): string {
@@ -157,39 +157,7 @@ export async function POST(
     } else {
       // Default mode: concierge with agent management tools
       const agents = await agentService.getAll();
-      const allToolIds = [
-        "agents.list_agents",
-        "agents.create_agent",
-        "agents.update_agent",
-        "agents.delete_agent",
-        "google.web_search",
-        "knowledge.save_entry",
-        "knowledge.get_entries",
-        "knowledge.delete_entry",
-        "github.read_file",
-        "github.list_directory",
-        "github.search_code",
-        "data.my_profile",
-        "data.my_conversations",
-        "data.my_messages",
-        "data.list_agents",
-        "data.list_tools",
-        "data.get_agent_details",
-        "data.my_jobs",
-        "data.my_logs",
-        "data.my_meetings",
-        "planning.schedule_activity",
-        "planning.schedule_meeting",
-        "planning.list_scheduled_activities",
-        "planning.cancel_scheduled_activity",
-        "files.upload_file",
-        "files.list_files",
-        "files.get_file",
-        "files.read_file",
-        "files.update_file",
-        "files.delete_file",
-      ];
-      const result = await streamDefaultChat(agents, messages, allToolIds, {
+      const result = await streamDefaultChat(agents, messages, DEFAULT_ASSISTANT_TOOL_IDS, {
         userId: session.user.id,
         lang: userLang,
         timezone: userTimezone,

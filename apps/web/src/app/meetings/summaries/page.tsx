@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { Heading, Card, LoadingIndicator } from "@community/ui";
+import { Heading, Card, LoadingIndicator, Collapsible } from "@community/ui";
 import { useMeetingSummaries } from "@/requests/useMeetingSummaries";
 import MarkdownMessage from "@/components/markdown-message";
 
@@ -33,34 +33,38 @@ export default function MeetingSummariesPage() {
       )}
 
       <div className="space-y-4">
-        {summaries.map((summary) => (
+        {summaries.map((summary, index) => (
           <Card key={summary.id}>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <h3 className="font-heading font-semibold text-text-primary">
-                  {summary.activityTitle ?? t("summaries.untitled")}
-                </h3>
-                {summary.scheduledAt && (
-                  <span className="text-xs text-text-tertiary">
-                    {new Date(summary.scheduledAt).toLocaleString(undefined, {
-                      dateStyle: "medium",
-                      timeStyle: "short",
-                    })}
-                  </span>
-                )}
-              </div>
+            <Collapsible
+              defaultOpen={index === 0}
+              title={
+                <div className="flex items-center justify-between w-full">
+                  <h3 className="font-heading font-semibold text-text-primary">
+                    {summary.summaryTitle ?? summary.activityTitle ?? t("summaries.untitled")}
+                  </h3>
+                  {summary.scheduledAt && (
+                    <span className="text-xs text-text-tertiary">
+                      {new Date(summary.scheduledAt).toLocaleString(undefined, {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </span>
+                  )}
+                </div>
+              }
+            >
               <div className="text-sm text-text-secondary">
                 <MarkdownMessage content={summary.content} />
               </div>
               {summary.activityId && (
                 <Link
                   href={`/meetings/${summary.activityId}`}
-                  className="text-xs text-accent hover:underline"
+                  className="text-xs text-accent hover:underline mt-2 inline-block"
                 >
                   {t("summaries.viewMeeting")}
                 </Link>
               )}
-            </div>
+            </Collapsible>
           </Card>
         ))}
       </div>

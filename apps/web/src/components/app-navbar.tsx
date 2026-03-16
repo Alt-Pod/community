@@ -8,6 +8,7 @@ import { signOut, useSession } from "next-auth/react";
 import { Navbar } from "@community/ui";
 import { USER_ROLES } from "@community/shared";
 import { useProfile } from "@/requests/useProfile";
+import NotificationBadge from "./notification-badge";
 
 function NavbarAvatar() {
   const { data: profile } = useProfile();
@@ -117,6 +118,7 @@ export default function AppNavbar() {
       menuCloseLabel={t("menuClose")}
       right={
         <div className="flex items-center gap-2">
+          <NotificationBadge />
           <NavbarAvatar />
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}

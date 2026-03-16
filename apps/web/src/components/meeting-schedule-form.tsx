@@ -66,7 +66,7 @@ export default function MeetingScheduleForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!title || !agenda || selectedAgents.length < 2 || !scheduledAt) return;
+    if (!title || !agenda || !scheduledAt) return;
 
     await scheduleMeeting.mutateAsync({
       title,
@@ -146,12 +146,7 @@ export default function MeetingScheduleForm({
             </label>
           ))}
         </div>
-        {selectedAgents.length > 0 && selectedAgents.length < 2 && (
-          <p className="text-xs text-red-500 mt-1">
-            {t("scheduleForm.minAgents")}
-          </p>
-        )}
-        {selectedAgents.length >= 2 && (
+        {selectedAgents.length >= 1 && (
           <p className="text-xs text-text-tertiary mt-1">
             {selectedAgents.length} {t("scheduleForm.selected")}
           </p>
@@ -201,7 +196,6 @@ export default function MeetingScheduleForm({
             scheduleMeeting.isPending ||
             !title ||
             !agenda ||
-            selectedAgents.length < 2 ||
             !scheduledAt
           }
         >

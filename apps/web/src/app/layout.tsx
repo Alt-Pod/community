@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import QueryProvider from "@/query-provider";
 import SessionProvider from "@/session-provider";
+import PushNotificationManager from "@/components/push-notification-manager";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -27,6 +28,13 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Community",
   description: "Your personal AI organization",
+  manifest: "/manifest.json",
+  themeColor: "#1a1a1a",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Community",
+  },
 };
 
 export default async function RootLayout({
@@ -44,7 +52,10 @@ export default async function RootLayout({
       >
         <SessionProvider>
           <NextIntlClientProvider messages={messages}>
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              <PushNotificationManager />
+              {children}
+            </QueryProvider>
           </NextIntlClientProvider>
         </SessionProvider>
       </body>

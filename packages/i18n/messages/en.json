@@ -14,6 +14,7 @@
     "billing": "Billing",
     "logout": "Log out",
     "profile": "Profile",
+    "notifications": "Notifications",
     "menuOpen": "Open menu",
     "menuClose": "Close menu"
   },
@@ -46,6 +47,21 @@
       "viewAll": "View all",
       "noMeetings": "No meetings in the next hour.",
       "live": "Live"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "viewAll": "View all",
+      "empty": "No new notifications."
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet.",
+    "emptyUnread": "No unread notifications.",
+    "markAllRead": "Mark all as read",
+    "filters": {
+      "all": "All",
+      "unread": "Unread"
     }
   },
   "auth": {
@@ -393,6 +409,12 @@
         "description": "Read and extract content from a file"
       }
     },
+    "notifications": {
+      "sendNotification": {
+        "name": "Send notification",
+        "description": "Send a notification to the user"
+      }
+    },
     "prompt": {
       "submit": "Submit",
       "select": {
@@ -477,6 +499,8 @@
     "roleUser": "User",
     "roleAdmin": "Admin",
     "createdAt": "Joined",
+    "language": "Lang",
+    "timezone": "TZ",
     "form": {
       "email": "Email",
       "emailPlaceholder": "user@example.com",

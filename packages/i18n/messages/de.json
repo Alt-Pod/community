@@ -14,6 +14,7 @@
     "billing": "Abrechnung",
     "logout": "Abmelden",
     "profile": "Profil",
+    "notifications": "Benachrichtigungen",
     "menuOpen": "Menü öffnen",
     "menuClose": "Menü schließen"
   },
@@ -46,6 +47,21 @@
       "viewAll": "Alle anzeigen",
       "noMeetings": "Keine Meetings in der nächsten Stunde.",
       "live": "Live"
+    },
+    "notifications": {
+      "title": "Benachrichtigungen",
+      "viewAll": "Alle anzeigen",
+      "empty": "Keine neuen Benachrichtigungen."
+    }
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "empty": "Noch keine Benachrichtigungen.",
+    "emptyUnread": "Keine ungelesenen Benachrichtigungen.",
+    "markAllRead": "Alle als gelesen markieren",
+    "filters": {
+      "all": "Alle",
+      "unread": "Ungelesen"
     }
   },
   "auth": {
@@ -352,6 +368,12 @@
         "description": "Ein Meeting zwischen mehreren Agenten planen"
       }
     },
+    "notifications": {
+      "sendNotification": {
+        "name": "Benachrichtigung senden",
+        "description": "Eine Benachrichtigung an den Benutzer senden"
+      }
+    },
     "files": {
       "uploadFile": {
         "name": "Datei hochladen",
@@ -469,6 +491,8 @@
     "roleUser": "Benutzer",
     "roleAdmin": "Admin",
     "createdAt": "Beigetreten",
+    "language": "Sprache",
+    "timezone": "Zeitzone",
     "form": {
       "email": "E-Mail",
       "emailPlaceholder": "benutzer@beispiel.de",
