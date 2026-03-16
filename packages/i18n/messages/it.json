@@ -241,6 +241,10 @@
         "name": "Elenco agenti",
         "description": "Elencare tutti gli agenti disponibili"
       },
+      "listTools": {
+        "name": "Elenco strumenti",
+        "description": "Elencare tutti gli strumenti disponibili e i loro identificativi"
+      },
       "myJobs": {
         "name": "I miei lavori",
         "description": "Elencare i tuoi lavori in background"

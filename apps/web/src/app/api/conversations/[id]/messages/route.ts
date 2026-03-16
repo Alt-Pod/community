@@ -166,6 +166,7 @@ export async function POST(
         "data.my_conversations",
         "data.my_messages",
         "data.list_agents",
+        "data.list_tools",
         "data.my_jobs",
         "planning.schedule_activity",
         "planning.list_scheduled_activities",

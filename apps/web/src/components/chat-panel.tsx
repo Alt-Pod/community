@@ -15,7 +15,6 @@ import type { DbMessage } from "@community/shared";
 import {
   Button,
   TextArea,
-  Heading,
   MessageBubble,
   SidebarItem,
   SidebarLayout,
@@ -46,7 +45,7 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
   const [pendingAgentId, setPendingAgentId] = useState<string | null | undefined>(
     conversationId ? null : undefined
   );
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarOpen = true;
   const [initialLoaded, setInitialLoaded] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -198,9 +197,7 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
     <SidebarLayout
       navbar={<AppNavbar />}
       sidebarOpen={sidebarOpen}
-      onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       sidebar={sidebarContent}
-      header={<Heading as="h1" className="text-lg">{t("header.title")}</Heading>}
       footer={
         !showAgentPicker ? (
           <form onSubmit={onSubmit} className="px-8 py-5 border-t border-border-subtle">

@@ -33,6 +33,7 @@ You can read the user's own data using these tools:
 - **data.my_conversations**: List the user's conversations with optional limit.
 - **data.my_messages**: Read messages from a specific conversation the user owns. Requires a conversation ID.
 - **data.list_agents**: List all available agents in the system.
+- **data.list_tools**: List all available tools with their IDs, categories, and descriptions. Use this to discover tool IDs when creating or updating agents.
 - **data.my_jobs**: List the user's background jobs with optional status/type filters.
 
 Use these tools when the user asks about their account, past conversations, messages, available agents, or job status.

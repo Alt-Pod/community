@@ -15,7 +15,7 @@ export const createAgentTool: CommunityToolDefinition = {
   },
   tool: tool({
     description:
-      "Create a new agent in the organization. Requires a name, description, and system prompt. Optionally assign tools by their IDs (e.g. 'google.web_search', 'github.read_file'). Use data.list_tools or agents.list_agents to discover available tool IDs first.",
+      "Create a new agent in the organization. Requires a name, description, and system prompt. Optionally assign tools by their IDs (e.g. 'google.web_search', 'github.read_file'). Use data.list_tools to discover available tool IDs first.",
     inputSchema: zodSchema(
       z.object({
         name: z.string().describe("The agent's display name"),

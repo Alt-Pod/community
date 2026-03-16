@@ -3,6 +3,7 @@ import { myProfileTool } from "./my-profile";
 import { myConversationsTool } from "./my-conversations";
 import { myMessagesTool } from "./my-messages";
 import { listAgentsDataTool } from "./list-agents";
+import { listToolsTool } from "./list-tools";
 import { myJobsTool } from "./my-jobs";
 
 export const dataToolDefinitions = [
@@ -10,6 +11,7 @@ export const dataToolDefinitions = [
   myConversationsTool,
   myMessagesTool,
   listAgentsDataTool,
+  listToolsTool,
   myJobsTool,
 ];
 

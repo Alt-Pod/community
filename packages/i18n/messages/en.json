@@ -241,6 +241,10 @@
         "name": "List agents",
         "description": "List all available agents"
       },
+      "listTools": {
+        "name": "List tools",
+        "description": "List all available tools and their IDs"
+      },
       "myJobs": {
         "name": "My jobs",
         "description": "List your background jobs"

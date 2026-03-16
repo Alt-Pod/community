@@ -241,6 +241,10 @@
         "name": "Agenten auflisten",
         "description": "Alle verfügbaren Agenten auflisten"
       },
+      "listTools": {
+        "name": "Werkzeuge auflisten",
+        "description": "Alle verfügbaren Werkzeuge und ihre Kennungen auflisten"
+      },
       "myJobs": {
         "name": "Meine Aufträge",
         "description": "Deine Hintergrundaufträge auflisten"

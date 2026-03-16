@@ -241,6 +241,10 @@
         "name": "Lister les agents",
         "description": "Lister tous les agents disponibles"
       },
+      "listTools": {
+        "name": "Lister les outils",
+        "description": "Lister tous les outils disponibles et leurs identifiants"
+      },
       "myJobs": {
         "name": "Mes tâches",
         "description": "Lister vos tâches en arrière-plan"
