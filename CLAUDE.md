@@ -418,25 +418,6 @@ VAPID_SUBJECT=                  # mailto: URI (optional, defaults to mailto:admi
 NEXT_PUBLIC_VAPID_PUBLIC_KEY=   # Same as VAPID_PUBLIC_KEY (exposed to client)
 ```
 
-## Company Loop
-
-The company loop is a background cron (every 15 minutes) that "pings" each agent to check if it has work to do. This drives autonomous agent behavior.
-
-### How It Works
-
-1. Cron runs every 15 minutes (`packages/ai/src/tasks/companyLoop.ts`)
-2. Finds all users with active agents (`agentRepository.findDistinctUserIds()`)
-3. For each user's agents (skipping busy ones):
-   - Loads context: knowledge base, recent activity, other agents, running activities
-   - Calls `pingAgent()` — uses `generateText` to ask the agent what to do
-   - Agent responds with: `"task"`, `"meeting"`, or `"nothing"`
-4. If task/meeting, schedules it with `scheduled_at = NOW()` (starts ASAP)
-5. The existing `activityCron` picks it up within 1 minute
-
-### Agent Ownership
-
-Agents have a `user_id` column. The company loop only pings agents belonging to each user, with user-scoped knowledge and activity context.
-
 ## Task Activity
 
 A task is a solo agent activity — one agent works independently with tools to achieve a goal.
@@ -447,7 +428,6 @@ A task is a solo agent activity — one agent works independently with tools to 
 packages/ai/src/tasks/
   taskExecution.ts    → Inngest handler: agent loop with tools
   taskAgents.ts       → Task prompts + shared outcome summary prompt
-  companyLoop.ts      → Company loop cron + pingAgent
 ```
 
 ### Task Flow
@@ -469,7 +449,7 @@ Every meeting and task produces one of three outcomes:
 - **`needs_user_input`**: Blocked — user must provide information or a decision
 - **`needs_follow_up`**: Can't be completed in this activity — needs another task/meeting
 
-The outcome is stored in `scheduled_activities.outcome` (JSONB). The company loop picks up follow-up work in the next cycle — agents see prior outcomes in their context and decide what to do next.
+The outcome is stored in `scheduled_activities.outcome` (JSONB).
 
 ### Conversation Types
 
@@ -479,7 +459,6 @@ The `conversations` table `type` column: `'chat'` (default), `'meeting'`, or `'t
 
 | File | Purpose |
 |------|---------|
-| `packages/ai/src/tasks/companyLoop.ts` | Company loop cron + pingAgent |
 | `packages/ai/src/tasks/taskExecution.ts` | Task execution (Inngest handler) |
 | `packages/ai/src/tasks/taskAgents.ts` | Task prompts + outcome summary prompt |
 | `packages/ai/src/tools/planning/schedule-task.ts` | `planning.schedule_task` tool |

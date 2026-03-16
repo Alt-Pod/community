@@ -6,7 +6,7 @@ export const INNGEST_FUNCTION_IDS = {
   MEETING_SUMMARY: "meeting-summary",
   TASK_EXECUTION: "task-execution",
   NOTIFICATION_EXECUTION: "notification-execution",
-  COMPANY_LOOP: "company-loop",
+
   TITLE_GENERATION: "title-generation",
   LOGBOOK_CRON: "logbook-cron",
   RECURRENCE_MATERIALIZER: "recurrence-materializer",

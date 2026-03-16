@@ -7,7 +7,6 @@ export { meetingSummary } from "./meetingSummary";
 export { notificationExecution } from "./notificationExecution";
 export { recurrenceMaterializer } from "./recurrenceMaterializer";
 export { logbookCron } from "./logbookCron";
-export { companyLoop } from "./companyLoop";
 export { taskExecution } from "./taskExecution";
 
 import { titleGeneration } from "./titleGeneration";
@@ -19,7 +18,6 @@ import { meetingSummary } from "./meetingSummary";
 import { notificationExecution } from "./notificationExecution";
 import { recurrenceMaterializer } from "./recurrenceMaterializer";
 import { logbookCron } from "./logbookCron";
-import { companyLoop } from "./companyLoop";
 import { taskExecution } from "./taskExecution";
 
 export const allFunctions = [
@@ -33,6 +31,5 @@ export const allFunctions = [
   notificationExecution,
   recurrenceMaterializer,
   logbookCron,
-  companyLoop,
   taskExecution,
 ];

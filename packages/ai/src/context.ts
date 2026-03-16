@@ -95,7 +95,7 @@ Every meeting and task produces one of three outcomes:
 - **goal_reached**: The goal was accomplished. Nothing more to do.
 - **needs_user_input**: The goal can't be achieved without information or a decision from the user.
 - **needs_follow_up**: The goal needs more work — another task or meeting with a different approach or agents.
-The company loop will automatically pick up follow-up work in the next cycle.
+Follow-up work can be scheduled via tools or recurring activities.
 
 ### Recurring Activities
 You can create activities that repeat on a schedule:
