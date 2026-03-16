@@ -152,16 +152,29 @@ export class RecurringActivityService {
     const now = new Date();
     const horizon = new Date(now.getTime() + MATERIALIZATION_HORIZON_DAYS * 24 * 60 * 60 * 1000);
 
+    // PostgreSQL DATE/TIME columns are returned as Date objects by the driver,
+    // but computeNextOccurrences expects string formats ("YYYY-MM-DD" / "HH:MM").
+    const toDateStr = (v: unknown): string => {
+      if (v instanceof Date) return v.toISOString().split("T")[0];
+      return String(v);
+    };
+    const toTimeStr = (v: unknown): string => {
+      if (v instanceof Date) {
+        return `${String(v.getUTCHours()).padStart(2, "0")}:${String(v.getUTCMinutes()).padStart(2, "0")}`;
+      }
+      return String(v);
+    };
+
     const rule: RecurrenceRule = {
       frequency: recurring.frequency,
       interval_value: recurring.interval_value,
       days_of_week: recurring.days_of_week,
       day_of_month: recurring.day_of_month,
-      time_of_day: recurring.time_of_day,
+      time_of_day: toTimeStr(recurring.time_of_day),
       timezone: recurring.timezone,
-      start_date: recurring.start_date,
+      start_date: toDateStr(recurring.start_date),
       end_after_occurrences: recurring.end_after_occurrences,
-      end_by_date: recurring.end_by_date,
+      end_by_date: recurring.end_by_date ? toDateStr(recurring.end_by_date) : null,
       occurrences_created: recurring.occurrences_created,
     };
 
@@ -173,12 +186,12 @@ export class RecurringActivityService {
       recurring.id,
       "scheduled"
     );
-    const existingTimes = new Set(existing.map((a) => a.scheduled_at));
+    const existingTimes = new Set(existing.map((a) => new Date(a.scheduled_at).getTime()));
 
     let created = 0;
     for (const occurrence of occurrences) {
       const scheduledAt = occurrence.toISOString();
-      if (existingTimes.has(scheduledAt)) continue;
+      if (existingTimes.has(occurrence.getTime())) continue;
 
       const activity = await this.scheduledActivityRepository.create({
         userId: recurring.user_id,

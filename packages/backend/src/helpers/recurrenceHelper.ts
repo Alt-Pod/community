@@ -34,6 +34,16 @@ export function computeNextOccurrences(
   if (rule.frequency === "daily") {
     // Generate candidate dates: start_date, start_date + interval, start_date + 2*interval, ...
     const cursor = new Date(startDate);
+
+    // Skip ahead to near fromDate to avoid iterating through many past dates
+    if (cursor < fromDate && rule.interval_value > 0) {
+      const diffMs = fromDate.getTime() - cursor.getTime();
+      const diffDays = Math.floor(diffMs / (24 * 60 * 60 * 1000));
+      const intervalsToSkip = Math.max(0, Math.floor(diffDays / rule.interval_value) - 1);
+      cursor.setUTCDate(cursor.getUTCDate() + intervalsToSkip * rule.interval_value);
+      occurrenceCount += intervalsToSkip;
+    }
+
     while (cursor <= horizon) {
       if (occurrenceCount >= maxOccurrences) break;
       if (endByDate && cursor > endByDate) break;
@@ -42,7 +52,6 @@ export function computeNextOccurrences(
       if (occurrence >= fromDate && occurrence <= horizon) {
         results.push(occurrence);
       }
-      // If we've passed the horizon, stop iterating
       if (occurrence > horizon) break;
 
       occurrenceCount++;
@@ -70,8 +79,8 @@ export function computeNextOccurrences(
         const occurrence = buildOccurrenceDate(dayDate, hours, minutes, rule.timezone);
         if (occurrence >= fromDate && occurrence <= horizon) {
           results.push(occurrence);
-          occurrenceCount++;
         }
+        occurrenceCount++;
         if (occurrence > horizon) break;
       }
 
@@ -101,8 +110,8 @@ export function computeNextOccurrences(
         const occurrence = buildOccurrenceDate(dayDate, hours, minutes, rule.timezone);
         if (occurrence >= fromDate && occurrence <= horizon) {
           results.push(occurrence);
-          occurrenceCount++;
         }
+        occurrenceCount++;
         if (occurrence > horizon) break;
       }
 
