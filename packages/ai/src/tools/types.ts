@@ -12,6 +12,8 @@ export interface ToolMeta {
 export interface ToolContext {
   userId: string;
   agentId?: string;
+  lang?: string;
+  timezone?: string;
 }
 
 export interface CommunityToolDefinition {

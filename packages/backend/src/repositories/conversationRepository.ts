@@ -8,18 +8,36 @@ export class ConversationRepository {
 
   async findByUserId(userId: string) {
     return this.sql`
-      SELECT id, title, agent_id, title_generated, created_at
+      SELECT id, title, agent_id, title_generated, type, ended_at, created_at
       FROM ${this.sql(this.table)}
-      WHERE user_id = ${userId}
+      WHERE user_id = ${userId} AND type = 'chat'
+      ORDER BY created_at DESC
+    `;
+  }
+
+  async findMeetingsByUserId(userId: string) {
+    return this.sql`
+      SELECT id, title, agent_id, title_generated, type, ended_at, created_at
+      FROM ${this.sql(this.table)}
+      WHERE user_id = ${userId} AND type = 'meeting'
       ORDER BY created_at DESC
     `;
   }
 
   async findById(id: string, userId: string) {
     const [conversation] = await this.sql`
-      SELECT id, title, agent_id, title_generated, created_at
+      SELECT id, title, agent_id, title_generated, type, ended_at, created_at
       FROM ${this.sql(this.table)}
       WHERE id = ${id} AND user_id = ${userId}
+    `;
+    return conversation ?? null;
+  }
+
+  async findByIdInternal(id: string) {
+    const [conversation] = await this.sql`
+      SELECT id, title, agent_id, title_generated, type, ended_at, created_at
+      FROM ${this.sql(this.table)}
+      WHERE id = ${id}
     `;
     return conversation ?? null;
   }
@@ -29,18 +47,31 @@ export class ConversationRepository {
       UPDATE ${this.sql(this.table)}
       SET title = ${title}, title_generated = TRUE
       WHERE id = ${id}
-      RETURNING id, title, agent_id, title_generated, created_at
+      RETURNING id, title, agent_id, title_generated, type, ended_at, created_at
     `;
     return conversation ?? null;
   }
 
-  async create(userId: string, title: string, agentId?: string | null) {
+  async create(
+    userId: string,
+    title: string,
+    agentId?: string | null,
+    type: "chat" | "meeting" = "chat"
+  ) {
     const [conversation] = await this.sql`
-      INSERT INTO ${this.sql(this.table)} (user_id, title, agent_id)
-      VALUES (${userId}, ${title}, ${agentId ?? null})
+      INSERT INTO ${this.sql(this.table)} (user_id, title, agent_id, type)
+      VALUES (${userId}, ${title}, ${agentId ?? null}, ${type})
       RETURNING *
     `;
     return conversation;
+  }
+
+  async updateEndedAt(id: string, endedAt: Date) {
+    await this.sql`
+      UPDATE ${this.sql(this.table)}
+      SET ended_at = ${endedAt.toISOString()}
+      WHERE id = ${id}
+    `;
   }
 
   async deleteById(id: string, userId: string) {

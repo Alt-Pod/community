@@ -40,13 +40,21 @@ export class UserService {
 
   async updateProfile(
     userId: string,
-    data: { name?: string; email?: string }
+    data: { name?: string; email?: string; timezone?: string; lang?: string }
   ) {
     if (data.email) {
       const existing = await this.userRepository.findByEmail(data.email);
       if (existing && existing.id !== userId) {
         throw new Error("EMAIL_TAKEN");
       }
+    }
+    if (data.timezone !== undefined) {
+      const valid = Intl.supportedValuesOf("timeZone").includes(data.timezone);
+      if (!valid) throw new Error("INVALID_TIMEZONE");
+    }
+    if (data.lang !== undefined) {
+      const validLangs = ["en", "fr", "es", "it", "de"];
+      if (!validLangs.includes(data.lang)) throw new Error("INVALID_LANG");
     }
     const profile = await this.userRepository.updateProfile(userId, data);
     if (!profile) return null;

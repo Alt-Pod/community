@@ -1,8 +1,15 @@
 import { inngest, scheduledActivityRepository, jobService } from "@community/backend";
 
+/**
+ * Handles non-meeting activity execution.
+ * Meetings are handled by the meetingStart function chain.
+ */
 export const activityExecution = inngest.createFunction(
   { id: "activity-execution", retries: 2 },
-  { event: "job/started", if: "event.data.type == 'activity.execute'" },
+  {
+    event: "job/started",
+    if: "event.data.type == 'activity.execute' && event.data.metadata.activityType != 'meeting'",
+  },
   async ({ event, step }) => {
     const { jobId, metadata } = event.data;
     const activityId = metadata.activityId as string;
@@ -37,8 +44,7 @@ export const activityExecution = inngest.createFunction(
       await jobService.markRunning(jobId);
     });
 
-    // Execute the activity (initial version: just mark as completed)
-    // Future: dispatch to the appropriate handler based on activity_type
+    // Default: mark completed (placeholder for future activity types)
     await step.run("execute", async () => {
       await scheduledActivityRepository.markCompleted(activityId, { executed: true });
       await jobService.markCompleted(jobId, { activityId, executed: true });

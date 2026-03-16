@@ -20,6 +20,8 @@ export type {
 } from "./types/prompt";
 export { PROMPT_TOOL_IDS } from "./types/prompt";
 export type { ScheduledActivity } from "./types/scheduledActivity";
+export type { MeetingPayload } from "./types/meeting";
+export type { AuditLog } from "./types/auditLog";
 export type { ActivityDefinition, ActivityType } from "./activities";
 export { ACTIVITIES } from "./activities";
 export type { UsageLog, UsageStats } from "./types/usage";
@@ -32,3 +34,8 @@ export {
   ALLOWED_MIME_TYPES,
   MAX_FILE_SIZE,
 } from "./types/file";
+export {
+  levenshteinDistance,
+  fuzzyMatch,
+  fuzzySearchItems,
+} from "./fuzzySearch";

@@ -3,6 +3,8 @@ export interface Conversation {
   title: string;
   agent_id: string | null;
   title_generated: boolean;
+  type: "chat" | "meeting";
+  ended_at: string | null;
   created_at: string;
 }
 

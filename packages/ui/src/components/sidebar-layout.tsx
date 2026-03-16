@@ -31,12 +31,14 @@ export function SidebarLayout({
         />
       )}
 
-      {/* Sidebar */}
-      {sidebarOpen && (
-        <aside className="fixed inset-y-0 left-0 z-40 w-72 flex flex-col border-r border-border-subtle bg-surface-secondary transition-all duration-200 md:relative md:inset-auto md:z-auto">
-          {sidebar}
-        </aside>
-      )}
+      {/* Sidebar — always visible on md+, toggled on mobile */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 w-72 flex flex-col border-r border-border-subtle bg-surface-secondary transition-transform duration-200 md:relative md:inset-auto md:z-auto md:translate-x-0 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {sidebar}
+      </aside>
 
       {/* Main area */}
       <div className="flex flex-col flex-1 min-w-0">

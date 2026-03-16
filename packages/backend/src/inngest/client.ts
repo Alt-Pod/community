@@ -9,6 +9,58 @@ type Events = {
       metadata: Record<string, unknown>;
     };
   };
+  "meeting/ready": {
+    data: {
+      activityId: string;
+      jobId: string;
+      userId: string;
+    };
+  };
+  "meeting/started": {
+    data: {
+      activityId: string;
+      jobId: string;
+      conversationId: string;
+      userId: string;
+      agenda: string;
+      participantAgentIds: string[];
+      durationMinutes: number;
+      endTime: number;
+    };
+  };
+  "meeting/round-completed": {
+    data: {
+      activityId: string;
+      jobId: string;
+      conversationId: string;
+      userId: string;
+      roundNumber: number;
+      agenda: string;
+      participantAgentIds: string[];
+      endTime: number;
+    };
+  };
+  "meeting/closing": {
+    data: {
+      activityId: string;
+      jobId: string;
+      conversationId: string;
+      userId: string;
+      agenda: string;
+      participantAgentIds: string[];
+    };
+  };
+  "meeting/summarize": {
+    data: {
+      activityId: string;
+      jobId: string;
+      conversationId: string;
+      userId: string;
+      agenda: string;
+      participantAgentIds: string[];
+      durationMinutes: number;
+    };
+  };
 };
 
 export const inngest = new Inngest({

@@ -21,7 +21,9 @@ import {
   ErrorBanner,
   EmptyState,
   LoadingIndicator,
+  SearchInput,
 } from "@community/ui";
+import { useFuzzySearch } from "@/hooks/use-fuzzy-search";
 import { useConversations } from "@/requests/useConversations";
 import { useDeleteConversation } from "@/requests/useDeleteConversation";
 import { usePrefetchMessages } from "@/requests/useMessages";
@@ -62,6 +64,12 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
   const deleteConversationMutation = useDeleteConversation();
   const prefetchMessages = usePrefetchMessages();
   const { data: agents = [] } = useAgents();
+  const tSearch = useTranslations("search");
+  const convFieldExtractor = useCallback(
+    (c: { title: string }) => [c.title],
+    [],
+  );
+  const { query: sidebarQuery, setQuery: setSidebarQuery, results: filteredConversations } = useFuzzySearch(conversations, convFieldExtractor);
 
   const transportRef = useRef(
     new DefaultChatTransport({
@@ -123,7 +131,10 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
   const loadConversation = useCallback(async (id: string) => {
     const msgs = await prefetchMessages(id);
     setPendingAgentId(null); // not in picker mode
-    setSidebarOpen(false); // close sidebar (overlay on mobile)
+    // Close sidebar overlay on mobile only
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      setSidebarOpen(false);
+    }
     setMessages(
       msgs.map((m: DbMessage) => ({
         id: m.id,
@@ -172,8 +183,15 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
           {t("sidebar.newButton")}
         </Button>
       </div>
+      <div className="px-3 py-2 border-b border-border-subtle">
+        <SearchInput
+          value={sidebarQuery}
+          onChange={setSidebarQuery}
+          placeholder={tSearch("placeholder")}
+        />
+      </div>
       <div className="flex-1 overflow-y-auto scrollbar-thin">
-        {conversations.map((c) => (
+        {filteredConversations.map((c) => (
           <SidebarItem
             key={c.id}
             title={c.title || t("sidebar.untitled")}
@@ -185,7 +203,12 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
             }}
           />
         ))}
-        {conversations.length === 0 && (
+        {sidebarQuery && filteredConversations.length === 0 && (
+          <p className="px-5 py-6 text-xs text-text-tertiary text-center">
+            {tSearch("noResults")}
+          </p>
+        )}
+        {!sidebarQuery && conversations.length === 0 && (
           <p className="px-5 py-6 text-xs text-text-tertiary text-center">
             {t("sidebar.empty")}
           </p>

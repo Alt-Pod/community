@@ -6,6 +6,7 @@ import { useProfile } from "@/requests/useProfile";
 import AppNavbar from "@/components/app-navbar";
 import ProfileAvatar from "@/components/profile-avatar";
 import ProfileInfoForm from "@/components/profile-info-form";
+import ProfilePreferencesForm from "@/components/profile-preferences-form";
 import ProfilePasswordForm from "@/components/profile-password-form";
 
 export default function ProfilePage() {
@@ -39,6 +40,10 @@ export default function ProfilePage() {
             <ProfileInfoForm
               initialName={profile.name ?? ""}
               initialEmail={profile.email}
+            />
+            <ProfilePreferencesForm
+              initialTimezone={profile.timezone}
+              initialLang={profile.lang}
             />
             <ProfilePasswordForm />
           </div>

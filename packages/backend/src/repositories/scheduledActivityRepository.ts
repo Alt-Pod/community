@@ -131,6 +131,27 @@ export class ScheduledActivityRepository {
     `;
   }
 
+  async findDueActivities(
+    from: string,
+    to: string
+  ): Promise<ScheduledActivity[]> {
+    return this.sql<ScheduledActivity[]>`
+      SELECT * FROM ${this.sql(this.table)}
+      WHERE scheduled_at >= ${from}
+        AND scheduled_at <= ${to}
+        AND status = 'scheduled'
+      ORDER BY scheduled_at ASC
+    `;
+  }
+
+  async updatePayload(id: string, payload: Record<string, unknown>): Promise<void> {
+    await this.sql`
+      UPDATE ${this.sql(this.table)}
+      SET payload = ${this.sql.json(payload as JSONValue)}, updated_at = now()
+      WHERE id = ${id}
+    `;
+  }
+
   async updateJobId(id: string, jobId: string): Promise<void> {
     await this.sql`
       UPDATE ${this.sql(this.table)}

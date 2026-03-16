@@ -7,7 +7,9 @@
     "chat": "Chat",
     "agents": "Agents",
     "tools": "Tools",
+    "meetings": "Meetings",
     "planning": "Planning",
+    "logs": "Logs",
     "admin": "Admin",
     "billing": "Billing",
     "logout": "Log out",
@@ -38,6 +40,12 @@
     "billing": {
       "title": "Billing",
       "description": "Monitor costs and usage across your platform."
+    },
+    "liveMeetings": {
+      "title": "Meetings",
+      "viewAll": "View all",
+      "noMeetings": "No meetings in the next hour.",
+      "live": "Live"
     }
   },
   "auth": {
@@ -156,7 +164,63 @@
       "failed": "Failed",
       "cancelled": "Cancelled"
     },
-    "loading": "Loading activities..."
+    "loading": "Loading activities...",
+    "scheduleMeeting": "Schedule Meeting",
+    "hideMeetingForm": "Cancel"
+  },
+  "meetings": {
+    "title": "Meetings",
+    "scheduleMeeting": "Schedule Meeting",
+    "hideForm": "Cancel",
+    "loading": "Loading meetings...",
+    "noMeetings": "No meetings scheduled yet.",
+    "agenda": "Agenda",
+    "participants": "Participants",
+    "duration": "Duration",
+    "timezone": "Timezone",
+    "summary": "Summary",
+    "status": {
+      "scheduled": "Scheduled",
+      "running": "In progress",
+      "completed": "Completed",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    },
+    "scheduleForm": {
+      "title": "Schedule a Meeting",
+      "titleLabel": "Meeting title",
+      "titlePlaceholder": "e.g. Weekly sync",
+      "agendaLabel": "Agenda",
+      "agendaPlaceholder": "Describe the topics to discuss...",
+      "participantsLabel": "Participants",
+      "noAgents": "No agents available. Create agents first.",
+      "selected": "selected",
+      "dateLabel": "Date & time",
+      "durationLabel": "Duration",
+      "timezoneLabel": "Timezone",
+      "submit": "Schedule Meeting",
+      "scheduling": "Scheduling...",
+      "cancel": "Cancel",
+      "error": "Failed to schedule meeting. Please try again.",
+      "supervisor": "Meeting Supervisor",
+      "supervisorNote": "(always included)",
+      "minAgents": "At least 2 agents required"
+    },
+    "summaries": {
+      "title": "Meeting Summaries",
+      "noSummaries": "No meeting summaries yet.",
+      "viewMeeting": "View meeting",
+      "untitled": "Untitled meeting"
+    },
+    "viewer": {
+      "loading": "Loading meeting...",
+      "error": "Failed to load meeting.",
+      "transcript": "Transcript",
+      "noMessages": "Meeting has not started yet.",
+      "readOnly": "This is a meeting between agents. You are observing.",
+      "meetingMaster": "Meeting Master",
+      "unknownAgent": "Unknown Agent"
+    }
   },
   "tools": {
     "status": {
@@ -262,12 +326,24 @@
       "myJobs": {
         "name": "My jobs",
         "description": "List your background jobs"
+      },
+      "myLogs": {
+        "name": "Activity logs",
+        "description": "Read your activity logs and audit trail"
+      },
+      "myMeetings": {
+        "name": "My meetings",
+        "description": "List your scheduled meetings with details"
       }
     },
     "planning": {
       "scheduleActivity": {
         "name": "Schedule activity",
         "description": "Schedule a future activity for an agent"
+      },
+      "scheduleMeeting": {
+        "name": "Schedule meeting",
+        "description": "Schedule a meeting between multiple agents"
       },
       "listScheduledActivities": {
         "name": "List scheduled activities",
@@ -371,6 +447,15 @@
       "errorWrong": "Current password is incorrect",
       "errorMismatch": "Passwords do not match",
       "errorLength": "Password must be at least 8 characters"
+    },
+    "preferences": {
+      "title": "Preferences",
+      "timezone": "Timezone",
+      "language": "Language",
+      "save": "Save preferences",
+      "saving": "Saving...",
+      "saved": "Preferences updated",
+      "error": "Failed to update preferences"
     }
   },
   "admin": {
@@ -441,5 +526,45 @@
     "googleAiStudioDashboard": "Google AI Studio",
     "cloudflareR2Dashboard": "Cloudflare R2",
     "loading": "Loading usage data..."
+  },
+  "search": {
+    "placeholder": "Search…",
+    "noResults": "No results found."
+  },
+  "logs": {
+    "title": "Activity Log",
+    "noLogs": "No activity yet.",
+    "loading": "Loading logs...",
+    "eventTypes": {
+      "conversation": {
+        "created": "Conversation created",
+        "deleted": "Conversation deleted"
+      },
+      "meeting": {
+        "scheduled": "Meeting scheduled",
+        "started": "Meeting started",
+        "completed": "Meeting completed"
+      },
+      "agent": {
+        "created": "Agent created",
+        "updated": "Agent updated",
+        "deleted": "Agent deleted"
+      },
+      "file": {
+        "uploaded": "File uploaded",
+        "deleted": "File deleted"
+      },
+      "knowledge": {
+        "saved": "Knowledge saved",
+        "deleted": "Knowledge deleted"
+      }
+    },
+    "entityTypes": {
+      "conversation": "Conversation",
+      "meeting": "Meeting",
+      "agent": "Agent",
+      "file": "File",
+      "knowledge_entry": "Knowledge"
+    }
   }
 }

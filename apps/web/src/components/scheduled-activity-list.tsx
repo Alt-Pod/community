@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { Card, StatusBadge } from "@community/ui";
 import { ACTIVITIES } from "@community/shared";
 import type { ScheduledActivity } from "@community/shared";
@@ -50,8 +51,9 @@ export default function ScheduledActivityList({
           minute: "2-digit",
         });
 
-        return (
-          <Card key={activity.id}>
+        const isMeeting = activity.activity_type === "meeting";
+        const content = (
+          <Card className={isMeeting ? "hover:border-accent transition-colors cursor-pointer" : undefined}>
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <h4 className="font-heading font-semibold text-text-primary truncate">
@@ -76,6 +78,14 @@ export default function ScheduledActivityList({
               />
             </div>
           </Card>
+        );
+
+        return isMeeting ? (
+          <Link key={activity.id} href={`/meetings/${activity.id}`}>
+            {content}
+          </Link>
+        ) : (
+          <div key={activity.id}>{content}</div>
         );
       })}
     </div>

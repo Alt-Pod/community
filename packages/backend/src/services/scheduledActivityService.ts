@@ -36,7 +36,7 @@ export class ScheduledActivityService {
     const job = await this.jobService.createJob(
       "activity.execute",
       { activityType: data.activityType },
-      { activityId: activity.id, scheduledAt: data.scheduledAt },
+      { activityId: activity.id, scheduledAt: data.scheduledAt, activityType: data.activityType },
       { userId }
     );
 

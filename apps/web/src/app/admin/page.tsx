@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { Button, Heading, LoadingIndicator, TextInput } from "@community/ui";
+import { Button, Heading, LoadingIndicator, TextInput, SearchInput } from "@community/ui";
 import {
   useAdminUsers,
   useCreateUser,
@@ -11,15 +11,23 @@ import {
   useUpdateUserRole,
   useDeleteUser,
 } from "@/requests/useAdmin";
+import { useFuzzySearch } from "@/hooks/use-fuzzy-search";
 
 export default function AdminPage() {
   const t = useTranslations("admin");
+  const tSearch = useTranslations("search");
   const { data: session } = useSession();
   const { data: users = [], isLoading } = useAdminUsers();
   const createMutation = useCreateUser();
   const resetMutation = useUpdateUserPassword();
   const roleMutation = useUpdateUserRole();
   const deleteMutation = useDeleteUser();
+
+  const fieldExtractor = useCallback(
+    (u: { email: string; name?: string | null }) => [u.email, u.name ?? ""],
+    [],
+  );
+  const { query, setQuery, results } = useFuzzySearch(users, fieldExtractor);
 
   const [showCreate, setShowCreate] = useState(false);
   const [createEmail, setCreateEmail] = useState("");
@@ -123,12 +131,19 @@ export default function AdminPage() {
         </div>
       )}
 
+      <SearchInput
+        value={query}
+        onChange={setQuery}
+        placeholder={tSearch("placeholder")}
+        className="mb-6"
+      />
+
       {isLoading && (
         <LoadingIndicator variant="inline" text={t("loading")} />
       )}
 
       <div className="space-y-3">
-        {users.map((user) => {
+        {results.map((user) => {
           const isSelf = user.id === session?.user?.id;
 
           return (
@@ -278,7 +293,13 @@ export default function AdminPage() {
           );
         })}
 
-        {!isLoading && users.length === 0 && (
+        {query && results.length === 0 && (
+          <p className="text-text-tertiary text-sm text-center py-8">
+            {tSearch("noResults")}
+          </p>
+        )}
+
+        {!query && !isLoading && users.length === 0 && (
           <p className="text-text-tertiary text-sm text-center py-8">
             {t("empty")}
           </p>

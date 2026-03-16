@@ -1,4 +1,4 @@
-import { auth, agentService } from "@community/backend";
+import { auth, agentService, auditLogService } from "@community/backend";
 
 export async function GET(
   _req: Request,
@@ -42,6 +42,7 @@ export async function PUT(
     return Response.json({ error: "Agent not found" }, { status: 404 });
   }
 
+  auditLogService.log(session.user.id, "agent.updated", "agent", id, body).catch(() => {});
   return Response.json(agent);
 }
 
@@ -61,5 +62,6 @@ export async function DELETE(
     return Response.json({ error: "Agent not found" }, { status: 404 });
   }
 
+  auditLogService.log(session.user.id, "agent.deleted", "agent", id, {}).catch(() => {});
   return new Response(null, { status: 204 });
 }

@@ -90,6 +90,9 @@ API routes live in `apps/web/src/app/api/` and follow REST principles:
 | `GET` | `/api/files/[id]` | Get file metadata + signed URL |
 | `PUT` | `/api/files/[id]` | Update file metadata |
 | `DELETE` | `/api/files/[id]` | Delete a file |
+| `GET` | `/api/meetings` | List user's meetings (filtered scheduled activities) |
+| `POST` | `/api/meetings` | Schedule a new meeting |
+| `GET` | `/api/meetings/[id]` | Get meeting details + transcript |
 | `POST` | `/api/auth/register` | Register a new user |
 
 ### Rules for New Endpoints
@@ -227,6 +230,44 @@ Read-only tools (search, list, retrieve) execute automatically without approval.
 9. **Filter from assignment UI** (if universal) — Verify `GET /api/tools` excludes tools with `meta.universal: true`
 
 10. **Build** — Run `yarn build` to verify no type errors
+
+## Meeting Activity
+
+Meetings are the first activity type. A meeting is an automated multi-agent conversation orchestrated by a Meeting Master agent.
+
+### Architecture
+
+- **Scheduling**: Meetings are `scheduled_activities` with `activity_type = 'meeting'`. Config stored in `payload` JSONB as `MeetingPayload`.
+- **Execution**: Inngest `activityExecution` dispatches to `runMeeting()` when `activity_type === "meeting"`. Uses `generateText` (not streaming) for each turn.
+- **Conversation**: Stored as a `conversation` with `type = 'meeting'`. The user owns it but doesn't participate — only agents talk.
+- **Hardcoded agents**: Meeting Master and Summary Agent are system prompt constants in `packages/ai/src/tasks/meetingAgents.ts`, not database agent rows.
+
+### Meeting Flow
+
+1. Inngest sleeps until scheduled time
+2. Creates a meeting conversation (`type: 'meeting'`)
+3. Meeting Master opens with agenda intro
+4. Round-robin: each participant agent speaks per round
+5. Duration enforced by wall-clock check before each turn
+6. Meeting Master closes the meeting
+7. Summary Agent generates a summary
+8. Activity marked completed with summary in output
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `packages/ai/src/tasks/activityExecution.ts` | Inngest function with meeting dispatch |
+| `packages/ai/src/tasks/meetingHelper.ts` | generateText helpers for each turn |
+| `packages/ai/src/tasks/meetingAgents.ts` | Hardcoded Meeting Master + Summary Agent prompts |
+| `packages/ai/src/tools/planning/schedule-meeting.ts` | `planning.schedule_meeting` tool |
+| `apps/web/src/app/api/meetings/` | Meeting API routes |
+| `apps/web/src/components/meeting-schedule-form.tsx` | Scheduling form component |
+| `apps/web/src/components/meeting-viewer.tsx` | Read-only transcript viewer |
+
+### Conversation Types
+
+The `conversations` table has a `type` column: `'chat'` (default) or `'meeting'`. Meeting conversations are excluded from the chat sidebar (`findByUserId` filters `WHERE type = 'chat'`).
 
 ## File Storage (Cloudflare R2)
 

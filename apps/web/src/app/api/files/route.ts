@@ -1,4 +1,4 @@
-import { auth, fileService } from "@community/backend";
+import { auth, fileService, auditLogService } from "@community/backend";
 import type { FileCategory } from "@community/shared";
 
 export async function GET(req: Request) {
@@ -40,6 +40,7 @@ export async function POST(req: Request) {
       category,
       metadata,
     });
+    auditLogService.log(session.user.id, "file.uploaded", "file", result.id, { filename: result.filename, category }).catch(() => {});
     return Response.json(result, { status: 201 });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Upload failed";

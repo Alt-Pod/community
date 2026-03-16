@@ -2,11 +2,13 @@
 
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
-import { Button, Heading, LoadingIndicator, Select } from "@community/ui";
+import { Button, Heading, LoadingIndicator, Select, Card } from "@community/ui";
 import { useScheduledActivities } from "@/requests/useScheduledActivities";
 import { useAgents } from "@/requests/useAgents";
+import { useProfile } from "@/requests/useProfile";
 import PlanningCalendar from "@/components/planning-calendar";
 import ScheduledActivityList from "@/components/scheduled-activity-list";
+import MeetingScheduleForm from "@/components/meeting-schedule-form";
 
 export default function PlanningPage() {
   const t = useTranslations("planning");
@@ -15,6 +17,8 @@ export default function PlanningPage() {
   const [month, setMonth] = useState(now.getMonth());
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [agentFilter, setAgentFilter] = useState<string>("");
+  const [showMeetingForm, setShowMeetingForm] = useState(false);
+  const { data: profile } = useProfile();
 
   const from = new Date(year, month, 1).toISOString();
   const to = new Date(year, month + 1, 1).toISOString();
@@ -81,6 +85,9 @@ export default function PlanningPage() {
           {t("title")}
         </Heading>
         <div className="flex items-center gap-3">
+          <Button onClick={() => setShowMeetingForm(!showMeetingForm)}>
+            {showMeetingForm ? t("hideMeetingForm") : t("scheduleMeeting")}
+          </Button>
           <Select
             value={agentFilter}
             onChange={(e) => setAgentFilter(e.target.value)}
@@ -94,6 +101,18 @@ export default function PlanningPage() {
           />
         </div>
       </div>
+
+      {showMeetingForm && (
+        <div className="mb-6">
+          <Card>
+            <MeetingScheduleForm
+              defaultTimezone={profile?.timezone}
+              onSuccess={() => setShowMeetingForm(false)}
+              onCancel={() => setShowMeetingForm(false)}
+            />
+          </Card>
+        </div>
+      )}
 
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">

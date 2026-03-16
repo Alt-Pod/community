@@ -76,9 +76,19 @@ export default function AppNavbar() {
       active: pathname.startsWith("/tools"),
     },
     {
+      href: "/meetings",
+      label: t("meetings"),
+      active: pathname.startsWith("/meetings"),
+    },
+    {
       href: "/planning",
       label: t("planning"),
       active: pathname.startsWith("/planning"),
+    },
+    {
+      href: "/logs",
+      label: t("logs"),
+      active: pathname.startsWith("/logs"),
     },
     ...(session?.user?.role === USER_ROLES.ADMIN
       ? [

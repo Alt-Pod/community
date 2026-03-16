@@ -7,7 +7,9 @@
     "chat": "Chat",
     "agents": "Agenti",
     "tools": "Strumenti",
+    "meetings": "Riunioni",
     "planning": "Pianificazione",
+    "logs": "Registro",
     "admin": "Admin",
     "billing": "Fatturazione",
     "logout": "Disconnetti",
@@ -38,6 +40,12 @@
     "billing": {
       "title": "Fatturazione",
       "description": "Monitora i costi e l'utilizzo della piattaforma."
+    },
+    "liveMeetings": {
+      "title": "Riunioni",
+      "viewAll": "Vedi tutto",
+      "noMeetings": "Nessuna riunione nella prossima ora.",
+      "live": "In diretta"
     }
   },
   "auth": {
@@ -156,7 +164,63 @@
       "failed": "Fallito",
       "cancelled": "Annullato"
     },
-    "loading": "Caricamento attività..."
+    "loading": "Caricamento attività...",
+    "scheduleMeeting": "Programma riunione",
+    "hideMeetingForm": "Annulla"
+  },
+  "meetings": {
+    "title": "Riunioni",
+    "scheduleMeeting": "Programma riunione",
+    "hideForm": "Annulla",
+    "loading": "Caricamento riunioni...",
+    "noMeetings": "Nessuna riunione programmata.",
+    "agenda": "Ordine del giorno",
+    "participants": "Partecipanti",
+    "duration": "Durata",
+    "timezone": "Fuso orario",
+    "summary": "Riepilogo",
+    "status": {
+      "scheduled": "Programmata",
+      "running": "In corso",
+      "completed": "Completata",
+      "failed": "Fallita",
+      "cancelled": "Annullata"
+    },
+    "scheduleForm": {
+      "title": "Programma una riunione",
+      "titleLabel": "Titolo della riunione",
+      "titlePlaceholder": "es. Sync settimanale",
+      "agendaLabel": "Ordine del giorno",
+      "agendaPlaceholder": "Descrivi gli argomenti da discutere...",
+      "participantsLabel": "Partecipanti",
+      "noAgents": "Nessun agente disponibile. Crea prima degli agenti.",
+      "selected": "selezionato/i",
+      "dateLabel": "Data e ora",
+      "durationLabel": "Durata",
+      "timezoneLabel": "Fuso orario",
+      "submit": "Programma riunione",
+      "scheduling": "Programmazione...",
+      "cancel": "Annulla",
+      "error": "Impossibile programmare la riunione. Riprova.",
+      "supervisor": "Supervisore riunione",
+      "supervisorNote": "(sempre incluso)",
+      "minAgents": "Almeno 2 agenti richiesti"
+    },
+    "summaries": {
+      "title": "Riepiloghi riunioni",
+      "noSummaries": "Nessun riepilogo di riunione.",
+      "viewMeeting": "Vedi riunione",
+      "untitled": "Riunione senza titolo"
+    },
+    "viewer": {
+      "loading": "Caricamento riunione...",
+      "error": "Impossibile caricare la riunione.",
+      "transcript": "Trascrizione",
+      "noMessages": "La riunione non è ancora iniziata.",
+      "readOnly": "Questa è una riunione tra agenti. Stai osservando.",
+      "meetingMaster": "Moderatore",
+      "unknownAgent": "Agente sconosciuto"
+    }
   },
   "tools": {
     "status": {
@@ -276,6 +340,10 @@
       "cancelScheduledActivity": {
         "name": "Annulla attività pianificata",
         "description": "Annulla un'attività pianificata"
+      },
+      "scheduleMeeting": {
+        "name": "Programma riunione",
+        "description": "Programma una riunione tra più agenti"
       }
     },
     "files": {
@@ -371,6 +439,15 @@
       "errorWrong": "La password attuale non è corretta",
       "errorMismatch": "Le password non corrispondono",
       "errorLength": "La password deve contenere almeno 8 caratteri"
+    },
+    "preferences": {
+      "title": "Preferenze",
+      "timezone": "Fuso orario",
+      "language": "Lingua",
+      "save": "Salva preferenze",
+      "saving": "Salvataggio...",
+      "saved": "Preferenze aggiornate",
+      "error": "Impossibile aggiornare le preferenze"
     }
   },
   "admin": {
@@ -441,5 +518,45 @@
     "googleAiStudioDashboard": "Google AI Studio",
     "cloudflareR2Dashboard": "Cloudflare R2",
     "loading": "Caricamento dati di utilizzo..."
+  },
+  "search": {
+    "placeholder": "Cerca…",
+    "noResults": "Nessun risultato."
+  },
+  "logs": {
+    "title": "Registro attività",
+    "noLogs": "Nessuna attività.",
+    "loading": "Caricamento registro...",
+    "eventTypes": {
+      "conversation": {
+        "created": "Conversazione creata",
+        "deleted": "Conversazione eliminata"
+      },
+      "meeting": {
+        "scheduled": "Riunione programmata",
+        "started": "Riunione avviata",
+        "completed": "Riunione completata"
+      },
+      "agent": {
+        "created": "Agente creato",
+        "updated": "Agente aggiornato",
+        "deleted": "Agente eliminato"
+      },
+      "file": {
+        "uploaded": "File caricato",
+        "deleted": "File eliminato"
+      },
+      "knowledge": {
+        "saved": "Conoscenza salvata",
+        "deleted": "Conoscenza eliminata"
+      }
+    },
+    "entityTypes": {
+      "conversation": "Conversazione",
+      "meeting": "Riunione",
+      "agent": "Agente",
+      "file": "File",
+      "knowledge_entry": "Conoscenza"
+    }
   }
 }

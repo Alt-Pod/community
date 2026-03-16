@@ -1,4 +1,4 @@
-import { auth, conversationService } from "@community/backend";
+import { auth, conversationService, auditLogService } from "@community/backend";
 
 export async function GET(
   _req: Request,
@@ -35,5 +35,6 @@ export async function DELETE(
     return new Response("Not found", { status: 404 });
   }
 
+  auditLogService.log(session.user.id, "conversation.deleted", "conversation", id, {}).catch(() => {});
   return new Response(null, { status: 204 });
 }

@@ -12,7 +12,7 @@ export async function streamAgentChat(
   toolIds: string[],
   ctx: ToolContext
 ) {
-  const system = buildAgentSystemPrompt(agent);
+  const system = buildAgentSystemPrompt(agent, ctx.lang, ctx.timezone);
   const tools = buildToolsForAgent(toolIds, ctx);
   const modelMessages = await convertToModelMessages(messages, {
     ignoreIncompleteToolCalls: true,
@@ -32,7 +32,7 @@ export async function streamDefaultChat(
   toolIds: string[],
   ctx: ToolContext
 ) {
-  const system = buildDefaultSystemPrompt(agents);
+  const system = buildDefaultSystemPrompt(agents, ctx.lang, ctx.timezone);
   const tools = buildToolsForAgent(toolIds, ctx);
   const modelMessages = await convertToModelMessages(messages, {
     ignoreIncompleteToolCalls: true,

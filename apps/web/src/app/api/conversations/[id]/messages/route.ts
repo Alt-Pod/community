@@ -7,6 +7,7 @@ import {
   buildPartsFromSteps,
   jobService,
   usageService,
+  userService,
 } from "@community/backend";
 import { streamAgentChat, streamDefaultChat } from "@community/ai";
 import type { UIMessage } from "ai";
@@ -112,6 +113,9 @@ export async function POST(
   }
 
   try {
+    const userProfile = await userService.getProfile(session.user.id);
+    const userLang = (userProfile as { lang?: string })?.lang;
+    const userTimezone = (userProfile as { timezone?: string })?.timezone;
     const agentId = (conversation as { agent_id?: string | null }).agent_id;
 
     if (agentId) {
@@ -125,6 +129,8 @@ export async function POST(
       const result = await streamAgentChat(agent, messages, toolIds, {
         userId: session.user.id,
         agentId,
+        lang: userLang,
+        timezone: userTimezone,
       });
 
       Promise.resolve(result.steps)
@@ -169,7 +175,10 @@ export async function POST(
         "data.list_tools",
         "data.get_agent_details",
         "data.my_jobs",
+        "data.my_logs",
+        "data.my_meetings",
         "planning.schedule_activity",
+        "planning.schedule_meeting",
         "planning.list_scheduled_activities",
         "planning.cancel_scheduled_activity",
         "files.upload_file",
@@ -180,6 +189,8 @@ export async function POST(
       ];
       const result = await streamDefaultChat(agents, messages, allToolIds, {
         userId: session.user.id,
+        lang: userLang,
+        timezone: userTimezone,
       });
 
       Promise.resolve(result.steps)

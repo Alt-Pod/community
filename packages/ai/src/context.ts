@@ -1,5 +1,32 @@
 import type { Agent } from "@community/shared";
 
+const LANG_NAMES: Record<string, string> = {
+  en: "English",
+  fr: "French",
+  es: "Spanish",
+  it: "Italian",
+  de: "German",
+};
+
+function buildLanguageInstruction(lang?: string): string {
+  if (!lang || lang === "en") return "";
+  const name = LANG_NAMES[lang] || "English";
+  return `\n\n## Language\nAlways respond in ${name}. The user's preferred language is ${lang}.`;
+}
+
+function buildTimezoneInstruction(timezone?: string): string {
+  if (!timezone || timezone === "UTC") {
+    const now = new Date().toISOString();
+    return `\n\n## Time Context\nThe current UTC time is ${now}. The user's timezone is UTC. When the user mentions a time (e.g. "12h32", "3pm", "tomorrow at 9"), interpret it as UTC.`;
+  }
+  const now = new Date().toLocaleString("en-US", {
+    timeZone: timezone,
+    dateStyle: "full",
+    timeStyle: "long",
+  });
+  return `\n\n## Time Context\nThe user's timezone is **${timezone}**. The current date and time in their timezone is: ${now}.\nWhen the user mentions a time (e.g. "12h32", "3pm", "tomorrow at 9"), always interpret it in ${timezone} unless they explicitly specify another timezone. When displaying times back to the user, use their timezone. When scheduling activities, convert to ISO 8601 with the correct offset for ${timezone}.`;
+}
+
 const PROMPT_TOOLS_INSTRUCTIONS = `
 ## Interactive Prompts
 You have tools to present interactive UI elements to the user and collect structured answers:
@@ -36,21 +63,27 @@ You can read the user's own data using these tools:
 - **data.list_tools**: List all available tools with their IDs, categories, and descriptions. Use this to discover tool IDs when creating or updating agents.
 - **data.get_agent_details**: Get detailed information about a specific agent, including its currently assigned tool IDs. Use this to inspect a single agent's configuration before modifying it.
 - **data.my_jobs**: List the user's background jobs with optional status/type filters.
+- **data.my_logs**: Read the user's activity logs (audit trail). Shows events like conversations created, meetings started/completed, agents created/updated/deleted, etc. Can filter by event_type or entity_type.
+- **data.my_meetings**: List the user's meetings with agenda, participants, status, and scheduled time. Can filter by status (scheduled, running, completed, failed, cancelled).
 
-Use these tools when the user asks about their account, past conversations, messages, available agents, or job status.
+Use these tools when the user asks about their account, past conversations, messages, available agents, job status, activity history, or meetings.
 All queries are scoped to the current user — you cannot access other users' data.`;
 
 const PLANNING_INSTRUCTIONS = `
 ## Activity Planning
 You can schedule future activities using these tools:
-- **planning.schedule_activity**: Schedule an activity for a specific future date/time. You must specify an activity_type from the available types: report_generation.
+- **planning.schedule_activity**: Schedule an activity for a specific future date/time. You must specify an activity_type from the available types: report_generation, meeting.
+- **planning.schedule_meeting**: Schedule a meeting between multiple agents. This is the preferred tool for scheduling meetings — it provides a structured interface for agenda, participants, duration, and timezone.
 - **planning.list_scheduled_activities**: List the user's scheduled activities, optionally filtered by status or date range.
 - **planning.cancel_scheduled_activity**: Cancel a scheduled activity that hasn't been executed yet.
 
 Available activity types:
 - **report_generation**: Generate and deliver a report on a given topic. Payload: { topic: string, format?: string }
+- **meeting**: A scheduled meeting between agents. Use planning.schedule_meeting to schedule meetings. Requires participant agent IDs, an agenda, scheduled time, duration (5-120 min), and timezone. A Meeting Master agent will orchestrate the discussion and a summary will be generated automatically.
 
-Use these when the user asks you to schedule something, plan a report, or any future task. Always confirm the scheduled time with the user before creating the activity.`;
+Use these when the user asks you to schedule something, plan a report, schedule a meeting, or any future task. Always confirm the scheduled time with the user before creating the activity.
+When scheduling a meeting, use data.list_agents first to show available agents and let the user pick participants.
+When scheduling a meeting, use the user's preferred timezone (available via data.my_profile) as the default unless they specify otherwise.`;
 
 const FILE_MANAGEMENT_INSTRUCTIONS = `
 ## File Management
@@ -66,11 +99,11 @@ Categories: avatar, agent_avatar, chat_image, document, attachment.
 ### Referencing uploaded files
 Every uploaded file gets a unique ID. When a file is uploaded during the conversation, remember its ID so you can reference it later using files.get_file or files.list_files. If the user asks about a previously uploaded file or image, use files.list_files to find it and files.get_file to retrieve its download URL.`;
 
-export function buildAgentSystemPrompt(agent: Agent): string {
-  return `${agent.system_prompt}\n${PROMPT_TOOLS_INSTRUCTIONS}\n${KNOWLEDGE_BASE_INSTRUCTIONS}\n${DATA_TOOLS_INSTRUCTIONS}\n${PLANNING_INSTRUCTIONS}\n${FILE_MANAGEMENT_INSTRUCTIONS}`;
+export function buildAgentSystemPrompt(agent: Agent, lang?: string, timezone?: string): string {
+  return `${agent.system_prompt}\n${PROMPT_TOOLS_INSTRUCTIONS}\n${KNOWLEDGE_BASE_INSTRUCTIONS}\n${DATA_TOOLS_INSTRUCTIONS}\n${PLANNING_INSTRUCTIONS}\n${FILE_MANAGEMENT_INSTRUCTIONS}${buildTimezoneInstruction(timezone)}${buildLanguageInstruction(lang)}`;
 }
 
-export function buildDefaultSystemPrompt(agents: Agent[]): string {
+export function buildDefaultSystemPrompt(agents: Agent[], lang?: string, timezone?: string): string {
   const agentList = agents
     .map((a) => `- **${a.name}**: ${a.description || "No description"}`)
     .join("\n");
@@ -105,5 +138,5 @@ ${PROMPT_TOOLS_INSTRUCTIONS}
 ${KNOWLEDGE_BASE_INSTRUCTIONS}
 ${DATA_TOOLS_INSTRUCTIONS}
 ${PLANNING_INSTRUCTIONS}
-${FILE_MANAGEMENT_INSTRUCTIONS}`;
+${FILE_MANAGEMENT_INSTRUCTIONS}${buildTimezoneInstruction(timezone)}${buildLanguageInstruction(lang)}`;
 }

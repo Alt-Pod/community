@@ -1,4 +1,4 @@
-import { auth, fileService } from "@community/backend";
+import { auth, fileService, auditLogService } from "@community/backend";
 
 export async function GET(
   _req: Request,
@@ -66,5 +66,6 @@ export async function DELETE(
     return Response.json({ error: "File not found" }, { status: 404 });
   }
 
+  auditLogService.log(session.user.id, "file.deleted", "file", id, {}).catch(() => {});
   return new Response(null, { status: 204 });
 }

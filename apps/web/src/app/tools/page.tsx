@@ -1,18 +1,22 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Heading, LoadingIndicator } from "@community/ui";
+import { Heading, LoadingIndicator, SearchInput } from "@community/ui";
+import { fuzzySearchItems } from "@community/shared";
 import { useToolDefinitions, useToolAssignments } from "@/requests/useTools";
 
 export default function ToolsPage() {
   const t = useTranslations("toolsPage");
   const tRoot = useTranslations();
+  const tSearch = useTranslations("search");
   const { data: tools = [], isLoading: toolsLoading } = useToolDefinitions();
   const { data: assignments = [], isLoading: assignmentsLoading } =
     useToolAssignments();
 
   const isLoading = toolsLoading || assignmentsLoading;
+  const [query, setQuery] = useState("");
 
   // Group assignments by tool_id
   const assignmentsByTool = assignments.reduce(
@@ -23,8 +27,17 @@ export default function ToolsPage() {
     {} as Record<string, typeof assignments>
   );
 
-  // Group tools by category
-  const categories = tools.reduce(
+  // Fuzzy filter tools, then group by category
+  const filteredTools = useMemo(
+    () =>
+      fuzzySearchItems(tools, query, (tool) => [
+        tRoot(tool.name),
+        tool.description ?? "",
+      ]),
+    [tools, query, tRoot],
+  );
+
+  const categories = filteredTools.reduce(
     (acc, tool) => {
       (acc[tool.category] ??= []).push(tool);
       return acc;
@@ -37,6 +50,13 @@ export default function ToolsPage() {
       <Heading as="h1" className="text-2xl mb-8">
         {t("title")}
       </Heading>
+
+      <SearchInput
+        value={query}
+        onChange={setQuery}
+        placeholder={tSearch("placeholder")}
+        className="mb-6"
+      />
 
       {isLoading && (
         <LoadingIndicator variant="inline" text={t("loading")} />
@@ -94,7 +114,13 @@ export default function ToolsPage() {
         </div>
       ))}
 
-      {!isLoading && tools.length === 0 && (
+      {query && filteredTools.length === 0 && (
+        <p className="text-text-tertiary text-sm text-center py-8">
+          {tSearch("noResults")}
+        </p>
+      )}
+
+      {!query && !isLoading && tools.length === 0 && (
         <p className="text-text-tertiary text-sm text-center py-8">
           {t("empty")}
         </p>

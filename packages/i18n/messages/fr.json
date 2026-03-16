@@ -7,7 +7,9 @@
     "chat": "Discussion",
     "agents": "Agents",
     "tools": "Outils",
+    "meetings": "Réunions",
     "planning": "Planning",
+    "logs": "Journal",
     "admin": "Admin",
     "billing": "Facturation",
     "logout": "Se déconnecter",
@@ -38,6 +40,12 @@
     "billing": {
       "title": "Facturation",
       "description": "Surveillez les coûts et l'utilisation de votre plateforme."
+    },
+    "liveMeetings": {
+      "title": "Réunions",
+      "viewAll": "Voir tout",
+      "noMeetings": "Aucune réunion dans la prochaine heure.",
+      "live": "En direct"
     }
   },
   "auth": {
@@ -156,7 +164,63 @@
       "failed": "Échoué",
       "cancelled": "Annulé"
     },
-    "loading": "Chargement des activités..."
+    "loading": "Chargement des activités...",
+    "scheduleMeeting": "Planifier une réunion",
+    "hideMeetingForm": "Annuler"
+  },
+  "meetings": {
+    "title": "Réunions",
+    "scheduleMeeting": "Planifier une réunion",
+    "hideForm": "Annuler",
+    "loading": "Chargement des réunions...",
+    "noMeetings": "Aucune réunion planifiée.",
+    "agenda": "Ordre du jour",
+    "participants": "Participants",
+    "duration": "Durée",
+    "timezone": "Fuseau horaire",
+    "summary": "Résumé",
+    "status": {
+      "scheduled": "Planifiée",
+      "running": "En cours",
+      "completed": "Terminée",
+      "failed": "Échouée",
+      "cancelled": "Annulée"
+    },
+    "scheduleForm": {
+      "title": "Planifier une réunion",
+      "titleLabel": "Titre de la réunion",
+      "titlePlaceholder": "ex. Sync hebdomadaire",
+      "agendaLabel": "Ordre du jour",
+      "agendaPlaceholder": "Décrivez les sujets à discuter...",
+      "participantsLabel": "Participants",
+      "noAgents": "Aucun agent disponible. Créez d'abord des agents.",
+      "selected": "sélectionné(s)",
+      "dateLabel": "Date et heure",
+      "durationLabel": "Durée",
+      "timezoneLabel": "Fuseau horaire",
+      "submit": "Planifier la réunion",
+      "scheduling": "Planification...",
+      "cancel": "Annuler",
+      "error": "Échec de la planification. Veuillez réessayer.",
+      "supervisor": "Superviseur de réunion",
+      "supervisorNote": "(toujours inclus)",
+      "minAgents": "Au moins 2 agents requis"
+    },
+    "summaries": {
+      "title": "Résumés des réunions",
+      "noSummaries": "Aucun résumé de réunion.",
+      "viewMeeting": "Voir la réunion",
+      "untitled": "Réunion sans titre"
+    },
+    "viewer": {
+      "loading": "Chargement de la réunion...",
+      "error": "Impossible de charger la réunion.",
+      "transcript": "Transcription",
+      "noMessages": "La réunion n'a pas encore commencé.",
+      "readOnly": "Ceci est une réunion entre agents. Vous êtes observateur.",
+      "meetingMaster": "Maître de réunion",
+      "unknownAgent": "Agent inconnu"
+    }
   },
   "tools": {
     "status": {
@@ -276,6 +340,10 @@
       "cancelScheduledActivity": {
         "name": "Annuler une activité planifiée",
         "description": "Annuler une activité planifiée"
+      },
+      "scheduleMeeting": {
+        "name": "Planifier une réunion",
+        "description": "Planifier une réunion entre plusieurs agents"
       }
     },
     "files": {
@@ -371,6 +439,15 @@
       "errorWrong": "Le mot de passe actuel est incorrect",
       "errorMismatch": "Les mots de passe ne correspondent pas",
       "errorLength": "Le mot de passe doit contenir au moins 8 caractères"
+    },
+    "preferences": {
+      "title": "Préférences",
+      "timezone": "Fuseau horaire",
+      "language": "Langue",
+      "save": "Enregistrer les préférences",
+      "saving": "Enregistrement...",
+      "saved": "Préférences mises à jour",
+      "error": "Échec de la mise à jour des préférences"
     }
   },
   "admin": {
@@ -441,5 +518,45 @@
     "googleAiStudioDashboard": "Google AI Studio",
     "cloudflareR2Dashboard": "Cloudflare R2",
     "loading": "Chargement des données..."
+  },
+  "search": {
+    "placeholder": "Rechercher…",
+    "noResults": "Aucun résultat."
+  },
+  "logs": {
+    "title": "Journal d'activité",
+    "noLogs": "Aucune activité.",
+    "loading": "Chargement du journal...",
+    "eventTypes": {
+      "conversation": {
+        "created": "Conversation créée",
+        "deleted": "Conversation supprimée"
+      },
+      "meeting": {
+        "scheduled": "Réunion planifiée",
+        "started": "Réunion démarrée",
+        "completed": "Réunion terminée"
+      },
+      "agent": {
+        "created": "Agent créé",
+        "updated": "Agent mis à jour",
+        "deleted": "Agent supprimé"
+      },
+      "file": {
+        "uploaded": "Fichier téléchargé",
+        "deleted": "Fichier supprimé"
+      },
+      "knowledge": {
+        "saved": "Connaissance enregistrée",
+        "deleted": "Connaissance supprimée"
+      }
+    },
+    "entityTypes": {
+      "conversation": "Conversation",
+      "meeting": "Réunion",
+      "agent": "Agent",
+      "file": "Fichier",
+      "knowledge_entry": "Connaissance"
+    }
   }
 }

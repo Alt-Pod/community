@@ -1,8 +1,10 @@
 "use client";
 
+import { useCallback } from "react";
 import { useTranslations } from "next-intl";
-import { Heading } from "@community/ui";
+import { Heading, SearchInput } from "@community/ui";
 import type { Agent } from "@community/shared";
+import { useFuzzySearch } from "@/hooks/use-fuzzy-search";
 import AgentPickerTools from "./agent-picker-tools";
 
 interface AgentPickerProps {
@@ -12,6 +14,12 @@ interface AgentPickerProps {
 
 export default function AgentPicker({ agents, onSelect }: AgentPickerProps) {
   const t = useTranslations("chat.agentPicker");
+  const tSearch = useTranslations("search");
+  const fieldExtractor = useCallback(
+    (a: Agent) => [a.name, a.description ?? ""],
+    [],
+  );
+  const { query, setQuery, results } = useFuzzySearch(agents, fieldExtractor);
 
   return (
     <div className="flex-1 overflow-y-auto scrollbar-thin px-4 py-8 md:px-8 md:py-12">
@@ -23,6 +31,12 @@ export default function AgentPicker({ agents, onSelect }: AgentPickerProps) {
       </div>
 
       <div className="grid gap-4 w-full max-w-lg mx-auto">
+        <SearchInput
+          value={query}
+          onChange={setQuery}
+          placeholder={tSearch("placeholder")}
+        />
+
         <button
           onClick={() => onSelect(null)}
           className="text-left p-5 rounded-md border border-border-subtle bg-surface-secondary hover:border-accent-gold-muted hover:shadow-card transition-all duration-150"
@@ -36,7 +50,7 @@ export default function AgentPicker({ agents, onSelect }: AgentPickerProps) {
           <AgentPickerTools />
         </button>
 
-        {agents.map((agent) => (
+        {results.map((agent) => (
           <button
             key={agent.id}
             onClick={() => onSelect(agent.id)}
@@ -53,6 +67,12 @@ export default function AgentPicker({ agents, onSelect }: AgentPickerProps) {
             <AgentPickerTools agentId={agent.id} />
           </button>
         ))}
+
+        {query && results.length === 0 && (
+          <p className="text-text-tertiary text-sm text-center py-4">
+            {tSearch("noResults")}
+          </p>
+        )}
       </div>
       </div>
   );

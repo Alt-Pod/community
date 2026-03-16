@@ -9,7 +9,7 @@ export async function fetchProfile(): Promise<ProfileResponse> {
 }
 
 export async function updateProfile(
-  data: { name?: string; email?: string }
+  data: { name?: string; email?: string; timezone?: string; lang?: string }
 ): Promise<ProfileResponse> {
   const res = await fetch("/api/profile", {
     method: "PATCH",

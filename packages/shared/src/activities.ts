@@ -10,6 +10,11 @@ export const ACTIVITIES = {
     name: "Report Generation",
     description: "Generate and deliver a report on a given topic",
   },
+  meeting: {
+    id: "meeting",
+    name: "Meeting",
+    description: "A scheduled meeting between agents with an agenda",
+  },
 } as const satisfies Record<string, ActivityDefinition>;
 
 export type ActivityType = keyof typeof ACTIVITIES;

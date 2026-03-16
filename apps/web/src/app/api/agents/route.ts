@@ -1,4 +1,4 @@
-import { auth, agentService } from "@community/backend";
+import { auth, agentService, auditLogService } from "@community/backend";
 
 export async function GET() {
   const session = await auth();
@@ -30,5 +30,6 @@ export async function POST(req: Request) {
   }
 
   const agent = await agentService.create({ name, description, system_prompt });
+  auditLogService.log(session.user.id, "agent.created", "agent", agent.id, { name: agent.name }).catch(() => {});
   return Response.json(agent, { status: 201 });
 }

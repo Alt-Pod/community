@@ -22,19 +22,21 @@ export class UserRepository {
 
   async findProfileById(id: string) {
     const [user] = await this.sql`
-      SELECT id, email, name, avatar_url, created_at
+      SELECT id, email, name, avatar_url, timezone, lang, created_at
       FROM ${this.sql(this.table)} WHERE id = ${id}
     `;
     return user ?? null;
   }
 
-  async updateProfile(id: string, data: { name?: string; email?: string }) {
+  async updateProfile(id: string, data: { name?: string; email?: string; timezone?: string; lang?: string }) {
     const [user] = await this.sql`
       UPDATE ${this.sql(this.table)}
       SET name = COALESCE(${data.name ?? null}, name),
-          email = COALESCE(${data.email ?? null}, email)
+          email = COALESCE(${data.email ?? null}, email),
+          timezone = COALESCE(${data.timezone ?? null}, timezone),
+          lang = COALESCE(${data.lang ?? null}, lang)
       WHERE id = ${id}
-      RETURNING id, email, name, avatar_url, created_at
+      RETURNING id, email, name, avatar_url, timezone, lang, created_at
     `;
     return user ?? null;
   }
@@ -44,7 +46,7 @@ export class UserRepository {
       UPDATE ${this.sql(this.table)}
       SET avatar_url = ${avatarUrl}
       WHERE id = ${id}
-      RETURNING id, email, name, avatar_url, created_at
+      RETURNING id, email, name, avatar_url, timezone, lang, created_at
     `;
     return user ?? null;
   }

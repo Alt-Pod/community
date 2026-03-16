@@ -15,6 +15,7 @@ export { ScheduledActivityRepository } from "./repositories/scheduledActivityRep
 export type { ScheduledActivityStatus } from "./repositories/scheduledActivityRepository";
 export { UsageRepository } from "./repositories/usageRepository";
 export { FileRepository } from "./repositories/fileRepository";
+export { AuditLogRepository } from "./repositories/auditLogRepository";
 
 // Services
 export { UserService } from "./services/userService";
@@ -28,10 +29,12 @@ export { ScheduledActivityService } from "./services/scheduledActivityService";
 export { UsageService } from "./services/usageService";
 export { FileService } from "./services/fileService";
 export type { FileWithUrl } from "./services/fileService";
+export { AuditLogService } from "./services/auditLogService";
 
 // Helpers
 export { buildPartsFromSteps } from "./helpers/partsHelper";
 export { uploadToStorage, deleteFromStorage, getSignedUrl } from "./helpers/storageHelper";
+export { withJobTracking } from "./helpers/jobTrackingHelper";
 
 // Inngest
 export { inngest } from "./inngest/client";
@@ -59,6 +62,8 @@ import { UsageRepository } from "./repositories/usageRepository";
 import { UsageService } from "./services/usageService";
 import { FileRepository } from "./repositories/fileRepository";
 import { FileService } from "./services/fileService";
+import { AuditLogRepository } from "./repositories/auditLogRepository";
+import { AuditLogService } from "./services/auditLogService";
 
 const userRepository = new UserRepository(sql, "users");
 const conversationRepository = new ConversationRepository(sql, "conversations");
@@ -81,6 +86,8 @@ const usageRepository = new UsageRepository(sql, "usage_logs");
 const usageService = new UsageService(usageRepository);
 const fileRepository = new FileRepository(sql, "files");
 const fileService = new FileService(fileRepository);
+const auditLogRepository = new AuditLogRepository(sql, "audit_logs");
+const auditLogService = new AuditLogService(auditLogRepository);
 
 export {
   userRepository,
@@ -103,4 +110,6 @@ export {
   usageService,
   fileRepository,
   fileService,
+  auditLogRepository,
+  auditLogService,
 };
