@@ -7,7 +7,8 @@ import {
   lastAssistantMessageIsCompleteWithToolCalls,
 } from "ai";
 import type { UIMessage } from "ai";
-import { useState, useRef, useEffect, type FormEvent } from "react";
+import { useState, useRef, useEffect, useCallback, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import type { DbMessage } from "@community/shared";
@@ -35,20 +36,26 @@ import ToolConfirmationCard from "@/components/tool-confirmation-card";
 import ToolResultCard from "@/components/tool-result-card";
 import PromptToolRenderer from "@/components/prompt-tool-renderer";
 
-export default function ChatPanel() {
+export default function ChatPanel({ conversationId }: { conversationId?: string }) {
   const t = useTranslations("chat");
+  const router = useRouter();
   const queryClient = useQueryClient();
   const [input, setInput] = useState("");
-  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
-  const [pendingAgentId, setPendingAgentId] = useState<string | null | undefined>(undefined);
+  const [pendingAgentId, setPendingAgentId] = useState<string | null | undefined>(
+    conversationId ? null : undefined
+  );
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [initialLoaded, setInitialLoaded] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const activeConversationId = conversationId ?? null;
   const conversationIdRef = useRef(activeConversationId);
   conversationIdRef.current = activeConversationId;
 
   const pendingAgentIdRef = useRef(pendingAgentId);
   pendingAgentIdRef.current = pendingAgentId;
+
+  const creatingConversationRef = useRef<Promise<string> | null>(null);
 
   const { data: conversations = [] } = useConversations();
   const deleteConversationMutation = useDeleteConversation();
@@ -62,18 +69,27 @@ export default function ChatPanel() {
         let convId = conversationIdRef.current;
 
         if (!convId) {
-          let title = "New conversation";
-          try {
-            const parsed = JSON.parse(init?.body as string);
-            const lastMsg = parsed.messages?.[parsed.messages.length - 1];
-            if (lastMsg?.content) title = String(lastMsg.content).slice(0, 100);
-          } catch {}
+          if (!creatingConversationRef.current) {
+            creatingConversationRef.current = (async () => {
+              let title = "New conversation";
+              try {
+                const parsed = JSON.parse(init?.body as string);
+                const lastMsg = parsed.messages?.[parsed.messages.length - 1];
+                if (lastMsg?.content) title = String(lastMsg.content).slice(0, 100);
+              } catch {}
 
-          const agentId = pendingAgentIdRef.current;
-          const conv = await createConversation(title, agentId);
-          convId = conv.id;
-          setActiveConversationId(convId);
-          queryClient.invalidateQueries({ queryKey: ["conversations"] });
+              const agentId = pendingAgentIdRef.current;
+              const conv = await createConversation(title, agentId);
+              conversationIdRef.current = conv.id;
+              // Update URL without unmounting — a full router.replace would
+              // navigate to /chat/[id], destroying the in-flight stream.
+              window.history.replaceState(null, "", `/chat/${conv.id}`);
+              queryClient.invalidateQueries({ queryKey: ["conversations"] });
+              return conv.id;
+            })();
+          }
+
+          convId = await creatingConversationRef.current;
         }
 
         return fetch(`/api/conversations/${convId}/messages`, init);
@@ -93,17 +109,18 @@ export default function ChatPanel() {
   });
 
   useEffect(() => {
-    scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
-  }, [messages]);
+    if (status === "streaming" || status === "submitted") {
+      scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
+    }
+  }, [messages, status]);
 
   const isLoading = status === "streaming" || status === "submitted";
 
   // Show agent picker when starting a new conversation (no active conversation and no pending selection)
   const showAgentPicker = !activeConversationId && pendingAgentId === undefined;
 
-  async function loadConversation(id: string) {
+  const loadConversation = useCallback(async (id: string) => {
     const msgs = await prefetchMessages(id);
-    setActiveConversationId(id);
     setPendingAgentId(null); // not in picker mode
     setMessages(
       msgs.map((m: DbMessage) => ({
@@ -112,12 +129,23 @@ export default function ChatPanel() {
         parts: (Array.isArray(m.parts) ? m.parts : [{ type: "text" as const, text: m.content }]) as UIMessage["parts"],
       }))
     );
-  }
+    if (id !== conversationId) {
+      router.push(`/chat/${id}`);
+    }
+  }, [prefetchMessages, setMessages, conversationId, router]);
+
+  // Load conversation messages on mount when navigating to /chat/[id]
+  useEffect(() => {
+    if (conversationId && !initialLoaded) {
+      setInitialLoaded(true);
+      loadConversation(conversationId);
+    }
+  }, [conversationId, initialLoaded, loadConversation]);
 
   function newChat() {
-    setActiveConversationId(null);
     setPendingAgentId(undefined); // show picker
     setMessages([]);
+    router.push("/chat");
   }
 
   function handleAgentSelect(agentId: string | null) {

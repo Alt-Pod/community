@@ -11,6 +11,9 @@ export { ToolRepository } from "./repositories/toolRepository";
 export { KnowledgeRepository } from "./repositories/knowledgeRepository";
 export { JobRepository } from "./repositories/jobRepository";
 export type { JobStatus } from "./repositories/jobRepository";
+export { ScheduledActivityRepository } from "./repositories/scheduledActivityRepository";
+export type { ScheduledActivityStatus } from "./repositories/scheduledActivityRepository";
+export { UsageRepository } from "./repositories/usageRepository";
 
 // Services
 export { UserService } from "./services/userService";
@@ -20,6 +23,8 @@ export { AgentService } from "./services/agentService";
 export { ToolService } from "./services/toolService";
 export { KnowledgeService } from "./services/knowledgeService";
 export { JobService } from "./services/jobService";
+export { ScheduledActivityService } from "./services/scheduledActivityService";
+export { UsageService } from "./services/usageService";
 
 // Helpers
 export { buildPartsFromSteps } from "./helpers/partsHelper";
@@ -44,6 +49,10 @@ import { KnowledgeRepository } from "./repositories/knowledgeRepository";
 import { KnowledgeService } from "./services/knowledgeService";
 import { JobRepository } from "./repositories/jobRepository";
 import { JobService } from "./services/jobService";
+import { ScheduledActivityRepository } from "./repositories/scheduledActivityRepository";
+import { ScheduledActivityService } from "./services/scheduledActivityService";
+import { UsageRepository } from "./repositories/usageRepository";
+import { UsageService } from "./services/usageService";
 
 const userRepository = new UserRepository(sql, "users");
 const conversationRepository = new ConversationRepository(sql, "conversations");
@@ -60,6 +69,10 @@ const knowledgeRepository = new KnowledgeRepository(sql, "knowledge_entries");
 const knowledgeService = new KnowledgeService(knowledgeRepository);
 const jobRepository = new JobRepository(sql, "jobs");
 const jobService = new JobService(jobRepository);
+const scheduledActivityRepository = new ScheduledActivityRepository(sql, "scheduled_activities");
+const scheduledActivityService = new ScheduledActivityService(scheduledActivityRepository, jobService);
+const usageRepository = new UsageRepository(sql, "usage_logs");
+const usageService = new UsageService(usageRepository);
 
 export {
   userRepository,
@@ -76,4 +89,8 @@ export {
   knowledgeService,
   jobRepository,
   jobService,
+  scheduledActivityRepository,
+  scheduledActivityService,
+  usageRepository,
+  usageService,
 };

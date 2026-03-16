@@ -5,6 +5,7 @@ import "./github";
 import "./knowledge";
 import "./prompt";
 import "./data";
+import "./planning";
 
 // Re-export registry API
 export {

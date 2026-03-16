@@ -38,8 +38,20 @@ You can read the user's own data using these tools:
 Use these tools when the user asks about their account, past conversations, messages, available agents, or job status.
 All queries are scoped to the current user — you cannot access other users' data.`;
 
+const PLANNING_INSTRUCTIONS = `
+## Activity Planning
+You can schedule future activities using these tools:
+- **planning.schedule_activity**: Schedule an activity for a specific future date/time. You must specify an activity_type from the available types: report_generation.
+- **planning.list_scheduled_activities**: List the user's scheduled activities, optionally filtered by status or date range.
+- **planning.cancel_scheduled_activity**: Cancel a scheduled activity that hasn't been executed yet.
+
+Available activity types:
+- **report_generation**: Generate and deliver a report on a given topic. Payload: { topic: string, format?: string }
+
+Use these when the user asks you to schedule something, plan a report, or any future task. Always confirm the scheduled time with the user before creating the activity.`;
+
 export function buildAgentSystemPrompt(agent: Agent): string {
-  return `${agent.system_prompt}\n${PROMPT_TOOLS_INSTRUCTIONS}\n${KNOWLEDGE_BASE_INSTRUCTIONS}\n${DATA_TOOLS_INSTRUCTIONS}`;
+  return `${agent.system_prompt}\n${PROMPT_TOOLS_INSTRUCTIONS}\n${KNOWLEDGE_BASE_INSTRUCTIONS}\n${DATA_TOOLS_INSTRUCTIONS}\n${PLANNING_INSTRUCTIONS}`;
 }
 
 export function buildDefaultSystemPrompt(agents: Agent[]): string {
@@ -69,10 +81,12 @@ Use these tools proactively when the user asks about the codebase, project struc
 ## Rules
 - Be concise and actionable.
 - When the user asks about agents, use the available tools to list, create, update, or delete them.
+- When creating an agent, you can assign tools to it by passing tool_ids. Use data.list_agents or the tools endpoint to discover available tool IDs first.
 - If the user wants to talk to a specific agent, explain that they should start a new conversation and select that agent from the picker.
 - When the user asks about the project or codebase, use the GitHub tools to read files and answer from source.
 - Be warm and helpful. You are the front door to the organization.
 ${PROMPT_TOOLS_INSTRUCTIONS}
 ${KNOWLEDGE_BASE_INSTRUCTIONS}
-${DATA_TOOLS_INSTRUCTIONS}`;
+${DATA_TOOLS_INSTRUCTIONS}
+${PLANNING_INSTRUCTIONS}`;
 }

@@ -20,7 +20,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         try {
           const [user] = await sql`
-            SELECT id, email, name, password_hash FROM users WHERE email = ${email}
+            SELECT id, email, name, password_hash, role FROM users WHERE email = ${email}
           `;
 
           if (!user) return null;
@@ -28,7 +28,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const valid = await bcrypt.compare(password, user.password_hash);
           if (!valid) return null;
 
-          return { id: user.id, email: user.email, name: user.name };
+          return { id: user.id, email: user.email, name: user.name, role: user.role };
         } catch {
           console.error("Auth: database error during login");
           return null;

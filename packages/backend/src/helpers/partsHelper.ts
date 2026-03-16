@@ -32,7 +32,7 @@ export function buildPartsFromSteps(steps: StepData[]): unknown[] {
         type: `tool-${toolCall.toolName}`,
         toolCallId: toolCall.toolCallId,
         toolName: toolCall.toolName,
-        state: matchingResult ? "output-available" : "output-denied",
+        state: "output-available",
         input: toolCall.input ?? {},
         output: matchingResult?.output ?? null,
       });

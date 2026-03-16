@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import QueryProvider from "@/query-provider";
+import SessionProvider from "@/session-provider";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -41,9 +42,11 @@ export default async function RootLayout({
       <body
         className={`${cormorant.variable} ${inter.variable} ${jetbrains.variable}`}
       >
-        <NextIntlClientProvider messages={messages}>
-          <QueryProvider>{children}</QueryProvider>
-        </NextIntlClientProvider>
+        <SessionProvider>
+          <NextIntlClientProvider messages={messages}>
+            <QueryProvider>{children}</QueryProvider>
+          </NextIntlClientProvider>
+        </SessionProvider>
       </body>
     </html>
   );

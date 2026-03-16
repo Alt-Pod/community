@@ -1,8 +1,10 @@
 import { auth } from "@community/backend";
+import { USER_ROLES } from "@community/shared";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import AppNavbar from "@/components/app-navbar";
+import WeeklyPlanning from "@/components/weekly-planning";
 
 export default async function Home() {
   const session = await auth();
@@ -16,8 +18,8 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-primary via-surface-secondary to-accent-gold-pale/30">
       <AppNavbar />
-      <main className="flex items-center justify-center" style={{ minHeight: "calc(100vh - 53px)" }}>
-        <div className="w-full max-w-lg px-6">
+      <main className="py-10" style={{ minHeight: "calc(100vh - 53px)" }}>
+        <div className="w-full max-w-3xl mx-auto px-6">
           <div className="text-center mb-12">
             <h1 className="font-heading text-4xl font-semibold tracking-tight text-text-primary">
               {t("title")}
@@ -25,7 +27,7 @@ export default async function Home() {
             <p className="mt-3 text-text-secondary">{t("subtitle")}</p>
           </div>
 
-          <div className="grid gap-4">
+          <div className="grid grid-cols-2 gap-4 mb-10">
             <Link
               href="/chat"
               className="group p-6 rounded-lg bg-surface-primary border border-border-subtle shadow-elevated hover:shadow-card hover:border-accent-gold-muted transition-all duration-150"
@@ -49,6 +51,24 @@ export default async function Home() {
                 {t("agents.description")}
               </p>
             </Link>
+
+            {session?.user?.role === USER_ROLES.ADMIN && (
+              <Link
+                href="/billing"
+                className="group p-6 rounded-lg bg-surface-primary border border-border-subtle shadow-elevated hover:shadow-card hover:border-accent-gold-muted transition-all duration-150 col-span-2"
+              >
+                <h2 className="font-heading text-xl font-semibold text-text-primary group-hover:text-accent-gold transition-colors duration-150">
+                  {t("billing.title")}
+                </h2>
+                <p className="mt-1 text-sm text-text-secondary">
+                  {t("billing.description")}
+                </p>
+              </Link>
+            )}
+          </div>
+
+          <div className="rounded-lg bg-surface-primary border border-border-subtle shadow-elevated p-6">
+            <WeeklyPlanning />
           </div>
         </div>
       </main>

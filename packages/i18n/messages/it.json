@@ -5,7 +5,10 @@
   },
   "nav": {
     "chat": "Chat",
-    "agents": "Agenti"
+    "agents": "Agenti",
+    "planning": "Pianificazione",
+    "billing": "Fatturazione",
+    "logout": "Disconnetti"
   },
   "home": {
     "title": "Community",
@@ -17,6 +20,15 @@
     "agents": {
       "title": "Agenti",
       "description": "Crea, configura e gestisci i tuoi agenti IA."
+    },
+    "planning": {
+      "title": "Questa settimana",
+      "viewAll": "Vedi calendario completo",
+      "today": "Oggi"
+    },
+    "billing": {
+      "title": "Fatturazione",
+      "description": "Monitora i costi e l'utilizzo della piattaforma."
     }
   },
   "auth": {
@@ -106,6 +118,33 @@
     "edit": {
       "title": "Modifica agente",
       "saveButton": "Salva modifiche"
+    }
+  },
+  "planning": {
+    "title": "Pianificazione",
+    "subtitle": "Visualizza le attività pianificate",
+    "calendar": {
+      "today": "Oggi",
+      "previousMonth": "Precedente",
+      "nextMonth": "Successivo",
+      "noActivities": "Nessuna attività pianificata per questo giorno",
+      "allAgents": "Tutti gli agenti",
+      "days": {
+        "mon": "Lun",
+        "tue": "Mar",
+        "wed": "Mer",
+        "thu": "Gio",
+        "fri": "Ven",
+        "sat": "Sab",
+        "sun": "Dom"
+      }
+    },
+    "status": {
+      "scheduled": "Pianificato",
+      "running": "In esecuzione",
+      "completed": "Completato",
+      "failed": "Fallito",
+      "cancelled": "Annullato"
     }
   },
   "tools": {
@@ -203,6 +242,20 @@
         "description": "Elencare i tuoi lavori in background"
       }
     },
+    "planning": {
+      "scheduleActivity": {
+        "name": "Pianifica attività",
+        "description": "Pianifica un'attività futura per un agente"
+      },
+      "listScheduledActivities": {
+        "name": "Elenco attività pianificate",
+        "description": "Elenco delle attività pianificate"
+      },
+      "cancelScheduledActivity": {
+        "name": "Annulla attività pianificata",
+        "description": "Annulla un'attività pianificata"
+      }
+    },
     "prompt": {
       "submit": "Invia",
       "select": {
@@ -225,5 +278,29 @@
         "name": "Modulo"
       }
     }
+  },
+  "billing": {
+    "title": "Fatturazione e Utilizzo",
+    "subtitle": "Monitora i costi e l'utilizzo dei token della piattaforma",
+    "rangeToday": "Oggi",
+    "rangeWeek": "Questa settimana",
+    "rangeMonth": "Questo mese",
+    "totalTokens": "Token totali",
+    "inputTokens": "Token di input",
+    "outputTokens": "Token di output",
+    "estimatedCost": "Costo stimato",
+    "avgCostPerDay": "Costo medio/giorno",
+    "dailyUsage": "Utilizzo giornaliero",
+    "agentBreakdown": "Utilizzo per agente",
+    "date": "Data",
+    "agent": "Agente",
+    "cost": "Costo",
+    "noData": "Nessun dato di utilizzo per questo periodo.",
+    "externalServices": "Servizi esterni",
+    "externalServicesDescription": "Consulta i dettagli di fatturazione sulla dashboard di ogni fornitore.",
+    "neonDashboard": "Database Neon",
+    "vercelDashboard": "Vercel",
+    "inngestDashboard": "Inngest",
+    "googleCloudDashboard": "Google Cloud"
   }
 }

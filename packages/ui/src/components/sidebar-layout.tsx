@@ -33,7 +33,7 @@ export function SidebarLayout({
       )}
 
       {/* Main area */}
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 min-w-0">
         {/* Header */}
         <header className="flex items-center justify-between px-8 py-5 border-b border-border-subtle">
           <div className="flex items-center gap-3">

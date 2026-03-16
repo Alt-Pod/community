@@ -9,6 +9,7 @@ interface MarkdownMessageProps {
 
 export default function MarkdownMessage({ content }: MarkdownMessageProps) {
   return (
+    <div className="min-w-0" style={{ overflowWrap: "anywhere" }}>
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
@@ -27,11 +28,13 @@ export default function MarkdownMessage({ content }: MarkdownMessageProps) {
         ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
         ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
         li: ({ children }) => <li className="mb-0.5">{children}</li>,
-        code: ({ children, className }) => {
-          const isBlock = className?.includes("language-");
+        code: ({ children, className, node }) => {
+          const isBlock =
+            className?.includes("language-") ||
+            node?.position?.start.line !== node?.position?.end.line;
           if (isBlock) {
             return (
-              <code className="block font-mono bg-surface-tertiary rounded-sm p-3 my-2 text-xs overflow-x-auto text-text-primary">
+              <code className="block font-mono bg-surface-tertiary rounded-sm p-3 my-2 text-xs text-text-primary whitespace-pre-wrap break-words">
                 {children}
               </code>
             );
@@ -42,7 +45,7 @@ export default function MarkdownMessage({ content }: MarkdownMessageProps) {
             </code>
           );
         },
-        pre: ({ children }) => <pre className="my-2">{children}</pre>,
+        pre: ({ children }) => <pre className="my-2 overflow-x-auto">{children}</pre>,
         blockquote: ({ children }) => (
           <blockquote className="border-l-2 border-border-default pl-3 my-2 text-text-secondary">
             {children}
@@ -72,5 +75,6 @@ export default function MarkdownMessage({ content }: MarkdownMessageProps) {
     >
       {content}
     </ReactMarkdown>
+    </div>
   );
 }

@@ -5,7 +5,10 @@
   },
   "nav": {
     "chat": "Chat",
-    "agents": "Agents"
+    "agents": "Agents",
+    "planning": "Planning",
+    "billing": "Billing",
+    "logout": "Log out"
   },
   "home": {
     "title": "Community",
@@ -17,6 +20,15 @@
     "agents": {
       "title": "Agents",
       "description": "Create, configure, and manage your AI agents."
+    },
+    "planning": {
+      "title": "This Week",
+      "viewAll": "View full calendar",
+      "today": "Today"
+    },
+    "billing": {
+      "title": "Billing",
+      "description": "Monitor costs and usage across your platform."
     }
   },
   "auth": {
@@ -106,6 +118,33 @@
     "edit": {
       "title": "Edit agent",
       "saveButton": "Save changes"
+    }
+  },
+  "planning": {
+    "title": "Planning",
+    "subtitle": "View scheduled activities",
+    "calendar": {
+      "today": "Today",
+      "previousMonth": "Previous",
+      "nextMonth": "Next",
+      "noActivities": "No activities scheduled for this day",
+      "allAgents": "All agents",
+      "days": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      }
+    },
+    "status": {
+      "scheduled": "Scheduled",
+      "running": "Running",
+      "completed": "Completed",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
     }
   },
   "tools": {
@@ -203,6 +242,20 @@
         "description": "List your background jobs"
       }
     },
+    "planning": {
+      "scheduleActivity": {
+        "name": "Schedule activity",
+        "description": "Schedule a future activity for an agent"
+      },
+      "listScheduledActivities": {
+        "name": "List scheduled activities",
+        "description": "List scheduled activities"
+      },
+      "cancelScheduledActivity": {
+        "name": "Cancel scheduled activity",
+        "description": "Cancel a scheduled activity"
+      }
+    },
     "prompt": {
       "submit": "Submit",
       "select": {
@@ -225,5 +278,29 @@
         "name": "Form"
       }
     }
+  },
+  "billing": {
+    "title": "Billing & Usage",
+    "subtitle": "Monitor your platform costs and token usage",
+    "rangeToday": "Today",
+    "rangeWeek": "This week",
+    "rangeMonth": "This month",
+    "totalTokens": "Total tokens",
+    "inputTokens": "Input tokens",
+    "outputTokens": "Output tokens",
+    "estimatedCost": "Estimated cost",
+    "avgCostPerDay": "Avg cost/day",
+    "dailyUsage": "Daily usage",
+    "agentBreakdown": "Usage by agent",
+    "date": "Date",
+    "agent": "Agent",
+    "cost": "Cost",
+    "noData": "No usage data for this period.",
+    "externalServices": "External services",
+    "externalServicesDescription": "View billing details on each provider's dashboard.",
+    "neonDashboard": "Neon Database",
+    "vercelDashboard": "Vercel",
+    "inngestDashboard": "Inngest",
+    "googleCloudDashboard": "Google Cloud"
   }
 }

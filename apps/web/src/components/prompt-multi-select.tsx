@@ -23,10 +23,11 @@ export default function PromptMultiSelect({
 }: PromptMultiSelectProps) {
   const t = useTranslations("tools.prompt");
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const options = input.options ?? [];
 
   if (completed && output) {
     const selectedLabels = output.selected.map((v) => {
-      const opt = input.options.find((o) => o.value === v);
+      const opt = options.find((o) => o.value === v);
       return opt?.label ?? v;
     });
     return (
@@ -64,7 +65,7 @@ export default function PromptMultiSelect({
         {input.question}
       </p>
       <div className="space-y-2 mb-4">
-        {input.options.map((option) => (
+        {options.map((option) => (
           <label
             key={option.value}
             className={`flex items-center gap-3 p-2.5 rounded-sm border cursor-pointer transition-colors duration-150 ${

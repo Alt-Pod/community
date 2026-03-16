@@ -11,11 +11,16 @@ export function MessageBubble({ role, children }: MessageBubbleProps) {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[65%] rounded-md px-4 py-2.5 text-sm ${
+        className={`rounded-md px-4 py-2.5 text-sm ${
           isUser
-            ? "bg-accent-gold-pale border border-accent-gold-muted/40 text-text-primary whitespace-pre-wrap"
+            ? "max-w-[65%] bg-accent-gold-pale border border-accent-gold-muted/40 text-text-primary whitespace-pre-wrap"
             : "bg-surface-primary shadow-elevated text-text-primary border border-border-subtle"
         }`}
+        style={
+          !isUser
+            ? { maxWidth: "65ch", overflowWrap: "anywhere" }
+            : undefined
+        }
       >
         {children}
       </div>

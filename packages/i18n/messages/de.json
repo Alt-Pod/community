@@ -5,7 +5,10 @@
   },
   "nav": {
     "chat": "Chat",
-    "agents": "Agenten"
+    "agents": "Agenten",
+    "planning": "Planung",
+    "billing": "Abrechnung",
+    "logout": "Abmelden"
   },
   "home": {
     "title": "Community",
@@ -17,6 +20,15 @@
     "agents": {
       "title": "Agenten",
       "description": "Erstelle, konfiguriere und verwalte deine KI-Agenten."
+    },
+    "planning": {
+      "title": "Diese Woche",
+      "viewAll": "Vollständigen Kalender ansehen",
+      "today": "Heute"
+    },
+    "billing": {
+      "title": "Abrechnung",
+      "description": "Überwachen Sie die Kosten und Nutzung Ihrer Plattform."
     }
   },
   "auth": {
@@ -106,6 +118,33 @@
     "edit": {
       "title": "Agent bearbeiten",
       "saveButton": "Änderungen speichern"
+    }
+  },
+  "planning": {
+    "title": "Planung",
+    "subtitle": "Geplante Aktivitäten anzeigen",
+    "calendar": {
+      "today": "Heute",
+      "previousMonth": "Zurück",
+      "nextMonth": "Weiter",
+      "noActivities": "Keine Aktivitäten für diesen Tag geplant",
+      "allAgents": "Alle Agenten",
+      "days": {
+        "mon": "Mo",
+        "tue": "Di",
+        "wed": "Mi",
+        "thu": "Do",
+        "fri": "Fr",
+        "sat": "Sa",
+        "sun": "So"
+      }
+    },
+    "status": {
+      "scheduled": "Geplant",
+      "running": "Läuft",
+      "completed": "Abgeschlossen",
+      "failed": "Fehlgeschlagen",
+      "cancelled": "Abgebrochen"
     }
   },
   "tools": {
@@ -203,6 +242,20 @@
         "description": "Deine Hintergrundaufträge auflisten"
       }
     },
+    "planning": {
+      "scheduleActivity": {
+        "name": "Aktivität planen",
+        "description": "Eine zukünftige Aktivität für einen Agenten planen"
+      },
+      "listScheduledActivities": {
+        "name": "Geplante Aktivitäten auflisten",
+        "description": "Geplante Aktivitäten auflisten"
+      },
+      "cancelScheduledActivity": {
+        "name": "Geplante Aktivität abbrechen",
+        "description": "Eine geplante Aktivität abbrechen"
+      }
+    },
     "prompt": {
       "submit": "Absenden",
       "select": {
@@ -225,5 +278,29 @@
         "name": "Formular"
       }
     }
+  },
+  "billing": {
+    "title": "Abrechnung & Nutzung",
+    "subtitle": "Überwachen Sie die Kosten und Token-Nutzung Ihrer Plattform",
+    "rangeToday": "Heute",
+    "rangeWeek": "Diese Woche",
+    "rangeMonth": "Dieser Monat",
+    "totalTokens": "Gesamt-Token",
+    "inputTokens": "Eingabe-Token",
+    "outputTokens": "Ausgabe-Token",
+    "estimatedCost": "Geschätzte Kosten",
+    "avgCostPerDay": "Durchschn. Kosten/Tag",
+    "dailyUsage": "Tägliche Nutzung",
+    "agentBreakdown": "Nutzung nach Agent",
+    "date": "Datum",
+    "agent": "Agent",
+    "cost": "Kosten",
+    "noData": "Keine Nutzungsdaten für diesen Zeitraum.",
+    "externalServices": "Externe Dienste",
+    "externalServicesDescription": "Abrechnungsdetails auf dem Dashboard jedes Anbieters anzeigen.",
+    "neonDashboard": "Neon-Datenbank",
+    "vercelDashboard": "Vercel",
+    "inngestDashboard": "Inngest",
+    "googleCloudDashboard": "Google Cloud"
   }
 }

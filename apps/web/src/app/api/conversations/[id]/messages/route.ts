@@ -6,6 +6,7 @@ import {
   toolService,
   buildPartsFromSteps,
   jobService,
+  usageService,
 } from "@community/backend";
 import { streamAgentChat, streamDefaultChat } from "@community/ai";
 import type { UIMessage } from "ai";
@@ -15,6 +16,28 @@ function extractText(msg: UIMessage): string {
     .filter((p): p is { type: "text"; text: string } => p.type === "text")
     .map((p) => p.text)
     .join("");
+}
+
+/**
+ * Sanitize tool parts that use "output-denied" state without an approval object.
+ * The AI SDK expects `approval.reason` for denied tools — convert them to
+ * "output-available" with null output to avoid the crash.
+ */
+function sanitizeMessages(messages: UIMessage[]): UIMessage[] {
+  return messages.map((m) => ({
+    ...m,
+    parts: m.parts.map((p: any) => {
+      if (
+        typeof p.type === "string" &&
+        p.type.startsWith("tool-") &&
+        p.state === "output-denied" &&
+        !p.approval
+      ) {
+        return { ...p, state: "output-available", output: p.output ?? null };
+      }
+      return p;
+    }) as UIMessage["parts"],
+  }));
 }
 
 export async function GET(
@@ -54,7 +77,8 @@ export async function POST(
   }
 
   const body = await req.json();
-  const { messages } = body as { messages: UIMessage[] };
+  const { messages: rawMessages } = body as { messages: UIMessage[] };
+  const messages = sanitizeMessages(rawMessages);
   const lastMessage = messages[messages.length - 1];
   const userMessage = lastMessage?.role === "user" ? extractText(lastMessage) : "";
 
@@ -111,6 +135,17 @@ export async function POST(
         })
         .catch(() => {});
 
+      Promise.resolve(result.usage).then(async (usage) => {
+        await usageService.logUsage({
+          userId: session.user.id,
+          conversationId: id,
+          agentId,
+          model: "gemini-2.5-flash",
+          inputTokens: usage.inputTokens ?? 0,
+          outputTokens: usage.outputTokens ?? 0,
+        });
+      }).catch(() => {});
+
       return result.toUIMessageStreamResponse();
     } else {
       // Default mode: concierge with agent management tools
@@ -132,6 +167,9 @@ export async function POST(
         "data.my_messages",
         "data.list_agents",
         "data.my_jobs",
+        "planning.schedule_activity",
+        "planning.list_scheduled_activities",
+        "planning.cancel_scheduled_activity",
       ];
       const result = await streamDefaultChat(agents, messages, allToolIds, {
         userId: session.user.id,
@@ -144,6 +182,17 @@ export async function POST(
           await chatService.saveAssistantMessage(id, text, undefined, parts);
         })
         .catch(() => {});
+
+      Promise.resolve(result.usage).then(async (usage) => {
+        await usageService.logUsage({
+          userId: session.user.id,
+          conversationId: id,
+          agentId: null,
+          model: "gemini-2.5-flash",
+          inputTokens: usage.inputTokens ?? 0,
+          outputTokens: usage.outputTokens ?? 0,
+        });
+      }).catch(() => {});
 
       return result.toUIMessageStreamResponse();
     }

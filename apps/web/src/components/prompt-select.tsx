@@ -21,8 +21,10 @@ export default function PromptSelect({
   const t = useTranslations("tools.prompt");
   const [selected, setSelected] = useState<string | null>(null);
 
+  const options = input.options ?? [];
+
   if (completed && output) {
-    const selectedOption = input.options.find(
+    const selectedOption = options.find(
       (o) => o.value === output.selected
     );
     return (
@@ -41,7 +43,7 @@ export default function PromptSelect({
         {input.question}
       </p>
       <div className="space-y-2 mb-4">
-        {input.options.map((option) => (
+        {options.map((option) => (
           <label
             key={option.value}
             className={`flex items-center gap-3 p-2.5 rounded-sm border cursor-pointer transition-colors duration-150 ${
