@@ -87,6 +87,10 @@ export default function WeeklyPlanning() {
         map.get(key)!.push(a);
       }
     }
+    // Sort each day's activities most recent first
+    for (const list of map.values()) {
+      list.sort((a, b) => new Date(b.scheduled_at).getTime() - new Date(a.scheduled_at).getTime());
+    }
     return map;
   }, [activities, days]);
 
