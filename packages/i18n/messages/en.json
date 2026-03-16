@@ -374,7 +374,7 @@
     "neonDashboard": "Neon Database",
     "vercelDashboard": "Vercel",
     "inngestDashboard": "Inngest",
-    "googleCloudDashboard": "Google Cloud",
+    "googleAiStudioDashboard": "Google AI Studio",
     "cloudflareR2Dashboard": "Cloudflare R2"
   }
 }
