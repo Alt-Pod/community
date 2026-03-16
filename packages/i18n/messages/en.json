@@ -8,7 +8,8 @@
     "agents": "Agents",
     "planning": "Planning",
     "billing": "Billing",
-    "logout": "Log out"
+    "logout": "Log out",
+    "profile": "Profile"
   },
   "home": {
     "title": "Community",
@@ -160,7 +161,10 @@
       "title": "Action requires approval",
       "description": "This action will modify data. Please review the parameters and confirm.",
       "approve": "Approve",
-      "reject": "Reject"
+      "reject": "Reject",
+      "approveAll": "Confirm All",
+      "rejectAll": "Cancel All",
+      "pendingCount": "{count} actions awaiting confirmation"
     },
     "card": {
       "parameters": "Parameters",
@@ -256,6 +260,35 @@
         "description": "Cancel a scheduled activity"
       }
     },
+    "files": {
+      "uploadFile": {
+        "name": "Upload file",
+        "description": "Upload a file or image",
+        "defaultPrompt": "Select a file to upload",
+        "dropzone": "Click to select a file",
+        "hint": "Images (10 MB) or documents (25 MB)",
+        "upload": "Upload",
+        "uploading": "Uploading...",
+        "change": "Change",
+        "failed": "Upload failed"
+      },
+      "listFiles": {
+        "name": "List files",
+        "description": "List uploaded files"
+      },
+      "getFile": {
+        "name": "Get file",
+        "description": "Get file details and download link"
+      },
+      "updateFile": {
+        "name": "Update file",
+        "description": "Update file metadata"
+      },
+      "deleteFile": {
+        "name": "Delete file",
+        "description": "Permanently delete a file"
+      }
+    },
     "prompt": {
       "submit": "Submit",
       "select": {
@@ -277,6 +310,42 @@
       "form": {
         "name": "Form"
       }
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your account settings",
+    "info": {
+      "title": "Profile Information",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "save": "Save changes",
+      "saving": "Saving...",
+      "saved": "Profile updated",
+      "error": "Failed to update profile"
+    },
+    "avatar": {
+      "title": "Avatar",
+      "upload": "Upload photo",
+      "change": "Change photo",
+      "remove": "Remove photo",
+      "uploading": "Uploading...",
+      "maxSize": "Max 10 MB. JPG, PNG, GIF, or WebP.",
+      "error": "Failed to upload avatar"
+    },
+    "password": {
+      "title": "Change Password",
+      "current": "Current password",
+      "new": "New password",
+      "confirm": "Confirm new password",
+      "submit": "Update password",
+      "submitting": "Updating...",
+      "success": "Password updated",
+      "errorWrong": "Current password is incorrect",
+      "errorMismatch": "Passwords do not match",
+      "errorLength": "Password must be at least 8 characters"
     }
   },
   "billing": {
@@ -301,6 +370,7 @@
     "neonDashboard": "Neon Database",
     "vercelDashboard": "Vercel",
     "inngestDashboard": "Inngest",
-    "googleCloudDashboard": "Google Cloud"
+    "googleCloudDashboard": "Google Cloud",
+    "cloudflareR2Dashboard": "Cloudflare R2"
   }
 }

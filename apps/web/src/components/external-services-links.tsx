@@ -21,6 +21,10 @@ const SERVICES = [
     key: "googleCloudDashboard",
     url: "https://console.cloud.google.com/billing",
   },
+  {
+    key: "cloudflareR2Dashboard",
+    url: "https://dash.cloudflare.com/?to=/:account/r2",
+  },
 ];
 
 export default function ExternalServicesLinks({

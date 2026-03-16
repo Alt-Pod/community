@@ -170,6 +170,11 @@ export async function POST(
         "planning.schedule_activity",
         "planning.list_scheduled_activities",
         "planning.cancel_scheduled_activity",
+        "files.upload_file",
+        "files.list_files",
+        "files.get_file",
+        "files.update_file",
+        "files.delete_file",
       ];
       const result = await streamDefaultChat(agents, messages, allToolIds, {
         userId: session.user.id,

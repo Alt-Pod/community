@@ -34,7 +34,9 @@ import AppNavbar from "@/components/app-navbar";
 import ToolCallCard from "@/components/tool-call-card";
 import ToolConfirmationCard from "@/components/tool-confirmation-card";
 import ToolResultCard from "@/components/tool-result-card";
+import ToolBulkActions from "@/components/tool-bulk-actions";
 import PromptToolRenderer from "@/components/prompt-tool-renderer";
+import FileUploadTool from "@/components/file-upload-tool";
 
 export default function ChatPanel({ conversationId }: { conversationId?: string }) {
   const t = useTranslations("chat");
@@ -288,6 +290,24 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
                       );
                     }
 
+                    if (toolName === "files.upload_file") {
+                      return (
+                        <FileUploadTool
+                          key={toolPart.toolCallId || i}
+                          input={toolPart.input as any}
+                          completed={toolPart.state === "output-available"}
+                          output={toolPart.output as any}
+                          onSubmit={(output) =>
+                            addToolOutput({
+                              tool: toolPart.type as any,
+                              toolCallId: toolPart.toolCallId,
+                              output: output as any,
+                            })
+                          }
+                        />
+                      );
+                    }
+
                     if (toolPart.state === "approval-requested") {
                       return (
                         <ToolConfirmationCard
@@ -347,6 +367,38 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
                       />
                     );
                   })}
+                  {(() => {
+                    const pendingApprovals = toolParts
+                      .map((p) => p as unknown as {
+                        type: string;
+                        toolCallId: string;
+                        state: string;
+                        approval?: { id: string };
+                      })
+                      .filter((p) => p.state === "approval-requested");
+
+                    return pendingApprovals.length >= 2 ? (
+                      <ToolBulkActions
+                        count={pendingApprovals.length}
+                        onApproveAll={() =>
+                          pendingApprovals.forEach((p) =>
+                            addToolApprovalResponse({
+                              id: p.approval?.id ?? p.toolCallId,
+                              approved: true,
+                            })
+                          )
+                        }
+                        onRejectAll={() =>
+                          pendingApprovals.forEach((p) =>
+                            addToolApprovalResponse({
+                              id: p.approval?.id ?? p.toolCallId,
+                              approved: false,
+                            })
+                          )
+                        }
+                      />
+                    ) : null;
+                  })()}
                   {m.role === "assistant" && text && (
                     <MessageBubble role="assistant">
                       <MarkdownMessage content={text} />

@@ -14,6 +14,7 @@ export type { JobStatus } from "./repositories/jobRepository";
 export { ScheduledActivityRepository } from "./repositories/scheduledActivityRepository";
 export type { ScheduledActivityStatus } from "./repositories/scheduledActivityRepository";
 export { UsageRepository } from "./repositories/usageRepository";
+export { FileRepository } from "./repositories/fileRepository";
 
 // Services
 export { UserService } from "./services/userService";
@@ -25,9 +26,12 @@ export { KnowledgeService } from "./services/knowledgeService";
 export { JobService } from "./services/jobService";
 export { ScheduledActivityService } from "./services/scheduledActivityService";
 export { UsageService } from "./services/usageService";
+export { FileService } from "./services/fileService";
+export type { FileWithUrl } from "./services/fileService";
 
 // Helpers
 export { buildPartsFromSteps } from "./helpers/partsHelper";
+export { uploadToStorage, deleteFromStorage, getSignedUrl } from "./helpers/storageHelper";
 
 // Inngest
 export { inngest } from "./inngest/client";
@@ -53,6 +57,8 @@ import { ScheduledActivityRepository } from "./repositories/scheduledActivityRep
 import { ScheduledActivityService } from "./services/scheduledActivityService";
 import { UsageRepository } from "./repositories/usageRepository";
 import { UsageService } from "./services/usageService";
+import { FileRepository } from "./repositories/fileRepository";
+import { FileService } from "./services/fileService";
 
 const userRepository = new UserRepository(sql, "users");
 const conversationRepository = new ConversationRepository(sql, "conversations");
@@ -73,6 +79,8 @@ const scheduledActivityRepository = new ScheduledActivityRepository(sql, "schedu
 const scheduledActivityService = new ScheduledActivityService(scheduledActivityRepository, jobService);
 const usageRepository = new UsageRepository(sql, "usage_logs");
 const usageService = new UsageService(usageRepository);
+const fileRepository = new FileRepository(sql, "files");
+const fileService = new FileService(fileRepository);
 
 export {
   userRepository,
@@ -93,4 +101,6 @@ export {
   scheduledActivityService,
   usageRepository,
   usageService,
+  fileRepository,
+  fileService,
 };

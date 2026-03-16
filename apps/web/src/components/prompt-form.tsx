@@ -19,9 +19,11 @@ export default function PromptForm({
   onSubmit,
 }: PromptFormProps) {
   const t = useTranslations("tools.prompt");
+  const fields = Array.isArray(input.fields) ? input.fields : [];
+
   const [values, setValues] = useState<Record<string, string | number>>(() => {
     const initial: Record<string, string | number> = {};
-    for (const field of input.fields) {
+    for (const field of fields) {
       if (field.type === "number") {
         initial[field.name] = field.min ?? 0;
       } else if (field.type === "select") {
@@ -42,7 +44,7 @@ export default function PromptForm({
           </p>
         )}
         <dl className="space-y-1">
-          {input.fields.map((field) => (
+          {fields.map((field) => (
             <div key={field.name} className="flex gap-2 text-sm">
               <dt className="text-text-secondary">{field.label}:</dt>
               <dd className="text-text-primary">
@@ -63,7 +65,7 @@ export default function PromptForm({
     setValues((prev) => ({ ...prev, [name]: value }));
   }
 
-  const allRequiredFilled = input.fields.every((field) => {
+  const allRequiredFilled = fields.every((field) => {
     if (!field.required) return true;
     const val = values[field.name];
     if (typeof val === "string") return val.trim() !== "";
@@ -117,7 +119,7 @@ export default function PromptForm({
         </p>
       )}
       <div className="space-y-4 mb-4">
-        {input.fields.map((field) => (
+        {fields.map((field) => (
           <div key={field.name}>
             <label className="block text-xs text-text-secondary mb-1">
               {field.label}

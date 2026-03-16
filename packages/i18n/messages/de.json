@@ -8,7 +8,8 @@
     "agents": "Agenten",
     "planning": "Planung",
     "billing": "Abrechnung",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "profile": "Profil"
   },
   "home": {
     "title": "Community",
@@ -160,7 +161,10 @@
       "title": "Aktion erfordert Genehmigung",
       "description": "Diese Aktion wird Daten ändern. Bitte überprüfe die Parameter und bestätige.",
       "approve": "Genehmigen",
-      "reject": "Ablehnen"
+      "reject": "Ablehnen",
+      "approveAll": "Alle bestätigen",
+      "rejectAll": "Alle abbrechen",
+      "pendingCount": "{count} Aktionen warten auf Bestätigung"
     },
     "card": {
       "parameters": "Parameter",
@@ -256,6 +260,35 @@
         "description": "Eine geplante Aktivität abbrechen"
       }
     },
+    "files": {
+      "uploadFile": {
+        "name": "Datei hochladen",
+        "description": "Eine Datei oder ein Bild hochladen",
+        "defaultPrompt": "Wählen Sie eine Datei zum Hochladen",
+        "dropzone": "Klicken Sie, um eine Datei auszuwählen",
+        "hint": "Bilder (10 MB) oder Dokumente (25 MB)",
+        "upload": "Hochladen",
+        "uploading": "Wird hochgeladen...",
+        "change": "Ändern",
+        "failed": "Hochladen fehlgeschlagen"
+      },
+      "listFiles": {
+        "name": "Dateien auflisten",
+        "description": "Hochgeladene Dateien auflisten"
+      },
+      "getFile": {
+        "name": "Datei abrufen",
+        "description": "Dateidetails und Download-Link abrufen"
+      },
+      "updateFile": {
+        "name": "Datei aktualisieren",
+        "description": "Datei-Metadaten aktualisieren"
+      },
+      "deleteFile": {
+        "name": "Datei löschen",
+        "description": "Eine Datei dauerhaft löschen"
+      }
+    },
     "prompt": {
       "submit": "Absenden",
       "select": {
@@ -277,6 +310,42 @@
       "form": {
         "name": "Formular"
       }
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "subtitle": "Verwalte deine Kontoeinstellungen",
+    "info": {
+      "title": "Profilinformationen",
+      "name": "Name",
+      "namePlaceholder": "Dein Name",
+      "email": "E-Mail",
+      "emailPlaceholder": "deine@email.com",
+      "save": "Änderungen speichern",
+      "saving": "Speichern...",
+      "saved": "Profil aktualisiert",
+      "error": "Profil konnte nicht aktualisiert werden"
+    },
+    "avatar": {
+      "title": "Avatar",
+      "upload": "Foto hochladen",
+      "change": "Foto ändern",
+      "remove": "Foto entfernen",
+      "uploading": "Hochladen...",
+      "maxSize": "Max 10 MB. JPG, PNG, GIF oder WebP.",
+      "error": "Avatar konnte nicht hochgeladen werden"
+    },
+    "password": {
+      "title": "Passwort ändern",
+      "current": "Aktuelles Passwort",
+      "new": "Neues Passwort",
+      "confirm": "Neues Passwort bestätigen",
+      "submit": "Passwort aktualisieren",
+      "submitting": "Aktualisierung...",
+      "success": "Passwort aktualisiert",
+      "errorWrong": "Das aktuelle Passwort ist falsch",
+      "errorMismatch": "Die Passwörter stimmen nicht überein",
+      "errorLength": "Das Passwort muss mindestens 8 Zeichen lang sein"
     }
   },
   "billing": {
@@ -301,6 +370,7 @@
     "neonDashboard": "Neon-Datenbank",
     "vercelDashboard": "Vercel",
     "inngestDashboard": "Inngest",
-    "googleCloudDashboard": "Google Cloud"
+    "googleCloudDashboard": "Google Cloud",
+    "cloudflareR2Dashboard": "Cloudflare R2"
   }
 }

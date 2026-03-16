@@ -1,3 +1,4 @@
+export type { UserProfile } from "./types/user";
 export type { Agent, AgentMessage, AgentResponse } from "./types/agent";
 export type { Conversation, DbMessage } from "./types/conversation";
 export type { ToolDefinition, ToolExecutionStatus } from "./types/tool";
@@ -25,3 +26,9 @@ export type { UsageLog, UsageStats } from "./types/usage";
 export { USER_ROLES } from "./constants/roles";
 export type { UserRole } from "./constants/roles";
 export { MODEL_PRICING, DEFAULT_MODEL } from "./constants/pricing";
+export type { FileRecord, FileCategory } from "./types/file";
+export {
+  FILE_CATEGORIES,
+  ALLOWED_MIME_TYPES,
+  MAX_FILE_SIZE,
+} from "./types/file";

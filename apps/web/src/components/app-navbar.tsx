@@ -6,6 +6,46 @@ import { useTranslations } from "next-intl";
 import { signOut, useSession } from "next-auth/react";
 import { Navbar } from "@community/ui";
 import { USER_ROLES } from "@community/shared";
+import { useProfile } from "@/requests/useProfile";
+
+function NavbarAvatar() {
+  const { data: profile } = useProfile();
+  const { data: session } = useSession();
+
+  const name = profile?.name ?? session?.user?.name;
+  const email = profile?.email ?? session?.user?.email ?? "";
+  const avatarUrl = profile?.avatar_signed_url;
+
+  const initials = name
+    ? name
+        .split(" ")
+        .map((w: string) => w[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
+    : email[0]?.toUpperCase() ?? "?";
+
+  return (
+    <Link
+      href="/profile"
+      className="flex items-center gap-2 px-2 py-1 rounded-sm hover:bg-surface-tertiary transition-colors duration-150"
+    >
+      {avatarUrl ? (
+        <img
+          src={avatarUrl}
+          alt="Avatar"
+          className="w-7 h-7 rounded-full object-cover border border-border-subtle"
+        />
+      ) : (
+        <div className="w-7 h-7 rounded-full bg-accent-gold-pale flex items-center justify-center border border-border-subtle">
+          <span className="text-xs font-semibold text-accent-gold">
+            {initials}
+          </span>
+        </div>
+      )}
+    </Link>
+  );
+}
 
 export default function AppNavbar() {
   const t = useTranslations("nav");
@@ -45,12 +85,15 @@ export default function AppNavbar() {
       links={links}
       linkComponent={Link}
       right={
-        <button
-          onClick={() => signOut({ callbackUrl: "/login" })}
-          className="px-3 py-1.5 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-tertiary rounded-sm transition-colors duration-150"
-        >
-          {t("logout")}
-        </button>
+        <div className="flex items-center gap-2">
+          <NavbarAvatar />
+          <button
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            className="px-3 py-1.5 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-tertiary rounded-sm transition-colors duration-150"
+          >
+            {t("logout")}
+          </button>
+        </div>
       }
     />
   );

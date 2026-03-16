@@ -6,6 +6,7 @@ import "./knowledge";
 import "./prompt";
 import "./data";
 import "./planning";
+import "./files";
 
 // Re-export registry API
 export {

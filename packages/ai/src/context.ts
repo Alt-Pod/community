@@ -50,8 +50,22 @@ Available activity types:
 
 Use these when the user asks you to schedule something, plan a report, or any future task. Always confirm the scheduled time with the user before creating the activity.`;
 
+const FILE_MANAGEMENT_INSTRUCTIONS = `
+## File Management
+You can manage files and images for the user:
+- **files.upload_file**: Opens a file picker for the user to select and upload a file from their device. Specify a category and an optional prompt message. The user selects the file — you do NOT need to provide file content.
+- **files.list_files**: List the user's files, optionally filtered by category. Use this to find previously uploaded files.
+- **files.get_file**: Get details and a temporary download URL for a specific file by its ID. Use this to retrieve files uploaded earlier in the conversation or in past conversations.
+- **files.update_file**: Update a file's metadata (alt text, description, tags). Requires approval.
+- **files.delete_file**: Permanently delete a file. Requires approval.
+
+Categories: avatar, agent_avatar, chat_image, document, attachment.
+
+### Referencing uploaded files
+Every uploaded file gets a unique ID. When a file is uploaded during the conversation, remember its ID so you can reference it later using files.get_file or files.list_files. If the user asks about a previously uploaded file or image, use files.list_files to find it and files.get_file to retrieve its download URL.`;
+
 export function buildAgentSystemPrompt(agent: Agent): string {
-  return `${agent.system_prompt}\n${PROMPT_TOOLS_INSTRUCTIONS}\n${KNOWLEDGE_BASE_INSTRUCTIONS}\n${DATA_TOOLS_INSTRUCTIONS}\n${PLANNING_INSTRUCTIONS}`;
+  return `${agent.system_prompt}\n${PROMPT_TOOLS_INSTRUCTIONS}\n${KNOWLEDGE_BASE_INSTRUCTIONS}\n${DATA_TOOLS_INSTRUCTIONS}\n${PLANNING_INSTRUCTIONS}\n${FILE_MANAGEMENT_INSTRUCTIONS}`;
 }
 
 export function buildDefaultSystemPrompt(agents: Agent[]): string {
@@ -88,5 +102,6 @@ Use these tools proactively when the user asks about the codebase, project struc
 ${PROMPT_TOOLS_INSTRUCTIONS}
 ${KNOWLEDGE_BASE_INSTRUCTIONS}
 ${DATA_TOOLS_INSTRUCTIONS}
-${PLANNING_INSTRUCTIONS}`;
+${PLANNING_INSTRUCTIONS}
+${FILE_MANAGEMENT_INSTRUCTIONS}`;
 }

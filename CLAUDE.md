@@ -85,6 +85,11 @@ API routes live in `apps/web/src/app/api/` and follow REST principles:
 | `DELETE` | `/api/conversations/[id]` | Delete a conversation |
 | `GET` | `/api/conversations/[id]/messages` | List messages in a conversation |
 | `POST` | `/api/conversations/[id]/messages` | Send a message (streams AI response) |
+| `GET` | `/api/files` | List user's files (optional `?category=` filter) |
+| `POST` | `/api/files` | Upload a file (multipart FormData) |
+| `GET` | `/api/files/[id]` | Get file metadata + signed URL |
+| `PUT` | `/api/files/[id]` | Update file metadata |
+| `DELETE` | `/api/files/[id]` | Delete a file |
 | `POST` | `/api/auth/register` | Register a new user |
 
 ### Rules for New Endpoints
@@ -112,10 +117,12 @@ apps/web/src/requests/
   api/                    ← Raw async functions that call API endpoints
     conversationsApi.ts
     messagesApi.ts
+    filesApi.ts
   useConversations.ts     ← TanStack useQuery/useMutation hooks
   useCreateConversation.ts
   useDeleteConversation.ts
   useMessages.ts
+  useFiles.ts
 ```
 
 - **`requests/api/`**: Pure async fetch wrappers — one file per resource. These are the only place raw `fetch()` calls to the backend should exist in the frontend.
@@ -169,6 +176,7 @@ Tools live in `packages/ai/src/tools/<category>/` and follow the `CommunityToolD
 |------|-----------|-------------------|---------|
 | **Server-side** | Yes — runs on server | `false` | `agents.create_agent` |
 | **Client-side (prompt)** | No — UI collects input, `addToolOutput()` returns result | `true` | `prompt.select` |
+| **Client-side (action)** | No — UI collects input + performs action, `addToolOutput()` returns result | `false` | `files.upload_file` |
 | **Context-aware** | Via `toolFactory(ctx)` | `false` | Tools needing `userId`/`agentId` |
 
 ### Approval Rules
@@ -219,6 +227,58 @@ Read-only tools (search, list, retrieve) execute automatically without approval.
 9. **Filter from assignment UI** (if universal) — Verify `GET /api/tools` excludes tools with `meta.universal: true`
 
 10. **Build** — Run `yarn build` to verify no type errors
+
+## File Storage (Cloudflare R2)
+
+Files and images are stored in **Cloudflare R2** (S3-compatible). No files are stored locally or in the database — only metadata is persisted in the `files` table.
+
+### Architecture
+
+```
+packages/backend/src/
+  helpers/storageHelper.ts    → R2 client wrapper (uploadToStorage, deleteFromStorage, getSignedUrl)
+  repositories/fileRepository.ts → CRUD for files table
+  services/fileService.ts     → Upload/list/get/update/delete with validation + signed URLs
+```
+
+### File Categories
+
+Files are organized by `category`: `avatar`, `agent_avatar`, `chat_image`, `document`, `attachment`.
+
+### Supported File Types
+
+- **Images** (10 MB max): JPEG, PNG, GIF, WebP, SVG
+- **Documents** (25 MB max): PDF, DOCX, TXT, CSV
+
+### Signed URLs
+
+Files are never served via public URLs. All access uses **pre-signed URLs** generated on the fly (1-hour expiry). The `files` table stores a `storage_key` (R2 object path), not a URL.
+
+### Upload Flow
+
+1. Client sends `multipart/form-data` to `POST /api/files` with `file`, `category`, and optional `metadata`
+2. Service validates MIME type and size
+3. File is uploaded to R2 at `users/{userId}/{category}/{uuid}.{ext}`
+4. Metadata is saved to the `files` table
+5. Response includes the file record + a signed URL
+
+### AI Agent Tools
+
+Agents can manage files via 5 tools in `packages/ai/src/tools/files/`:
+- `files.upload_file` (approval required) — base64-encoded content
+- `files.list_files` — optional category filter
+- `files.get_file` — returns metadata + signed download URL
+- `files.update_file` (approval required) — update metadata (alt text, description, etc.)
+- `files.delete_file` (approval required) — permanent deletion
+
+### Environment Variables
+
+```
+R2_ACCOUNT_ID=        # Cloudflare account ID
+R2_ACCESS_KEY_ID=     # R2 API token access key
+R2_SECRET_ACCESS_KEY= # R2 API token secret
+R2_BUCKET_NAME=       # Bucket name (e.g. community-files)
+```
 
 ## Key Rules
 

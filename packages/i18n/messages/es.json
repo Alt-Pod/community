@@ -8,7 +8,8 @@
     "agents": "Agentes",
     "planning": "Planificación",
     "billing": "Facturación",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "profile": "Perfil"
   },
   "home": {
     "title": "Community",
@@ -160,7 +161,10 @@
       "title": "Acción requiere aprobación",
       "description": "Esta acción modificará datos. Revisa los parámetros y confirma.",
       "approve": "Aprobar",
-      "reject": "Rechazar"
+      "reject": "Rechazar",
+      "approveAll": "Confirmar todo",
+      "rejectAll": "Cancelar todo",
+      "pendingCount": "{count} acciones esperando confirmación"
     },
     "card": {
       "parameters": "Parámetros",
@@ -256,6 +260,35 @@
         "description": "Cancelar una actividad programada"
       }
     },
+    "files": {
+      "uploadFile": {
+        "name": "Subir archivo",
+        "description": "Subir un archivo o imagen",
+        "defaultPrompt": "Selecciona un archivo para subir",
+        "dropzone": "Haz clic para seleccionar un archivo",
+        "hint": "Imágenes (10 MB) o documentos (25 MB)",
+        "upload": "Subir",
+        "uploading": "Subiendo...",
+        "change": "Cambiar",
+        "failed": "Error al subir"
+      },
+      "listFiles": {
+        "name": "Listar archivos",
+        "description": "Listar archivos subidos"
+      },
+      "getFile": {
+        "name": "Obtener archivo",
+        "description": "Obtener detalles y enlace de descarga"
+      },
+      "updateFile": {
+        "name": "Actualizar archivo",
+        "description": "Actualizar metadatos del archivo"
+      },
+      "deleteFile": {
+        "name": "Eliminar archivo",
+        "description": "Eliminar permanentemente un archivo"
+      }
+    },
     "prompt": {
       "submit": "Enviar",
       "select": {
@@ -277,6 +310,42 @@
       "form": {
         "name": "Formulario"
       }
+    }
+  },
+  "profile": {
+    "title": "Perfil",
+    "subtitle": "Gestiona la configuración de tu cuenta",
+    "info": {
+      "title": "Información del perfil",
+      "name": "Nombre",
+      "namePlaceholder": "Tu nombre",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "tu@email.com",
+      "save": "Guardar cambios",
+      "saving": "Guardando...",
+      "saved": "Perfil actualizado",
+      "error": "Error al actualizar el perfil"
+    },
+    "avatar": {
+      "title": "Avatar",
+      "upload": "Subir foto",
+      "change": "Cambiar foto",
+      "remove": "Eliminar foto",
+      "uploading": "Subiendo...",
+      "maxSize": "Máx 10 MB. JPG, PNG, GIF o WebP.",
+      "error": "Error al subir el avatar"
+    },
+    "password": {
+      "title": "Cambiar contraseña",
+      "current": "Contraseña actual",
+      "new": "Nueva contraseña",
+      "confirm": "Confirmar nueva contraseña",
+      "submit": "Actualizar contraseña",
+      "submitting": "Actualizando...",
+      "success": "Contraseña actualizada",
+      "errorWrong": "La contraseña actual es incorrecta",
+      "errorMismatch": "Las contraseñas no coinciden",
+      "errorLength": "La contraseña debe tener al menos 8 caracteres"
     }
   },
   "billing": {
@@ -301,6 +370,7 @@
     "neonDashboard": "Base de datos Neon",
     "vercelDashboard": "Vercel",
     "inngestDashboard": "Inngest",
-    "googleCloudDashboard": "Google Cloud"
+    "googleCloudDashboard": "Google Cloud",
+    "cloudflareR2Dashboard": "Cloudflare R2"
   }
 }

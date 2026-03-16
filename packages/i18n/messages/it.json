@@ -8,7 +8,8 @@
     "agents": "Agenti",
     "planning": "Pianificazione",
     "billing": "Fatturazione",
-    "logout": "Disconnetti"
+    "logout": "Disconnetti",
+    "profile": "Profilo"
   },
   "home": {
     "title": "Community",
@@ -160,7 +161,10 @@
       "title": "Azione richiede approvazione",
       "description": "Questa azione modificherà i dati. Verifica i parametri e conferma.",
       "approve": "Approva",
-      "reject": "Rifiuta"
+      "reject": "Rifiuta",
+      "approveAll": "Conferma tutto",
+      "rejectAll": "Annulla tutto",
+      "pendingCount": "{count} azioni in attesa di conferma"
     },
     "card": {
       "parameters": "Parametri",
@@ -256,6 +260,35 @@
         "description": "Annulla un'attività pianificata"
       }
     },
+    "files": {
+      "uploadFile": {
+        "name": "Carica file",
+        "description": "Carica un file o un'immagine",
+        "defaultPrompt": "Seleziona un file da caricare",
+        "dropzone": "Clicca per selezionare un file",
+        "hint": "Immagini (10 MB) o documenti (25 MB)",
+        "upload": "Carica",
+        "uploading": "Caricamento...",
+        "change": "Cambia",
+        "failed": "Caricamento fallito"
+      },
+      "listFiles": {
+        "name": "Elenco file",
+        "description": "Elenco dei file caricati"
+      },
+      "getFile": {
+        "name": "Ottieni file",
+        "description": "Ottieni dettagli e link di download"
+      },
+      "updateFile": {
+        "name": "Aggiorna file",
+        "description": "Aggiorna i metadati del file"
+      },
+      "deleteFile": {
+        "name": "Elimina file",
+        "description": "Elimina definitivamente un file"
+      }
+    },
     "prompt": {
       "submit": "Invia",
       "select": {
@@ -277,6 +310,42 @@
       "form": {
         "name": "Modulo"
       }
+    }
+  },
+  "profile": {
+    "title": "Profilo",
+    "subtitle": "Gestisci le impostazioni del tuo account",
+    "info": {
+      "title": "Informazioni del profilo",
+      "name": "Nome",
+      "namePlaceholder": "Il tuo nome",
+      "email": "E-mail",
+      "emailPlaceholder": "tua@email.com",
+      "save": "Salva modifiche",
+      "saving": "Salvataggio...",
+      "saved": "Profilo aggiornato",
+      "error": "Aggiornamento del profilo non riuscito"
+    },
+    "avatar": {
+      "title": "Avatar",
+      "upload": "Carica foto",
+      "change": "Cambia foto",
+      "remove": "Rimuovi foto",
+      "uploading": "Caricamento...",
+      "maxSize": "Max 10 MB. JPG, PNG, GIF o WebP.",
+      "error": "Caricamento dell'avatar non riuscito"
+    },
+    "password": {
+      "title": "Cambia password",
+      "current": "Password attuale",
+      "new": "Nuova password",
+      "confirm": "Conferma nuova password",
+      "submit": "Aggiorna password",
+      "submitting": "Aggiornamento...",
+      "success": "Password aggiornata",
+      "errorWrong": "La password attuale non è corretta",
+      "errorMismatch": "Le password non corrispondono",
+      "errorLength": "La password deve contenere almeno 8 caratteri"
     }
   },
   "billing": {
@@ -301,6 +370,7 @@
     "neonDashboard": "Database Neon",
     "vercelDashboard": "Vercel",
     "inngestDashboard": "Inngest",
-    "googleCloudDashboard": "Google Cloud"
+    "googleCloudDashboard": "Google Cloud",
+    "cloudflareR2Dashboard": "Cloudflare R2"
   }
 }
