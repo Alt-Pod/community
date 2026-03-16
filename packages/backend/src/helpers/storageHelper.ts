@@ -41,6 +41,17 @@ export async function deleteFromStorage(key: string): Promise<void> {
   );
 }
 
+export async function downloadFromStorage(key: string): Promise<Buffer> {
+  const command = new GetObjectCommand({ Bucket: bucket, Key: key });
+  const response = await s3.send(command);
+  const stream = response.Body as import("stream").Readable;
+  const chunks: Buffer[] = [];
+  for await (const chunk of stream) {
+    chunks.push(Buffer.from(chunk));
+  }
+  return Buffer.concat(chunks);
+}
+
 export async function getSignedUrl(
   key: string,
   expiresInSeconds: number = 3600

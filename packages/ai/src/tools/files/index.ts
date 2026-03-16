@@ -4,11 +4,13 @@ import { listFilesTool } from "./list-files";
 import { getFileTool } from "./get-file";
 import { updateFileTool } from "./update-file";
 import { deleteFileTool } from "./delete-file";
+import { readFileTool } from "./read-file";
 
 export const fileToolDefinitions = [
   uploadFileTool,
   listFilesTool,
   getFileTool,
+  readFileTool,
   updateFileTool,
   deleteFileTool,
 ];

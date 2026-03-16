@@ -81,6 +81,7 @@ export default function WeeklyPlanning() {
       map.set(day.toDateString(), []);
     }
     for (const a of activities) {
+      if (a.status === "cancelled") continue;
       const key = new Date(a.scheduled_at).toDateString();
       if (map.has(key)) {
         map.get(key)!.push(a);

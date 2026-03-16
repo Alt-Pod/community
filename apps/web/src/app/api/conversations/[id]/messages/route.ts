@@ -85,7 +85,8 @@ export async function POST(
 
   // Save user message only when there's a new one (not on tool approval continuations)
   if (userMessage) {
-    await chatService.saveUserMessage(id, userMessage);
+    const userParts = lastMessage?.parts?.length ? lastMessage.parts : undefined;
+    await chatService.saveUserMessage(id, userMessage, userParts);
   }
 
   // If this is a tool-output continuation (no new user message),
@@ -184,6 +185,7 @@ export async function POST(
         "files.upload_file",
         "files.list_files",
         "files.get_file",
+        "files.read_file",
         "files.update_file",
         "files.delete_file",
       ];

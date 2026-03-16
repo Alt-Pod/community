@@ -7,7 +7,7 @@ import {
   lastAssistantMessageIsCompleteWithToolCalls,
 } from "ai";
 import type { UIMessage } from "ai";
-import { useState, useRef, useEffect, useCallback, type FormEvent } from "react";
+import { useState, useRef, useEffect, useCallback, type FormEvent, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -38,6 +38,10 @@ import ToolResultCard from "@/components/tool-result-card";
 import ToolBulkActions from "@/components/tool-bulk-actions";
 import PromptToolRenderer from "@/components/prompt-tool-renderer";
 import FileUploadTool from "@/components/file-upload-tool";
+import ChatAttachmentPreview from "@/components/chat-attachment-preview";
+import type { AttachedFile } from "@/components/chat-attachment-preview";
+import { uploadFile } from "@/requests/api/filesApi";
+import { ALLOWED_MIME_TYPES } from "@community/shared";
 
 export default function ChatPanel({ conversationId }: { conversationId?: string }) {
   const t = useTranslations("chat");
@@ -49,7 +53,9 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
   );
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [initialLoaded, setInitialLoaded] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const activeConversationId = conversationId ?? null;
   const conversationIdRef = useRef(activeConversationId);
@@ -165,12 +171,104 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
     setPendingAgentId(agentId);
   }
 
+  const allAcceptedTypes = [...ALLOWED_MIME_TYPES.image, ...ALLOWED_MIME_TYPES.document].join(",");
+
+  function handleFilesSelected(files: FileList | null) {
+    if (!files) return;
+    const maxNew = 5 - attachedFiles.length;
+    const selected = Array.from(files).slice(0, maxNew);
+
+    const newEntries: AttachedFile[] = selected.map((f) => ({
+      localFile: f,
+      preview: f.type.startsWith("image/") ? URL.createObjectURL(f) : undefined,
+      uploading: true,
+    }));
+
+    setAttachedFiles((prev) => {
+      const updated = [...prev, ...newEntries];
+      // Start uploads
+      newEntries.forEach((entry, i) => {
+        const idx = prev.length + i;
+        uploadFile(entry.localFile, "attachment")
+          .then((result) => {
+            setAttachedFiles((cur) =>
+              cur.map((f, j) =>
+                j === idx
+                  ? {
+                      ...f,
+                      uploading: false,
+                      uploaded: {
+                        id: result.id,
+                        url: result.url,
+                        filename: result.filename,
+                        mime_type: result.mime_type,
+                      },
+                    }
+                  : f
+              )
+            );
+          })
+          .catch((err) => {
+            setAttachedFiles((cur) =>
+              cur.map((f, j) =>
+                j === idx ? { ...f, uploading: false, error: err.message } : f
+              )
+            );
+          });
+      });
+      return updated;
+    });
+  }
+
+  function removeAttachment(index: number) {
+    setAttachedFiles((prev) => {
+      const file = prev[index];
+      if (file?.preview) URL.revokeObjectURL(file.preview);
+      return prev.filter((_, i) => i !== index);
+    });
+  }
+
   function onSubmit(e: FormEvent) {
     e.preventDefault();
     const text = input.trim();
-    if (!text || isLoading) return;
+    const readyFiles = attachedFiles.filter((f) => f.uploaded && !f.error);
+    const hasContent = text || readyFiles.length > 0;
+    if (!hasContent || isLoading) return;
+
+    // Build document annotations for non-image files
+    const docAnnotations = readyFiles
+      .filter((f) => !f.uploaded!.mime_type.startsWith("image/"))
+      .map((f) => `[Attached: ${f.uploaded!.filename} (file_id: ${f.uploaded!.id})]`)
+      .join("\n");
+
+    const fullText = docAnnotations
+      ? text
+        ? `${text}\n\n${docAnnotations}`
+        : docAnnotations
+      : text;
+
+    // Build image file parts for multimodal
+    const imageFiles = readyFiles.filter((f) =>
+      f.uploaded!.mime_type.startsWith("image/")
+    );
+    const fileParts = imageFiles.map((f) => ({
+      type: "file" as const,
+      mediaType: f.uploaded!.mime_type,
+      filename: f.uploaded!.filename,
+      url: f.uploaded!.url,
+    }));
+
+    // Clean up previews
+    attachedFiles.forEach((f) => {
+      if (f.preview) URL.revokeObjectURL(f.preview);
+    });
+
     setInput("");
-    sendMessage({ text });
+    setAttachedFiles([]);
+    sendMessage({
+      text: fullText,
+      files: fileParts.length > 0 ? fileParts : undefined,
+    });
   }
 
   const sidebarContent = (
@@ -240,6 +338,23 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
       footer={
         !showAgentPicker ? (
           <form onSubmit={onSubmit} className="px-4 py-3 md:px-8 md:py-5 border-t border-border-subtle">
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept={allAcceptedTypes}
+              className="hidden"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                handleFilesSelected(e.target.files);
+                e.target.value = "";
+              }}
+            />
+            {attachedFiles.length > 0 && (
+              <ChatAttachmentPreview
+                files={attachedFiles}
+                onRemove={removeAttachment}
+              />
+            )}
             <div className="flex gap-3 items-end">
               <TextArea
                 value={input}
@@ -247,7 +362,8 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
-                    if (input.trim() && !isLoading) {
+                    const readyFiles = attachedFiles.filter((f) => f.uploaded && !f.error);
+                    if ((input.trim() || readyFiles.length > 0) && !isLoading) {
                       onSubmit(e as unknown as FormEvent);
                     }
                   }
@@ -255,10 +371,21 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
                 placeholder={t("messages.placeholder")}
                 autoFocus
               />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex-shrink-0 p-2 text-text-secondary hover:text-text-primary transition-colors rounded-md hover:bg-bg-secondary"
+                aria-label={t("attachments.button")}
+                disabled={isLoading || attachedFiles.length >= 5}
+              >
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17.5 10.3l-7.78 7.78a4.5 4.5 0 0 1-6.36-6.36l7.78-7.78a3 3 0 0 1 4.24 4.24l-7.07 7.07a1.5 1.5 0 0 1-2.12-2.12L13.26 6" />
+                </svg>
+              </button>
               <Button
                 type="submit"
                 variant="primary"
-                disabled={isLoading || !input.trim()}
+                disabled={isLoading || (!input.trim() && attachedFiles.filter((f) => f.uploaded && !f.error).length === 0)}
               >
                 {t("messages.send")}
               </Button>
@@ -283,12 +410,40 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
               const toolParts = parts.filter(
                 (p) => typeof p.type === "string" && p.type.startsWith("tool-")
               );
+              const fileParts = parts.filter(
+                (p): p is { type: "file"; url: string; mediaType: string; filename?: string } =>
+                  p.type === "file"
+              );
               const text = textParts.map((p) => p.text).join("");
 
               return (
                 <div key={m.id} className="min-w-0">
-                  {m.role === "user" && text && (
-                    <MessageBubble role="user">{text}</MessageBubble>
+                  {m.role === "user" && (text || fileParts.length > 0) && (
+                    <MessageBubble role="user">
+                      {fileParts.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-2">
+                          {fileParts.map((fp, fi) => (
+                            fp.mediaType?.startsWith("image/") ? (
+                              <img
+                                key={fi}
+                                src={fp.url}
+                                alt={fp.filename ?? ""}
+                                className="max-w-[200px] max-h-[200px] rounded-md object-cover"
+                              />
+                            ) : (
+                              <div key={fi} className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-bg-secondary text-xs">
+                                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M9 1.5H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5.5L9 1.5z" />
+                                  <path d="M9 1.5V5.5h4" />
+                                </svg>
+                                {fp.filename}
+                              </div>
+                            )
+                          ))}
+                        </div>
+                      )}
+                      {text}
+                    </MessageBubble>
                   )}
                   {toolParts.map((part, i) => {
                     const toolPart = part as unknown as {

@@ -7,11 +7,12 @@ export class ChatService {
     return this.messageRepository.findByConversationId(conversationId);
   }
 
-  async saveUserMessage(conversationId: string, content: string) {
+  async saveUserMessage(conversationId: string, content: string, parts?: unknown[] | null) {
     return this.messageRepository.create({
       conversationId,
       role: "user",
       content,
+      parts,
     });
   }
 

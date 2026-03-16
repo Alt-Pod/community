@@ -87,6 +87,11 @@
       "send": "Enviar",
       "loading": "…"
     },
+    "attachments": {
+      "button": "Adjuntar archivo",
+      "uploading": "Subiendo...",
+      "remove": "Eliminar"
+    },
     "agentPicker": {
       "title": "Iniciar una conversación",
       "subtitle": "Elige con quién quieres hablar",
@@ -174,6 +179,7 @@
     "hideForm": "Cancelar",
     "loading": "Cargando reuniones...",
     "noMeetings": "No hay reuniones programadas.",
+    "cancelledSection": "Canceladas",
     "agenda": "Agenda",
     "participants": "Participantes",
     "duration": "Duración",
@@ -373,6 +379,10 @@
       "deleteFile": {
         "name": "Eliminar archivo",
         "description": "Eliminar permanentemente un archivo"
+      },
+      "readFile": {
+        "name": "Leer archivo",
+        "description": "Leer y extraer el contenido de un archivo"
       }
     },
     "prompt": {

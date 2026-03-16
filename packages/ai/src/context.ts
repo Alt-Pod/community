@@ -91,13 +91,17 @@ You can manage files and images for the user:
 - **files.upload_file**: Opens a file picker for the user to select and upload a file from their device. Specify a category and an optional prompt message. The user selects the file — you do NOT need to provide file content.
 - **files.list_files**: List the user's files, optionally filtered by category. Use this to find previously uploaded files.
 - **files.get_file**: Get details and a temporary download URL for a specific file by its ID. Use this to retrieve files uploaded earlier in the conversation or in past conversations.
+- **files.read_file**: Read the content of a file. For documents (PDF, DOCX, TXT, CSV), extracts and returns the text content. For images, returns a signed URL for visual analysis. Use this when the user attaches a file or asks you to read, analyze, or summarize a file.
 - **files.update_file**: Update a file's metadata (alt text, description, tags). Requires approval.
 - **files.delete_file**: Permanently delete a file. Requires approval.
 
 Categories: avatar, agent_avatar, chat_image, document, attachment.
 
 ### Referencing uploaded files
-Every uploaded file gets a unique ID. When a file is uploaded during the conversation, remember its ID so you can reference it later using files.get_file or files.list_files. If the user asks about a previously uploaded file or image, use files.list_files to find it and files.get_file to retrieve its download URL.`;
+Every uploaded file gets a unique ID. When a file is uploaded during the conversation, remember its ID so you can reference it later using files.get_file or files.list_files. If the user asks about a previously uploaded file or image, use files.list_files to find it and files.get_file to retrieve its download URL.
+
+### Chat Attachments
+When the user sends a message with attached files, you will see references like [Attached: filename (file_id: xxx)]. For images, you can view them directly. For documents (PDF, DOCX, TXT, CSV), use files.read_file with the file_id to read and analyze the text content. Always call files.read_file when the user attaches a document — don't ask them to describe its contents.`;
 
 export function buildAgentSystemPrompt(agent: Agent, lang?: string, timezone?: string): string {
   return `${agent.system_prompt}\n${PROMPT_TOOLS_INSTRUCTIONS}\n${KNOWLEDGE_BASE_INSTRUCTIONS}\n${DATA_TOOLS_INSTRUCTIONS}\n${PLANNING_INSTRUCTIONS}\n${FILE_MANAGEMENT_INSTRUCTIONS}${buildTimezoneInstruction(timezone)}${buildLanguageInstruction(lang)}`;

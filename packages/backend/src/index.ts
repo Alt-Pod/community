@@ -33,7 +33,8 @@ export { AuditLogService } from "./services/auditLogService";
 
 // Helpers
 export { buildPartsFromSteps } from "./helpers/partsHelper";
-export { uploadToStorage, deleteFromStorage, getSignedUrl } from "./helpers/storageHelper";
+export { uploadToStorage, deleteFromStorage, downloadFromStorage, getSignedUrl } from "./helpers/storageHelper";
+export { extractFileContent } from "./helpers/contentExtractionHelper";
 export { withJobTracking } from "./helpers/jobTrackingHelper";
 
 // Inngest

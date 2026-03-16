@@ -87,6 +87,11 @@
       "send": "Senden",
       "loading": "…"
     },
+    "attachments": {
+      "button": "Datei anhängen",
+      "uploading": "Wird hochgeladen...",
+      "remove": "Entfernen"
+    },
     "agentPicker": {
       "title": "Unterhaltung starten",
       "subtitle": "Wähle deinen Gesprächspartner",
@@ -174,6 +179,7 @@
     "hideForm": "Abbrechen",
     "loading": "Meetings werden geladen...",
     "noMeetings": "Keine Meetings geplant.",
+    "cancelledSection": "Storniert",
     "agenda": "Tagesordnung",
     "participants": "Teilnehmer",
     "duration": "Dauer",
@@ -373,6 +379,10 @@
       "deleteFile": {
         "name": "Datei löschen",
         "description": "Eine Datei dauerhaft löschen"
+      },
+      "readFile": {
+        "name": "Datei lesen",
+        "description": "Inhalt einer Datei lesen und extrahieren"
       }
     },
     "prompt": {

@@ -18,7 +18,7 @@ export async function GET() {
     to
   );
 
-  const meetings = activities.filter((a) => a.activity_type === "meeting");
+  const meetings = activities.filter((a) => a.activity_type === "meeting" && a.status !== "cancelled");
 
   // Also get any currently running meetings (may be outside the time window)
   const allActivities = await scheduledActivityService.getByUserId(session.user.id, {

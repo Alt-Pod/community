@@ -34,6 +34,10 @@ export default function MeetingsPage() {
   const { data: meetings = [], isLoading } = useMeetings();
   const { data: profile } = useProfile();
   const [showForm, setShowForm] = useState(false);
+
+  const activeMeetings = meetings.filter((m) => m.status !== "cancelled");
+  const cancelledMeetings = meetings.filter((m) => m.status === "cancelled");
+
   const fieldExtractor = useCallback(
     (m: { title: string; description?: string | null; participants: { name: string }[] }) => [
       m.title,
@@ -42,7 +46,7 @@ export default function MeetingsPage() {
     ],
     [],
   );
-  const { query, setQuery, results } = useFuzzySearch(meetings, fieldExtractor);
+  const { query, setQuery, results } = useFuzzySearch(activeMeetings, fieldExtractor);
 
   return (
     <div className="max-w-3xl mx-auto px-4 md:px-6 py-6 md:py-10">
@@ -84,7 +88,7 @@ export default function MeetingsPage() {
 
       {isLoading && <LoadingIndicator variant="inline" text={t("loading")} />}
 
-      {!query && !isLoading && meetings.length === 0 && (
+      {!query && !isLoading && activeMeetings.length === 0 && (
         <p className="text-sm text-text-tertiary text-center py-10">
           {t("noMeetings")}
         </p>
@@ -133,6 +137,46 @@ export default function MeetingsPage() {
           </p>
         )}
       </div>
+
+      {!query && cancelledMeetings.length > 0 && (
+        <div className="mt-10">
+          <Heading as="h2" className="text-lg mb-4 text-text-secondary">
+            {t("cancelledSection")}
+          </Heading>
+          <div className="space-y-3">
+            {cancelledMeetings.map((meeting) => (
+              <Link key={meeting.id} href={`/meetings/${meeting.id}`} className="block">
+                <Card className="hover:border-accent transition-colors cursor-pointer opacity-60">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-heading font-semibold text-text-primary truncate">
+                        {meeting.title}
+                      </h3>
+                      <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-text-tertiary">
+                        <span>
+                          {new Date(meeting.scheduled_at).toLocaleString(undefined, {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          })}
+                        </span>
+                        {meeting.participants.length > 0 && (
+                          <span>
+                            {meeting.participants.map((p) => p.name).join(", ")}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <StatusBadge
+                      variant={statusVariant(meeting.status)}
+                      label={t(`status.${meeting.status}`)}
+                    />
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
