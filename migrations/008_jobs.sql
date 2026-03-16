@@ -16,6 +16,6 @@ CREATE TABLE IF NOT EXISTS jobs (
   completed_at TIMESTAMPTZ
 );
 
-CREATE INDEX idx_jobs_status ON jobs(status);
-CREATE INDEX idx_jobs_type_status ON jobs(type, status);
-CREATE INDEX idx_jobs_metadata ON jobs USING GIN(metadata);
+CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status);
+CREATE INDEX IF NOT EXISTS idx_jobs_type_status ON jobs(type, status);
+CREATE INDEX IF NOT EXISTS idx_jobs_metadata ON jobs USING GIN(metadata);
