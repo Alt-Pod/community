@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { Card, StatusBadge, Heading, LoadingIndicator, Collapsible } from "@community/ui";
 import { useMeeting } from "@/requests/useMeetings";
 import MarkdownMessage from "@/components/markdown-message";
+import { getEffectiveMeetingTimes } from "@/lib/meeting-time";
 import type { DbMessage } from "@community/shared";
 
 interface MeetingViewerProps {
@@ -44,11 +45,22 @@ export default function MeetingViewer({ meetingId }: MeetingViewerProps) {
   const { activity, participants, messages, agenda, duration_minutes, timezone, summary, summary_title } =
     meeting;
 
+  const times = getEffectiveMeetingTimes(activity);
+
   // Build a map of agent_id -> agent name for message attribution
   const agentNameMap = new Map<string, string>();
   for (const p of participants) {
     agentNameMap.set(p.id, p.name);
   }
+
+  const startStr = times.startTime.toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+  const endStr = times.endTime.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
     <div className="space-y-6">
@@ -59,13 +71,14 @@ export default function MeetingViewer({ meetingId }: MeetingViewerProps) {
             {activity.title}
           </Heading>
           <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-text-secondary">
-            <span>
-              {new Date(activity.scheduled_at).toLocaleString(undefined, {
-                dateStyle: "medium",
-                timeStyle: "short",
-              })}
-            </span>
-            <span>{duration_minutes} min</span>
+            <span>{startStr} – {endStr}</span>
+            {times.isActual && times.durationMinutes !== times.scheduledDurationMinutes ? (
+              <span>
+                {times.durationMinutes} min ({t("viewer.actualDuration")}) · {times.scheduledDurationMinutes} min ({t("viewer.scheduledDuration")})
+              </span>
+            ) : (
+              <span>{duration_minutes} min</span>
+            )}
             <span>{timezone}</span>
           </div>
         </div>

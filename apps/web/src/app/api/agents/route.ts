@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const agent = await agentService.create({ name, description, system_prompt });
+  const agent = await agentService.create({ name, description, system_prompt, user_id: session.user.id });
   auditLogService.log(session.user.id, "agent.created", "agent", agent.id, { name: agent.name }).catch(() => {});
   return Response.json(agent, { status: 201 });
 }

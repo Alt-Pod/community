@@ -1,7 +1,8 @@
 import { EventSchemas, Inngest } from "inngest";
+import { INNGEST_EVENTS } from "@community/shared";
 
 type Events = {
-  "job/started": {
+  [INNGEST_EVENTS.JOB_STARTED]: {
     data: {
       jobId: string;
       type: string;
@@ -9,14 +10,14 @@ type Events = {
       metadata: Record<string, unknown>;
     };
   };
-  "meeting/ready": {
+  [INNGEST_EVENTS.MEETING_READY]: {
     data: {
       activityId: string;
       jobId: string;
       userId: string;
     };
   };
-  "meeting/started": {
+  [INNGEST_EVENTS.MEETING_STARTED]: {
     data: {
       activityId: string;
       jobId: string;
@@ -28,7 +29,7 @@ type Events = {
       endTime: number;
     };
   };
-  "meeting/round-completed": {
+  [INNGEST_EVENTS.MEETING_ROUND_COMPLETED]: {
     data: {
       activityId: string;
       jobId: string;
@@ -41,7 +42,7 @@ type Events = {
       endTime: number;
     };
   };
-  "meeting/closing": {
+  [INNGEST_EVENTS.MEETING_CLOSING]: {
     data: {
       activityId: string;
       jobId: string;
@@ -52,7 +53,7 @@ type Events = {
       durationMinutes: number;
     };
   };
-  "meeting/summarize": {
+  [INNGEST_EVENTS.MEETING_SUMMARIZE]: {
     data: {
       activityId: string;
       jobId: string;
@@ -63,11 +64,28 @@ type Events = {
       durationMinutes: number;
     };
   };
-  "notification/ready": {
+  [INNGEST_EVENTS.NOTIFICATION_READY]: {
     data: {
       activityId: string;
       jobId: string;
       userId: string;
+    };
+  };
+  [INNGEST_EVENTS.TASK_READY]: {
+    data: {
+      activityId: string;
+      jobId: string;
+      userId: string;
+    };
+  };
+  [INNGEST_EVENTS.TASK_COMPLETED]: {
+    data: {
+      activityId: string;
+      jobId: string;
+      conversationId: string;
+      userId: string;
+      goal: string;
+      agentId: string;
     };
   };
 };

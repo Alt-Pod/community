@@ -2,6 +2,7 @@ import { tool, zodSchema } from "ai";
 import { z } from "zod";
 import { scheduledActivityService } from "@community/backend";
 import type { CommunityToolDefinition } from "../types";
+import { ACTIVITIES, NOTIFICATION_TYPE } from "@community/shared";
 import type { ScheduledNotificationPayload } from "@community/shared";
 
 export const scheduleNotificationTool: CommunityToolDefinition = {
@@ -40,12 +41,12 @@ export const scheduleNotificationTool: CommunityToolDefinition = {
         const payload: ScheduledNotificationPayload = {
           title,
           body,
-          type: "scheduled",
+          type: NOTIFICATION_TYPE.SCHEDULED,
           link: link ?? null,
         };
 
         const activity = await scheduledActivityService.schedule(ctx.userId, {
-          activityType: "scheduled_notification",
+          activityType: ACTIVITIES.scheduled_notification.id,
           title: `Reminder: ${title}`,
           description: body,
           scheduledAt: scheduled_at,
@@ -55,7 +56,7 @@ export const scheduleNotificationTool: CommunityToolDefinition = {
         return {
           success: true,
           id: activity.id,
-          activity_type: "scheduled_notification",
+          activity_type: ACTIVITIES.scheduled_notification.id,
           scheduled_at: activity.scheduled_at,
         };
       },

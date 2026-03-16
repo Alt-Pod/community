@@ -2,6 +2,7 @@ import { tool, zodSchema } from "ai";
 import { z } from "zod";
 import { scheduledActivityService } from "@community/backend";
 import type { CommunityToolDefinition } from "../types";
+import { ACTIVITIES } from "@community/shared";
 import type { MeetingPayload } from "@community/shared";
 
 export const scheduleMeetingTool: CommunityToolDefinition = {
@@ -9,13 +10,13 @@ export const scheduleMeetingTool: CommunityToolDefinition = {
     id: "planning.schedule_meeting",
     category: "planning",
     displayName: "tools.planning.scheduleMeeting.name",
-    description: "Schedule a meeting between multiple agents at a specific time with an agenda",
+    description: "Schedule a meeting between multiple agents with an agenda. Starts ASAP by default.",
     requiresConfirmation: true,
   },
   toolFactory: (ctx) =>
     tool({
       description:
-        "Schedule a meeting between multiple AI agents. The meeting will be orchestrated by a Meeting Master who introduces the agenda, facilitates discussion rounds, and ensures all topics are covered. A summary is automatically generated at the end.",
+        "Schedule a meeting between multiple AI agents. The meeting will be orchestrated by a Meeting Master who introduces the agenda, facilitates discussion rounds, and ensures all topics are covered. A summary is automatically generated at the end. If no scheduled_at is provided, the meeting starts as soon as possible.",
       inputSchema: zodSchema(
         z.object({
           title: z.string().describe("Short title for the meeting"),
@@ -27,12 +28,13 @@ export const scheduleMeetingTool: CommunityToolDefinition = {
           participant_agent_ids: z
             .array(z.string())
             .describe(
-              "Array of agent IDs that will participate in the meeting. A default assistant with all tools is always included automatically."
+              "Array of agent IDs that will participate in the meeting."
             ),
           scheduled_at: z
             .string()
+            .optional()
             .describe(
-              "ISO 8601 datetime for when the meeting starts (e.g. 2026-03-20T14:00:00+01:00)"
+              "ISO 8601 datetime for when the meeting starts. If omitted, the meeting starts as soon as possible."
             ),
           duration_minutes: z
             .number()
@@ -46,6 +48,12 @@ export const scheduleMeetingTool: CommunityToolDefinition = {
             .describe(
               "IANA timezone identifier (e.g. Europe/Paris, America/New_York)"
             ),
+          include_assistant: z
+            .boolean()
+            .default(false)
+            .describe(
+              "Whether the default assistant should participate alongside the agents (default: false)"
+            ),
         })
       ),
       needsApproval: true,
@@ -56,26 +64,28 @@ export const scheduleMeetingTool: CommunityToolDefinition = {
         scheduled_at,
         duration_minutes,
         timezone,
+        include_assistant,
       }) => {
         const meetingPayload: MeetingPayload = {
           participant_agent_ids,
           agenda,
           duration_minutes,
           timezone,
+          include_assistant,
         };
 
         const activity = await scheduledActivityService.schedule(ctx.userId, {
-          activityType: "meeting",
+          activityType: ACTIVITIES.meeting.id,
           title,
           description: agenda,
-          scheduledAt: scheduled_at,
+          scheduledAt: scheduled_at || new Date().toISOString(),
           payload: meetingPayload as unknown as Record<string, unknown>,
         });
 
         return {
           success: true,
           id: activity.id,
-          activity_type: "meeting",
+          activity_type: ACTIVITIES.meeting.id,
           scheduled_at: activity.scheduled_at,
           duration_minutes,
           participant_count: participant_agent_ids.length,

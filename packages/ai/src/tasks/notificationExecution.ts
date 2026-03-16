@@ -4,6 +4,11 @@ import {
   jobService,
   notificationService,
 } from "@community/backend";
+import {
+  INNGEST_FUNCTION_IDS,
+  INNGEST_EVENTS,
+  ACTIVITY_STATUSES,
+} from "@community/shared";
 import type { ScheduledNotificationPayload } from "@community/shared";
 
 /**
@@ -11,8 +16,8 @@ import type { ScheduledNotificationPayload } from "@community/shared";
  * Creates the notification and marks the activity completed.
  */
 export const notificationExecution = inngest.createFunction(
-  { id: "notification-execution", retries: 2 },
-  { event: "notification/ready" },
+  { id: INNGEST_FUNCTION_IDS.NOTIFICATION_EXECUTION, retries: 2 },
+  { event: INNGEST_EVENTS.NOTIFICATION_READY },
   async ({ event, step }) => {
     const { activityId, jobId, userId } = event.data;
 
@@ -20,7 +25,7 @@ export const notificationExecution = inngest.createFunction(
       return scheduledActivityRepository.findById(activityId);
     });
 
-    if (!activity || activity.status !== "scheduled") {
+    if (!activity || activity.status !== ACTIVITY_STATUSES.SCHEDULED) {
       await step.run("skip", async () => {
         if (jobId) {
           await jobService.markCompleted(jobId, { skipped: true, reason: "not_scheduled" });
@@ -30,7 +35,7 @@ export const notificationExecution = inngest.createFunction(
     }
 
     await step.run("mark-running", async () => {
-      await scheduledActivityRepository.updateStatus(activityId, "running");
+      await scheduledActivityRepository.updateStatus(activityId, ACTIVITY_STATUSES.RUNNING);
       if (jobId) await jobService.markRunning(jobId);
     });
 

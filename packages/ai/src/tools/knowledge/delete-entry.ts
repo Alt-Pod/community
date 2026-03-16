@@ -10,6 +10,7 @@ export const deleteKnowledgeEntryTool: CommunityToolDefinition = {
     displayName: "tools.knowledge.deleteEntry.name",
     description: "Delete a knowledge entry",
     requiresConfirmation: true,
+    universal: true,
   },
   toolFactory: (ctx) =>
     tool({

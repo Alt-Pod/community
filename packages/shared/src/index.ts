@@ -26,6 +26,11 @@ export type {
   RecurringActivityStatus,
 } from "./types/recurringActivity";
 export type { MeetingPayload } from "./types/meeting";
+export type { TaskPayload } from "./types/task";
+export type {
+  ActivityOutcome,
+  ActivityOutcomeType,
+} from "./types/activityOutcome";
 export type { AuditLog } from "./types/auditLog";
 export type { ActivityDefinition, ActivityType } from "./activities";
 export { ACTIVITIES } from "./activities";
@@ -45,9 +50,40 @@ export type {
   PushSubscriptionRecord,
   ScheduledNotificationPayload,
 } from "./types/notification";
-export { NOTIFICATION_TYPES } from "./types/notification";
+export { NOTIFICATION_TYPES, NOTIFICATION_TYPE } from "./types/notification";
+export type { LogbookEntry, LogbookEvent } from "./types/logbookEntry";
 export {
   levenshteinDistance,
   fuzzyMatch,
   fuzzySearchItems,
 } from "./fuzzySearch";
+
+// Constants
+export {
+  INNGEST_FUNCTION_IDS,
+  INNGEST_EVENTS,
+} from "./constants/inngest";
+export type {
+  InngestFunctionId,
+  InngestEventName,
+} from "./constants/inngest";
+export {
+  ACTIVITY_STATUSES,
+  AGENT_STATUSES,
+  RECURRING_ACTIVITY_STATUSES,
+} from "./constants/statuses";
+export type {
+  ActivityStatus,
+  AgentStatus,
+} from "./constants/statuses";
+export {
+  CONVERSATION_TYPES,
+  MESSAGE_ROLES,
+} from "./constants/conversation";
+export type {
+  ConversationType,
+  MessageRole,
+} from "./constants/conversation";
+export { ACTIVITY_OUTCOME_TYPES } from "./constants/outcomes";
+export { LOGBOOK_EVENT_TYPES } from "./constants/logbook";
+export type { LogbookEventType } from "./constants/logbook";

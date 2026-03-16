@@ -6,6 +6,7 @@ import {
   agentService,
   auditLogService,
 } from "@community/backend";
+import { ACTIVITIES } from "@community/shared";
 import type { MeetingPayload } from "@community/shared";
 
 export async function GET(req: Request) {
@@ -27,12 +28,12 @@ export async function GET(req: Request) {
     );
   } else {
     activities = await scheduledActivityService.getByUserId(session.user.id, {
-      activityType: "meeting",
+      activityType: ACTIVITIES.meeting.id,
     });
   }
 
   // Filter to meetings only
-  const meetings = activities.filter((a) => a.activity_type === "meeting");
+  const meetings = activities.filter((a) => a.activity_type === ACTIVITIES.meeting.id);
 
   // Enrich with agent names for participants
   const agents = await agentService.getAll();
@@ -88,7 +89,7 @@ export async function POST(req: Request) {
   };
 
   const activity = await scheduledActivityService.schedule(session.user.id, {
-    activityType: "meeting",
+    activityType: ACTIVITIES.meeting.id,
     title,
     description: agenda,
     scheduledAt: scheduled_at,

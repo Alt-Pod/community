@@ -12,8 +12,13 @@
     "lint": "yarn workspace @community/web lint",
     "setup": "bash scripts/setup.sh",
     "db:migrate": "node scripts/migrate.js",
+    "db:reset": "bash scripts/db-reset.sh",
     "db:migrate:prod": "env $(cat .env.prod | xargs) node scripts/migrate.js",
-    "inngest:dev": "npx inngest-cli@latest dev"
+    "inngest:dev": "npx inngest-cli@latest dev",
+    "db:seed": "node scripts/seed.js"
+  },
+  "devDependencies": {
+    "bcryptjs": "^3.0.3"
   },
   "repository": "https://github.com/Alt-Pod/community.git",
   "author": "Michael Dornic <michael@m-work.co>",

@@ -1,4 +1,6 @@
 import type { Sql } from "postgres";
+import type { ConversationType } from "@community/shared";
+import { CONVERSATION_TYPES } from "@community/shared";
 
 export class ConversationRepository {
   constructor(
@@ -10,7 +12,7 @@ export class ConversationRepository {
     return this.sql`
       SELECT id, title, agent_id, title_generated, type, ended_at, created_at
       FROM ${this.sql(this.table)}
-      WHERE user_id = ${userId} AND type = 'chat'
+      WHERE user_id = ${userId} AND type = ${CONVERSATION_TYPES.CHAT}
       ORDER BY created_at DESC
     `;
   }
@@ -19,7 +21,7 @@ export class ConversationRepository {
     return this.sql`
       SELECT id, title, agent_id, title_generated, type, ended_at, created_at
       FROM ${this.sql(this.table)}
-      WHERE user_id = ${userId} AND type = 'meeting'
+      WHERE user_id = ${userId} AND type = ${CONVERSATION_TYPES.MEETING}
       ORDER BY created_at DESC
     `;
   }
@@ -52,11 +54,20 @@ export class ConversationRepository {
     return conversation ?? null;
   }
 
+  async findTasksByUserId(userId: string) {
+    return this.sql`
+      SELECT id, title, agent_id, title_generated, type, ended_at, created_at
+      FROM ${this.sql(this.table)}
+      WHERE user_id = ${userId} AND type = ${CONVERSATION_TYPES.TASK}
+      ORDER BY created_at DESC
+    `;
+  }
+
   async create(
     userId: string,
     title: string,
     agentId?: string | null,
-    type: "chat" | "meeting" = "chat"
+    type: ConversationType = CONVERSATION_TYPES.CHAT
   ) {
     const [conversation] = await this.sql`
       INSERT INTO ${this.sql(this.table)} (user_id, title, agent_id, type)

@@ -1,3 +1,6 @@
+import type { ActivityOutcome } from "./activityOutcome";
+import type { ActivityStatus } from "../constants/statuses";
+
 export interface ScheduledActivity {
   id: string;
   user_id: string;
@@ -7,8 +10,9 @@ export interface ScheduledActivity {
   description: string | null;
   payload: Record<string, unknown>;
   scheduled_at: string;
-  status: "scheduled" | "running" | "completed" | "failed" | "cancelled";
+  status: ActivityStatus;
   output: Record<string, unknown> | null;
+  outcome: ActivityOutcome | null;
   error: string | null;
   job_id: string | null;
   created_at: string;

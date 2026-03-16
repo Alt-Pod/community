@@ -1,6 +1,8 @@
 import { tool, zodSchema } from "ai";
 import { z } from "zod";
 import { notificationService } from "@community/backend";
+import { NOTIFICATION_TYPE } from "@community/shared";
+import type { NotificationType } from "@community/shared";
 import type { CommunityToolDefinition } from "../types";
 
 export const sendNotificationTool: CommunityToolDefinition = {
@@ -22,8 +24,8 @@ export const sendNotificationTool: CommunityToolDefinition = {
             .describe("Short notification title (max ~80 chars)"),
           body: z.string().describe("Notification body with details"),
           type: z
-            .enum(["info", "success", "warning", "meeting", "agent"])
-            .default("info")
+            .enum(Object.values(NOTIFICATION_TYPE) as [NotificationType, ...NotificationType[]])
+            .default(NOTIFICATION_TYPE.INFO)
             .describe("Notification type for visual styling"),
           link: z
             .string()
@@ -41,7 +43,7 @@ export const sendNotificationTool: CommunityToolDefinition = {
         const notification = await notificationService.create(ctx.userId, {
           title,
           body,
-          type: type ?? "info",
+          type: type ?? NOTIFICATION_TYPE.INFO,
           link,
           agentId: ctx.agentId ?? null,
           conversationId: conversation_id ?? null,

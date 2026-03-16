@@ -19,6 +19,7 @@ export { FileRepository } from "./repositories/fileRepository";
 export { AuditLogRepository } from "./repositories/auditLogRepository";
 export { NotificationRepository } from "./repositories/notificationRepository";
 export { PushSubscriptionRepository } from "./repositories/pushSubscriptionRepository";
+export { LogbookEntryRepository } from "./repositories/logbookEntryRepository";
 
 // Services
 export { UserService } from "./services/userService";
@@ -35,6 +36,7 @@ export { FileService } from "./services/fileService";
 export type { FileWithUrl } from "./services/fileService";
 export { AuditLogService } from "./services/auditLogService";
 export { NotificationService } from "./services/notificationService";
+export { LogbookService } from "./services/logbookService";
 
 // Helpers
 export { buildPartsFromSteps } from "./helpers/partsHelper";
@@ -44,6 +46,7 @@ export { withJobTracking } from "./helpers/jobTrackingHelper";
 export { computeNextOccurrences } from "./helpers/recurrenceHelper";
 export type { RecurrenceRule } from "./helpers/recurrenceHelper";
 export { sendPushToUser } from "./helpers/pushHelper";
+export { formatKnowledgeForContext } from "./helpers/knowledgeHelper";
 
 // Inngest
 export { inngest } from "./inngest/client";
@@ -78,6 +81,8 @@ import { AuditLogService } from "./services/auditLogService";
 import { NotificationRepository } from "./repositories/notificationRepository";
 import { PushSubscriptionRepository } from "./repositories/pushSubscriptionRepository";
 import { NotificationService } from "./services/notificationService";
+import { LogbookEntryRepository } from "./repositories/logbookEntryRepository";
+import { LogbookService } from "./services/logbookService";
 
 const userRepository = new UserRepository(sql, "users");
 const conversationRepository = new ConversationRepository(sql, "conversations");
@@ -107,6 +112,8 @@ const auditLogService = new AuditLogService(auditLogRepository);
 const notificationRepository = new NotificationRepository(sql, "notifications");
 const pushSubscriptionRepository = new PushSubscriptionRepository(sql, "push_subscriptions");
 const notificationService = new NotificationService(notificationRepository, pushSubscriptionRepository);
+const logbookEntryRepository = new LogbookEntryRepository(sql, "logbook_entries");
+const logbookService = new LogbookService(logbookEntryRepository);
 
 export {
   userRepository,
@@ -136,4 +143,6 @@ export {
   notificationRepository,
   pushSubscriptionRepository,
   notificationService,
+  logbookEntryRepository,
+  logbookService,
 };

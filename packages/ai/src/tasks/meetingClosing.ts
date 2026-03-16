@@ -6,12 +6,17 @@ import {
   scheduledActivityRepository,
   withJobTracking,
 } from "@community/backend";
+import {
+  INNGEST_FUNCTION_IDS,
+  INNGEST_EVENTS,
+  MESSAGE_ROLES,
+} from "@community/shared";
 import type { Agent } from "@community/shared";
 import { loadMeetingHistory, generateMasterClosing } from "./meetingHelper";
 
 export const meetingClosing = inngest.createFunction(
-  { id: "meeting-closing", retries: 1 },
-  { event: "meeting/closing" },
+  { id: INNGEST_FUNCTION_IDS.MEETING_CLOSING, retries: 1 },
+  { event: INNGEST_EVENTS.MEETING_CLOSING },
   async ({ event, step }) => {
     const {
       activityId,
@@ -42,7 +47,7 @@ export const meetingClosing = inngest.createFunction(
 
           await messageRepository.create({
             conversationId,
-            role: "assistant",
+            role: MESSAGE_ROLES.ASSISTANT,
             content: closing,
             agentId: null,
           });
@@ -52,7 +57,7 @@ export const meetingClosing = inngest.createFunction(
 
     // Emit summarize event
     await step.sendEvent("trigger-summarize", {
-      name: "meeting/summarize",
+      name: INNGEST_EVENTS.MEETING_SUMMARIZE,
       data: {
         activityId,
         jobId,

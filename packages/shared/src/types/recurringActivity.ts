@@ -1,5 +1,7 @@
+import type { RecurringActivityStatus } from "../constants/statuses";
+
 export type RecurrenceFrequency = "daily" | "weekly" | "monthly";
-export type RecurringActivityStatus = "active" | "paused" | "deleted";
+export type { RecurringActivityStatus } from "../constants/statuses";
 
 export interface RecurringActivity {
   id: string;

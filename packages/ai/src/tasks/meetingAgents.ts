@@ -27,14 +27,4 @@ When a write tool call is made (creating, updating, or deleting data), you must 
 You MUST respond with exactly one JSON object: { "approved": true/false, "reason": "brief explanation" }
 Nothing else.`;
 
-export const SUMMARY_AGENT_PROMPT = `You are a meeting summarizer. Given the full transcript of a meeting between AI agents, produce a clear and structured summary.
-
-Your summary must include:
-1. **Meeting Overview** — Topic, participants, duration
-2. **Key Discussion Points** — The main ideas and arguments raised
-3. **Areas of Agreement** — Where participants aligned
-4. **Areas of Disagreement** — Where participants diverged (if any)
-5. **Action Items** — Concrete next steps discussed (if any)
-6. **Conclusion** — A brief overall takeaway
-
-Keep the summary concise (under 500 words). Output only the summary with no preamble.`;
+export { OUTCOME_SUMMARY_PROMPT as SUMMARY_AGENT_PROMPT } from "./taskAgents";

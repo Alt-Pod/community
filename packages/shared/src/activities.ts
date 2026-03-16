@@ -20,6 +20,11 @@ export const ACTIVITIES = {
     name: "Scheduled Notification",
     description: "Send a notification at a scheduled time (reminder)",
   },
+  task: {
+    id: "task",
+    name: "Task",
+    description: "Solo agent task — one agent works with tools toward a goal",
+  },
 } as const satisfies Record<string, ActivityDefinition>;
 
 export type ActivityType = keyof typeof ACTIVITIES;

@@ -1,7 +1,8 @@
 import { tool, zodSchema } from "ai";
 import { z } from "zod";
 import { sql, toolRepository } from "@community/backend";
-import type { Agent } from "@community/shared";
+import { AGENT_STATUSES } from "@community/shared";
+import type { Agent, AgentStatus } from "@community/shared";
 import type { CommunityToolDefinition } from "../types";
 
 export const updateAgentTool: CommunityToolDefinition = {
@@ -29,7 +30,7 @@ export const updateAgentTool: CommunityToolDefinition = {
           .optional()
           .describe("New system prompt for the agent"),
         status: z
-          .enum(["active", "inactive"])
+          .enum(Object.values(AGENT_STATUSES) as [AgentStatus, ...AgentStatus[]])
           .optional()
           .describe("Set the agent's status"),
         add_tool_ids: z

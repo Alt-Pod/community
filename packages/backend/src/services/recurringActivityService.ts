@@ -1,4 +1,4 @@
-import { ACTIVITIES } from "@community/shared";
+import { ACTIVITIES, RECURRING_ACTIVITY_STATUSES, ACTIVITY_STATUSES } from "@community/shared";
 import type { RecurringActivity, RecurringActivityStatus } from "@community/shared";
 import type { RecurringActivityRepository } from "../repositories/recurringActivityRepository";
 import type { ScheduledActivityRepository } from "../repositories/scheduledActivityRepository";
@@ -82,7 +82,7 @@ export class RecurringActivityService {
     const existing = await this.repository.findById(id);
     if (!existing) throw new Error("Recurring activity not found");
     if (existing.user_id !== userId) throw new Error("Unauthorized");
-    if (existing.status === "deleted") throw new Error("Cannot update a deleted recurring activity");
+    if (existing.status === RECURRING_ACTIVITY_STATUSES.DELETED) throw new Error("Cannot update a deleted recurring activity");
 
     // Check if schedule-affecting fields changed
     const scheduleFields = ["frequency", "intervalValue", "daysOfWeek", "dayOfMonth", "timeOfDay", "timezone", "startDate"];
@@ -104,18 +104,18 @@ export class RecurringActivityService {
     const existing = await this.repository.findById(id);
     if (!existing) throw new Error("Recurring activity not found");
     if (existing.user_id !== userId) throw new Error("Unauthorized");
-    if (existing.status !== "active") throw new Error("Only active recurring activities can be paused");
+    if (existing.status !== RECURRING_ACTIVITY_STATUSES.ACTIVE) throw new Error("Only active recurring activities can be paused");
 
-    await this.repository.updateStatus(id, "paused");
+    await this.repository.updateStatus(id, RECURRING_ACTIVITY_STATUSES.PAUSED);
   }
 
   async resume(id: string, userId: string): Promise<void> {
     const existing = await this.repository.findById(id);
     if (!existing) throw new Error("Recurring activity not found");
     if (existing.user_id !== userId) throw new Error("Unauthorized");
-    if (existing.status !== "paused") throw new Error("Only paused recurring activities can be resumed");
+    if (existing.status !== RECURRING_ACTIVITY_STATUSES.PAUSED) throw new Error("Only paused recurring activities can be resumed");
 
-    await this.repository.updateStatus(id, "active");
+    await this.repository.updateStatus(id, RECURRING_ACTIVITY_STATUSES.ACTIVE);
     // Re-materialize from now
     const refreshed = await this.repository.findById(id);
     if (refreshed) await this.materializeInstances(refreshed);
@@ -126,7 +126,7 @@ export class RecurringActivityService {
     if (!existing) throw new Error("Recurring activity not found");
     if (existing.user_id !== userId) throw new Error("Unauthorized");
 
-    await this.repository.updateStatus(id, "deleted");
+    await this.repository.updateStatus(id, RECURRING_ACTIVITY_STATUSES.DELETED);
 
     if (cancelFutureInstances) {
       await this.scheduledActivityRepository.cancelByRecurringActivityId(id);
@@ -184,7 +184,7 @@ export class RecurringActivityService {
     // Check existing instances to avoid duplicates
     const existing = await this.scheduledActivityRepository.findByRecurringActivityId(
       recurring.id,
-      "scheduled"
+      ACTIVITY_STATUSES.SCHEDULED
     );
     const existingTimes = new Set(existing.map((a) => new Date(a.scheduled_at).getTime()));
 

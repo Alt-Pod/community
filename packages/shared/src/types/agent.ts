@@ -1,15 +1,19 @@
+import type { AgentStatus } from "../constants/statuses";
+import type { MessageRole } from "../constants/conversation";
+
 export interface Agent {
   id: string;
+  user_id: string | null;
   name: string;
   description: string | null;
   system_prompt: string;
-  status: "active" | "inactive";
+  status: AgentStatus;
   created_at: string;
   updated_at: string;
 }
 
 export interface AgentMessage {
-  role: "user" | "assistant";
+  role: MessageRole;
   content: string;
 }
 

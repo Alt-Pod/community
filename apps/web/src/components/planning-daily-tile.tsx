@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { StatusBadge } from "@community/ui";
 import type { ScheduledActivity, MeetingPayload } from "@community/shared";
+import { getEffectiveMeetingTimes } from "@/lib/meeting-time";
 
 interface PlanningDailyTileProps {
   activity: ScheduledActivity;
@@ -42,7 +43,9 @@ export default function PlanningDailyTile({
 
   const isMeeting = activity.activity_type === "meeting";
   const payload = activity.payload as unknown as MeetingPayload | undefined;
-  const durationMinutes = isMeeting && payload?.duration_minutes ? payload.duration_minutes : 30;
+
+  const times = isMeeting ? getEffectiveMeetingTimes(activity) : null;
+  const durationMinutes = times?.durationMinutes ?? (payload?.duration_minutes || 30);
 
   const pxPerMinute = hourHeight / 60;
   const minutesSinceStart = (hours * 60 + minutes) - (startHour * 60);
@@ -54,7 +57,7 @@ export default function PlanningDailyTile({
     minute: "2-digit",
   });
 
-  const endTime = new Date(scheduled.getTime() + durationMinutes * 60 * 1000);
+  const endTime = times?.endTime ?? new Date(scheduled.getTime() + durationMinutes * 60 * 1000);
   const endStr = endTime.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",

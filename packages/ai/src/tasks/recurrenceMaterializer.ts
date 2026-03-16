@@ -3,13 +3,14 @@ import {
   recurringActivityRepository,
   recurringActivityService,
 } from "@community/backend";
+import { INNGEST_FUNCTION_IDS } from "@community/shared";
 
 /**
  * Daily cron: materializes scheduled_activity instances for all active
  * recurring activities up to 30 days in the future.
  */
 export const recurrenceMaterializer = inngest.createFunction(
-  { id: "recurrence-materializer" },
+  { id: INNGEST_FUNCTION_IDS.RECURRENCE_MATERIALIZER },
   { cron: "0 0 * * *" }, // daily at midnight UTC
   async ({ step }) => {
     const activeRules = await step.run("find-active-recurring", async () => {

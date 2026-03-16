@@ -1,6 +1,8 @@
 import { tool, zodSchema } from "ai";
 import { z } from "zod";
 import { scheduledActivityService } from "@community/backend";
+import { ACTIVITY_STATUSES } from "@community/shared";
+import type { ActivityStatus } from "@community/shared";
 import type { CommunityToolDefinition } from "../types";
 
 export const listScheduledActivitiesTool: CommunityToolDefinition = {
@@ -18,7 +20,7 @@ export const listScheduledActivitiesTool: CommunityToolDefinition = {
       inputSchema: zodSchema(
         z.object({
           status: z
-            .enum(["scheduled", "running", "completed", "failed", "cancelled"])
+            .enum(Object.values(ACTIVITY_STATUSES) as [ActivityStatus, ...ActivityStatus[]])
             .optional()
             .describe("Filter by status"),
           from: z

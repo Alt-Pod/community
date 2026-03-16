@@ -4,6 +4,7 @@ import {
   chatService,
   agentService,
 } from "@community/backend";
+import { ACTIVITIES } from "@community/shared";
 import type { MeetingPayload } from "@community/shared";
 
 export async function GET(
@@ -23,7 +24,7 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 
-  if (activity.activity_type !== "meeting") {
+  if (activity.activity_type !== ACTIVITIES.meeting.id) {
     return Response.json({ error: "Not a meeting" }, { status: 400 });
   }
 

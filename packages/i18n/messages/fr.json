@@ -9,6 +9,7 @@
     "tools": "Outils",
     "meetings": "Réunions",
     "planning": "Planning",
+    "logbook": "Journal de bord",
     "logs": "Journal",
     "admin": "Admin",
     "billing": "Facturation",
@@ -53,6 +54,13 @@
       "title": "Notifications",
       "viewAll": "Voir tout",
       "empty": "Aucune nouvelle notification."
+    },
+    "logbook": {
+      "title": "Journal du jour",
+      "viewAll": "Voir toutes les entrées",
+      "empty": "Aucune entrée dans le journal aujourd'hui.",
+      "updatedTimes": "Mis à jour {count} fois",
+      "lastUpdated": "Dernière mise à jour {time}"
     }
   },
   "notifications": {
@@ -319,7 +327,9 @@
       "noMessages": "La réunion n'a pas encore commencé.",
       "readOnly": "Ceci est une réunion entre agents. Vous êtes observateur.",
       "meetingMaster": "Maître de réunion",
-      "unknownAgent": "Agent inconnu"
+      "unknownAgent": "Agent inconnu",
+      "actualDuration": "effectif",
+      "scheduledDuration": "prévu"
     }
   },
   "tools": {
@@ -368,6 +378,10 @@
       "deleteAgent": {
         "name": "Supprimer un agent",
         "description": "Supprimer définitivement un agent"
+      },
+      "getAgentPrompt": {
+        "name": "Voir le prompt d'un agent",
+        "description": "Récupérer le prompt système complet d'un agent"
       }
     },
     "knowledge": {
@@ -460,6 +474,10 @@
       "listRecurringActivities": {
         "name": "Lister les activités récurrentes",
         "description": "Lister les activités récurrentes"
+      },
+      "scheduleTask": {
+        "name": "Planifier une tâche",
+        "description": "Planifier une tâche solo pour un agent vers un objectif"
       }
     },
     "notifications": {
@@ -651,6 +669,16 @@
     "googleAiStudioDashboard": "Google AI Studio",
     "cloudflareR2Dashboard": "Cloudflare R2",
     "loading": "Chargement des données..."
+  },
+  "logbook": {
+    "title": "Journal de bord",
+    "subtitle": "Compte-rendu quotidien de tout ce qui se passe dans votre organisation",
+    "noEntry": "Aucune entrée pour cette date.",
+    "previousDay": "Précédent",
+    "nextDay": "Suivant",
+    "today": "Aujourd'hui",
+    "entries": "Entrées récentes",
+    "version": "Version {version}"
   },
   "search": {
     "placeholder": "Rechercher…",

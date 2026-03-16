@@ -20,11 +20,14 @@ ALTER TABLE agents
   ADD COLUMN IF NOT EXISTS system_prompt TEXT,
   ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT now();
 
--- Step 5: Update existing agent (Chief of Staff) with new fields
-UPDATE agents
-SET
-  description = 'Your main point of contact. Knows about all available agents and helps you navigate the organization.',
-  system_prompt = 'You are the Chief of Staff, the primary point of contact in the user''s personal AI organization called Community.
+-- Step 5: Update existing agent (Chief of Staff) if it exists
+-- Wrapped in IF EXISTS because seed data may not include this agent
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM agents WHERE id = '00000000-0000-0000-0000-000000000010') THEN
+    UPDATE agents
+    SET
+      description = 'Your main point of contact. Knows about all available agents and helps you navigate the organization.',
+      system_prompt = 'You are the Chief of Staff, the primary point of contact in the user''s personal AI organization called Community.
 
 Your role is to help the user understand what Community can do and which agents are available to assist them.
 
@@ -33,8 +36,10 @@ Your role is to help the user understand what Community can do and which agents 
 - When the user asks about agents, use the available tools to list, create, update, or delete them.
 - If the user wants to talk to a specific agent, explain that they can start a new conversation and select that agent from the picker.
 - Be warm and helpful. You are the front door to the organization.',
-  updated_at = now()
-WHERE id = '00000000-0000-0000-0000-000000000010';
+      updated_at = now()
+    WHERE id = '00000000-0000-0000-0000-000000000010';
+  END IF;
+END $$;
 
 -- Step 6: Make system_prompt NOT NULL (after populating existing rows)
 ALTER TABLE agents ALTER COLUMN system_prompt SET NOT NULL;

@@ -9,6 +9,7 @@
     "tools": "Werkzeuge",
     "meetings": "Meetings",
     "planning": "Planung",
+    "logbook": "Logbuch",
     "logs": "Protokoll",
     "admin": "Admin",
     "billing": "Abrechnung",
@@ -53,6 +54,13 @@
       "title": "Benachrichtigungen",
       "viewAll": "Alle anzeigen",
       "empty": "Keine neuen Benachrichtigungen."
+    },
+    "logbook": {
+      "title": "Logbuch des Tages",
+      "viewAll": "Alle Einträge anzeigen",
+      "empty": "Heute noch kein Logbuch-Eintrag.",
+      "updatedTimes": "{count} Mal aktualisiert",
+      "lastUpdated": "Zuletzt aktualisiert {time}"
     }
   },
   "notifications": {
@@ -319,7 +327,9 @@
       "noMessages": "Das Meeting hat noch nicht begonnen.",
       "readOnly": "Dies ist ein Meeting zwischen Agenten. Sie beobachten.",
       "meetingMaster": "Moderator",
-      "unknownAgent": "Unbekannter Agent"
+      "unknownAgent": "Unbekannter Agent",
+      "actualDuration": "tatsächlich",
+      "scheduledDuration": "geplant"
     }
   },
   "tools": {
@@ -368,6 +378,10 @@
       "deleteAgent": {
         "name": "Agent löschen",
         "description": "Einen Agenten dauerhaft entfernen"
+      },
+      "getAgentPrompt": {
+        "name": "Agent-Prompt anzeigen",
+        "description": "Den vollständigen System-Prompt eines Agenten abrufen"
       }
     },
     "knowledge": {
@@ -460,6 +474,10 @@
       "listRecurringActivities": {
         "name": "Wiederkehrende Aktivitäten auflisten",
         "description": "Wiederkehrende Aktivitäten auflisten"
+      },
+      "scheduleTask": {
+        "name": "Aufgabe planen",
+        "description": "Eine Einzelaufgabe für einen Agenten planen"
       }
     },
     "notifications": {
@@ -651,6 +669,16 @@
     "googleAiStudioDashboard": "Google AI Studio",
     "cloudflareR2Dashboard": "Cloudflare R2",
     "loading": "Nutzungsdaten werden geladen..."
+  },
+  "logbook": {
+    "title": "Firmen-Logbuch",
+    "subtitle": "Täglicher Bericht über alles, was in Ihrer Organisation passiert",
+    "noEntry": "Kein Eintrag für dieses Datum.",
+    "previousDay": "Zurück",
+    "nextDay": "Weiter",
+    "today": "Heute",
+    "entries": "Letzte Einträge",
+    "version": "Version {version}"
   },
   "search": {
     "placeholder": "Suchen…",

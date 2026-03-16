@@ -10,6 +10,7 @@ export const getKnowledgeEntriesTool: CommunityToolDefinition = {
     displayName: "tools.knowledge.getEntries.name",
     description: "Retrieve stored knowledge entries",
     requiresConfirmation: false,
+    universal: true,
   },
   toolFactory: (ctx) =>
     tool({

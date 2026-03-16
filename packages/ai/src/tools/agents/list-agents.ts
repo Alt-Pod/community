@@ -1,7 +1,8 @@
 import { tool, zodSchema } from "ai";
 import { z } from "zod";
 import { sql } from "@community/backend";
-import type { Agent } from "@community/shared";
+import { AGENT_STATUSES } from "@community/shared";
+import type { Agent, AgentStatus } from "@community/shared";
 import type { CommunityToolDefinition } from "../types";
 
 export const listAgentsTool: CommunityToolDefinition = {
@@ -17,13 +18,13 @@ export const listAgentsTool: CommunityToolDefinition = {
     inputSchema: zodSchema(
       z.object({
         status: z
-          .enum(["active", "inactive"])
+          .enum(Object.values(AGENT_STATUSES) as [AgentStatus, ...AgentStatus[]])
           .optional()
           .describe("Filter by status. Defaults to active."),
       })
     ),
     execute: async ({ status }) => {
-      const filterStatus = status ?? "active";
+      const filterStatus = status ?? AGENT_STATUSES.ACTIVE;
       const agents = await sql<Agent[]>`
         SELECT id, name, description, system_prompt, status, created_at, updated_at
         FROM agents

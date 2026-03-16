@@ -69,7 +69,7 @@ export default function PlanningPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const view = (searchParams.get("view") as PlanningViewMode) || "daily";
+  const view = (searchParams.get("view") as PlanningViewMode) || "weekly";
   const currentDate = parseDate(searchParams.get("date"));
 
   const [agentFilter, setAgentFilter] = useState<string>("");

@@ -1,9 +1,10 @@
 import { inngest, jobService, chatService, conversationService } from "@community/backend";
 import { generateConversationTitle } from "../titleAgent";
+import { INNGEST_FUNCTION_IDS, INNGEST_EVENTS } from "@community/shared";
 
 export const titleGeneration = inngest.createFunction(
-  { id: "title-generation", retries: 2 },
-  { event: "job/started", if: "event.data.type == 'title.generate'" },
+  { id: INNGEST_FUNCTION_IDS.TITLE_GENERATION, retries: 2 },
+  { event: INNGEST_EVENTS.JOB_STARTED, if: "event.data.type == 'title.generate'" },
   async ({ event, step }) => {
     const { jobId, metadata } = event.data;
     const conversationId = metadata.conversationId as string;

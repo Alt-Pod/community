@@ -11,10 +11,15 @@ export class AgentService {
     return this.agentRepository.findById(id);
   }
 
+  async getByUserId(userId: string) {
+    return this.agentRepository.findByUserId(userId);
+  }
+
   async create(data: {
     name: string;
     description?: string | null;
     system_prompt: string;
+    user_id?: string | null;
   }) {
     return this.agentRepository.create(data);
   }

@@ -10,6 +10,11 @@ import {
 } from "@community/backend";
 import { buildToolsForAgent, DEFAULT_ASSISTANT_TOOL_IDS } from "../tools";
 import { buildDefaultSystemPrompt } from "../context";
+import {
+  INNGEST_FUNCTION_IDS,
+  INNGEST_EVENTS,
+  MESSAGE_ROLES,
+} from "@community/shared";
 import type { Agent } from "@community/shared";
 import {
   loadMeetingHistory,
@@ -22,10 +27,10 @@ import {
 const MAX_ROUNDS = 5;
 
 export const meetingRound = inngest.createFunction(
-  { id: "meeting-round", retries: 1 },
+  { id: INNGEST_FUNCTION_IDS.MEETING_ROUND, retries: 1 },
   [
-    { event: "meeting/started" },
-    { event: "meeting/round-completed" },
+    { event: INNGEST_EVENTS.MEETING_STARTED },
+    { event: INNGEST_EVENTS.MEETING_ROUND_COMPLETED },
   ],
   async ({ event, step }) => {
     const {
@@ -40,7 +45,7 @@ export const meetingRound = inngest.createFunction(
     } = event.data;
 
     // Determine round number
-    const roundNumber = event.name === "meeting/started"
+    const roundNumber = event.name === INNGEST_EVENTS.MEETING_STARTED
       ? 1
       : (event.data as { roundNumber?: number }).roundNumber ?? 1;
 
@@ -57,7 +62,15 @@ export const meetingRound = inngest.createFunction(
             if (agent) agents.push(agent);
           }
 
-          const participantNames = [...agents.map((a) => a.name), "Assistant"];
+          // Check if assistant should participate (from activity payload)
+          const activity = await scheduledActivityRepository.findById(activityId);
+          const includeAssistant = activity?.payload
+            ? (activity.payload as Record<string, unknown>).include_assistant === true
+            : false;
+
+          const participantNames = includeAssistant
+            ? [...agents.map((a) => a.name), "Assistant"]
+            : agents.map((a) => a.name);
           let timeUp = false;
 
           for (const agent of agents) {
@@ -101,15 +114,15 @@ export const meetingRound = inngest.createFunction(
             console.log(`[meeting] Saving agent "${agent.name}" message — content length: ${text.length}, tool actions: ${toolActions.length}`);
             await messageRepository.create({
               conversationId,
-              role: "assistant",
+              role: MESSAGE_ROLES.ASSISTANT,
               content: text,
               agentId: agent.id,
               parts: parts as unknown[] | undefined,
             });
           }
 
-          // Default assistant turn (always participates)
-          if (!timeUp && Date.now() < endTime) {
+          // Default assistant turn (optional)
+          if (includeAssistant && !timeUp && Date.now() < endTime) {
             const assistantHistory = await loadMeetingHistory(conversationId, agents);
             const allAgents = await agentService.getAll();
             const assistantSystemPrompt = buildDefaultSystemPrompt(allAgents);
@@ -142,7 +155,7 @@ export const meetingRound = inngest.createFunction(
             console.log(`[meeting] Saving default assistant message — content length: ${assistantText.length}, tool actions: ${assistantToolActions.length}`);
             await messageRepository.create({
               conversationId,
-              role: "assistant",
+              role: MESSAGE_ROLES.ASSISTANT,
               content: assistantText,
               agentId: null,
               parts: assistantParts,
@@ -161,7 +174,7 @@ export const meetingRound = inngest.createFunction(
     if (isTimeUp || maxRoundsReached) {
       // Emit closing event
       await step.sendEvent("trigger-closing", {
-        name: "meeting/closing",
+        name: INNGEST_EVENTS.MEETING_CLOSING,
         data: {
           activityId,
           jobId,
@@ -187,7 +200,7 @@ export const meetingRound = inngest.createFunction(
       const transition = await generateMasterTransition(history, roundNumber, agenda);
       await messageRepository.create({
         conversationId,
-        role: "assistant",
+        role: MESSAGE_ROLES.ASSISTANT,
         content: transition,
         agentId: null,
       });
@@ -195,7 +208,7 @@ export const meetingRound = inngest.createFunction(
 
     // Emit event for next round
     await step.sendEvent("trigger-next-round", {
-      name: "meeting/round-completed",
+      name: INNGEST_EVENTS.MEETING_ROUND_COMPLETED,
       data: {
         activityId,
         jobId,

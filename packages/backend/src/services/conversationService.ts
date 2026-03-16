@@ -1,5 +1,7 @@
 import type { ConversationRepository } from "../repositories/conversationRepository";
 import type { MessageRepository } from "../repositories/messageRepository";
+import type { ConversationType } from "@community/shared";
+import { CONVERSATION_TYPES } from "@community/shared";
 
 export class ConversationService {
   constructor(
@@ -15,13 +17,17 @@ export class ConversationService {
     userId: string,
     title: string,
     agentId?: string | null,
-    type: "chat" | "meeting" = "chat"
+    type: ConversationType = CONVERSATION_TYPES.CHAT
   ) {
     return this.conversationRepository.create(userId, title, agentId, type);
   }
 
   async createMeetingConversation(userId: string, title: string) {
-    return this.conversationRepository.create(userId, title, null, "meeting");
+    return this.conversationRepository.create(userId, title, null, CONVERSATION_TYPES.MEETING);
+  }
+
+  async createTaskConversation(userId: string, title: string) {
+    return this.conversationRepository.create(userId, title, null, CONVERSATION_TYPES.TASK);
   }
 
   async findById(id: string, userId: string) {

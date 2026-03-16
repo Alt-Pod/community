@@ -7,12 +7,14 @@ import { createRecurringActivityTool } from "./create-recurring-activity";
 import { updateRecurringActivityTool } from "./update-recurring-activity";
 import { deleteRecurringActivityTool } from "./delete-recurring-activity";
 import { listRecurringActivitiesTool } from "./list-recurring-activities";
+import { scheduleTaskTool } from "./schedule-task";
 
 export const planningToolDefinitions = [
   scheduleActivityTool,
   listScheduledActivitiesTool,
   cancelScheduledActivityTool,
   scheduleMeetingTool,
+  scheduleTaskTool,
   createRecurringActivityTool,
   updateRecurringActivityTool,
   deleteRecurringActivityTool,

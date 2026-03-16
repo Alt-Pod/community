@@ -1,6 +1,7 @@
 import { tool, zodSchema } from "ai";
 import { z } from "zod";
 import { recurringActivityService } from "@community/backend";
+import { ACTIVITIES } from "@community/shared";
 import type { CommunityToolDefinition } from "../types";
 
 export const createRecurringActivityTool: CommunityToolDefinition = {
@@ -18,7 +19,7 @@ export const createRecurringActivityTool: CommunityToolDefinition = {
       inputSchema: zodSchema(
         z.object({
           activity_type: z
-            .enum(["meeting", "report_generation", "scheduled_notification"])
+            .enum([ACTIVITIES.meeting.id, ACTIVITIES.report_generation.id, ACTIVITIES.scheduled_notification.id])
             .describe("Type of activity to recur"),
           title: z.string().describe("Title for the recurring activity"),
           description: z.string().optional().describe("Optional description"),

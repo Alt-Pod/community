@@ -7,7 +7,9 @@ import { Button, Heading, Card, StatusBadge, LoadingIndicator, SearchInput } fro
 import { useMeetings } from "@/requests/useMeetings";
 import { useProfile } from "@/requests/useProfile";
 import { useFuzzySearch } from "@/hooks/use-fuzzy-search";
+import { getEffectiveMeetingTimes } from "@/lib/meeting-time";
 import MeetingScheduleForm from "@/components/meeting-schedule-form";
+import type { ScheduledActivity } from "@community/shared";
 
 function statusVariant(
   status: string
@@ -109,12 +111,18 @@ export default function MeetingsPage() {
                     </p>
                   )}
                   <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-text-tertiary">
-                    <span>
-                      {new Date(meeting.scheduled_at).toLocaleString(undefined, {
+                    {(() => {
+                      const times = getEffectiveMeetingTimes(meeting as unknown as ScheduledActivity);
+                      const dateStr = times.startTime.toLocaleString(undefined, {
                         dateStyle: "medium",
                         timeStyle: "short",
-                      })}
-                    </span>
+                      });
+                      const endStr = times.endTime.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      });
+                      return <span>{dateStr} – {endStr}</span>;
+                    })()}
                     {meeting.participants.length > 0 && (
                       <span>
                         {meeting.participants.map((p) => p.name).join(", ")}

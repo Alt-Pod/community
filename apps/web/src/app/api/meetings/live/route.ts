@@ -1,4 +1,5 @@
 import { auth, scheduledActivityService, agentService } from "@community/backend";
+import { ACTIVITIES, ACTIVITY_STATUSES } from "@community/shared";
 import type { MeetingPayload } from "@community/shared";
 
 export async function GET() {
@@ -18,15 +19,15 @@ export async function GET() {
     to
   );
 
-  const meetings = activities.filter((a) => a.activity_type === "meeting" && a.status !== "cancelled");
+  const meetings = activities.filter((a) => a.activity_type === ACTIVITIES.meeting.id && a.status !== ACTIVITY_STATUSES.CANCELLED);
 
   // Also get any currently running meetings (may be outside the time window)
   const allActivities = await scheduledActivityService.getByUserId(session.user.id, {
-    status: "running",
-    activityType: "meeting",
+    status: ACTIVITY_STATUSES.RUNNING,
+    activityType: ACTIVITIES.meeting.id,
   });
   const runningMeetings = allActivities.filter(
-    (a) => a.activity_type === "meeting" && !meetings.find((m) => m.id === a.id)
+    (a) => a.activity_type === ACTIVITIES.meeting.id && !meetings.find((m) => m.id === a.id)
   );
 
   const combined = [...runningMeetings, ...meetings];
@@ -41,8 +42,8 @@ export async function GET() {
 
   // Sort: running first, then by scheduled_at
   unique.sort((a, b) => {
-    if (a.status === "running" && b.status !== "running") return -1;
-    if (b.status === "running" && a.status !== "running") return 1;
+    if (a.status === ACTIVITY_STATUSES.RUNNING && b.status !== ACTIVITY_STATUSES.RUNNING) return -1;
+    if (b.status === ACTIVITY_STATUSES.RUNNING && a.status !== ACTIVITY_STATUSES.RUNNING) return 1;
     return new Date(b.scheduled_at).getTime() - new Date(a.scheduled_at).getTime();
   });
 

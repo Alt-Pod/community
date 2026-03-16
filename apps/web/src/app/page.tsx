@@ -7,6 +7,7 @@ import AppNavbar from "@/components/app-navbar";
 import HomeDailyTimeline from "@/components/home-daily-timeline";
 import LiveMeetings from "@/components/live-meetings";
 import HomeNotifications from "@/components/home-notifications";
+import HomeLogbook from "@/components/home-logbook";
 
 export default async function Home() {
   const session = await auth();
@@ -87,6 +88,10 @@ export default async function Home() {
 
           <div className="rounded-lg bg-surface-primary border border-border-subtle shadow-elevated p-6 mb-6">
             <LiveMeetings />
+          </div>
+
+          <div className="rounded-lg bg-surface-primary border border-border-subtle shadow-elevated p-6 mb-6">
+            <HomeLogbook />
           </div>
 
           <div className="rounded-lg bg-surface-primary border border-border-subtle shadow-elevated p-6">

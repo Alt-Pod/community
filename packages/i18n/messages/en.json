@@ -9,6 +9,7 @@
     "tools": "Tools",
     "meetings": "Meetings",
     "planning": "Planning",
+    "logbook": "Logbook",
     "logs": "Logs",
     "admin": "Admin",
     "billing": "Billing",
@@ -53,6 +54,13 @@
       "title": "Notifications",
       "viewAll": "View all",
       "empty": "No new notifications."
+    },
+    "logbook": {
+      "title": "Today's Logbook",
+      "viewAll": "View all entries",
+      "empty": "No logbook entry for today yet.",
+      "updatedTimes": "Updated {count} times",
+      "lastUpdated": "Last updated {time}"
     }
   },
   "notifications": {
@@ -319,7 +327,9 @@
       "noMessages": "Meeting has not started yet.",
       "readOnly": "This is a meeting between agents. You are observing.",
       "meetingMaster": "Meeting Master",
-      "unknownAgent": "Unknown Agent"
+      "unknownAgent": "Unknown Agent",
+      "actualDuration": "actual",
+      "scheduledDuration": "scheduled"
     }
   },
   "tools": {
@@ -368,6 +378,10 @@
       "deleteAgent": {
         "name": "Delete agent",
         "description": "Permanently remove an agent"
+      },
+      "getAgentPrompt": {
+        "name": "Get agent prompt",
+        "description": "Get the full system prompt of an agent"
       }
     },
     "knowledge": {
@@ -468,6 +482,10 @@
       "listRecurringActivities": {
         "name": "List recurring activities",
         "description": "List recurring activities"
+      },
+      "scheduleTask": {
+        "name": "Schedule task",
+        "description": "Schedule a solo agent task to work toward a goal"
       }
     },
     "files": {
@@ -659,6 +677,16 @@
     "googleAiStudioDashboard": "Google AI Studio",
     "cloudflareR2Dashboard": "Cloudflare R2",
     "loading": "Loading usage data..."
+  },
+  "logbook": {
+    "title": "Company Logbook",
+    "subtitle": "Daily record of everything happening in your organization",
+    "noEntry": "No entry for this date.",
+    "previousDay": "Previous",
+    "nextDay": "Next",
+    "today": "Today",
+    "entries": "Recent entries",
+    "version": "Version {version}"
   },
   "search": {
     "placeholder": "Search…",

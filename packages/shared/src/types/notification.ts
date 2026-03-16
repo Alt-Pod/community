@@ -12,22 +12,20 @@ export interface Notification {
   created_at: string;
 }
 
-export type NotificationType =
-  | "info"
-  | "success"
-  | "warning"
-  | "meeting"
-  | "agent"
-  | "scheduled";
+export const NOTIFICATION_TYPE = {
+  INFO: "info",
+  SUCCESS: "success",
+  WARNING: "warning",
+  MEETING: "meeting",
+  AGENT: "agent",
+  SCHEDULED: "scheduled",
+} as const;
 
-export const NOTIFICATION_TYPES: NotificationType[] = [
-  "info",
-  "success",
-  "warning",
-  "meeting",
-  "agent",
-  "scheduled",
-];
+export type NotificationType =
+  (typeof NOTIFICATION_TYPE)[keyof typeof NOTIFICATION_TYPE];
+
+export const NOTIFICATION_TYPES: NotificationType[] =
+  Object.values(NOTIFICATION_TYPE);
 
 export interface ScheduledNotificationPayload {
   title: string;

@@ -249,6 +249,9 @@ Meetings are the first activity type. A meeting is an automated multi-agent conv
 - **Execution**: The `activityCron` (every minute) finds due activities and dispatches by type. For meetings it emits `meeting/ready`, triggering the `meetingStart` → `meetingRound` → `meetingClosing` → `meetingSummary` chain. Uses `generateText` (not streaming) for each turn.
 - **Conversation**: Stored as a `conversation` with `type = 'meeting'`. The user owns it but doesn't participate — only agents talk.
 - **Hardcoded agents**: Meeting Master and Summary Agent are system prompt constants in `packages/ai/src/tasks/meetingAgents.ts`, not database agent rows.
+- **Default assistant is optional**: `MeetingPayload.include_assistant` (default `false`). When false, only assigned agents participate.
+- **ASAP scheduling**: `scheduled_at` is optional in the schedule_meeting tool. If omitted, defaults to NOW.
+- **Outcome-aware summaries**: Meeting summaries use the 3-outcome model (goal_reached / needs_user_input / needs_follow_up). Stored in `scheduled_activities.outcome`.
 
 ### Meeting Flow
 
@@ -276,7 +279,7 @@ Meetings are the first activity type. A meeting is an automated multi-agent conv
 
 ### Conversation Types
 
-The `conversations` table has a `type` column: `'chat'` (default) or `'meeting'`. Meeting conversations are excluded from the chat sidebar (`findByUserId` filters `WHERE type = 'chat'`).
+The `conversations` table has a `type` column: `'chat'` (default), `'meeting'`, or `'task'`. Meeting and task conversations are excluded from the chat sidebar (`findByUserId` filters `WHERE type = 'chat'`).
 
 ## Recurring Activities
 
@@ -415,6 +418,75 @@ VAPID_SUBJECT=                  # mailto: URI (optional, defaults to mailto:admi
 NEXT_PUBLIC_VAPID_PUBLIC_KEY=   # Same as VAPID_PUBLIC_KEY (exposed to client)
 ```
 
+## Company Loop
+
+The company loop is a background cron (every 15 minutes) that "pings" each agent to check if it has work to do. This drives autonomous agent behavior.
+
+### How It Works
+
+1. Cron runs every 15 minutes (`packages/ai/src/tasks/companyLoop.ts`)
+2. Finds all users with active agents (`agentRepository.findDistinctUserIds()`)
+3. For each user's agents (skipping busy ones):
+   - Loads context: knowledge base, recent activity, other agents, running activities
+   - Calls `pingAgent()` — uses `generateText` to ask the agent what to do
+   - Agent responds with: `"task"`, `"meeting"`, or `"nothing"`
+4. If task/meeting, schedules it with `scheduled_at = NOW()` (starts ASAP)
+5. The existing `activityCron` picks it up within 1 minute
+
+### Agent Ownership
+
+Agents have a `user_id` column. The company loop only pings agents belonging to each user, with user-scoped knowledge and activity context.
+
+## Task Activity
+
+A task is a solo agent activity — one agent works independently with tools to achieve a goal.
+
+### Architecture
+
+```
+packages/ai/src/tasks/
+  taskExecution.ts    → Inngest handler: agent loop with tools
+  taskAgents.ts       → Task prompts + shared outcome summary prompt
+  companyLoop.ts      → Company loop cron + pingAgent
+```
+
+### Task Flow
+
+1. `activityCron` detects due task → emits `"task/ready"`
+2. `taskExecution` handler:
+   - Creates task conversation (`type: 'task'`)
+   - Loads agent + tools + knowledge context
+   - Runs agent in iteration loop (up to `max_iterations`)
+   - Each iteration: `generateText` with tools, saves messages
+3. Generates outcome-aware summary
+4. Saves summary to knowledge base
+5. Notifies user based on outcome
+
+### Activity Outcomes
+
+Every meeting and task produces one of three outcomes:
+- **`goal_reached`**: Success, nothing more to do
+- **`needs_user_input`**: Blocked — user must provide information or a decision
+- **`needs_follow_up`**: Can't be completed in this activity — needs another task/meeting
+
+The outcome is stored in `scheduled_activities.outcome` (JSONB). The company loop picks up follow-up work in the next cycle — agents see prior outcomes in their context and decide what to do next.
+
+### Conversation Types
+
+The `conversations` table `type` column: `'chat'` (default), `'meeting'`, or `'task'`. Task conversations are excluded from the chat sidebar.
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `packages/ai/src/tasks/companyLoop.ts` | Company loop cron + pingAgent |
+| `packages/ai/src/tasks/taskExecution.ts` | Task execution (Inngest handler) |
+| `packages/ai/src/tasks/taskAgents.ts` | Task prompts + outcome summary prompt |
+| `packages/ai/src/tools/planning/schedule-task.ts` | `planning.schedule_task` tool |
+| `packages/shared/src/types/task.ts` | TaskPayload type |
+| `packages/shared/src/types/activityOutcome.ts` | ActivityOutcome type |
+| `apps/web/src/components/task-viewer.tsx` | Task transcript viewer |
+
 ## Key Rules
 
 - **shared** has zero runtime dependencies — types and constants only
@@ -425,6 +497,43 @@ NEXT_PUBLIC_VAPID_PUBLIC_KEY=   # Same as VAPID_PUBLIC_KEY (exposed to client)
 - Tailwind CSS lives in `apps/web` only — UI components use class names, app compiles CSS
 - `.env.local` lives at repo root, symlinked into `apps/web/`
 - `auth.config.ts` must stay Edge-compatible (no Node.js-only imports)
+
+## Constants Convention
+
+**Never hardcode string literals that represent domain values** (statuses, types, event names, IDs). Instead, define `as const` objects in `packages/shared/src/constants/` and import them wherever needed.
+
+### Pattern
+
+```ts
+// packages/shared/src/constants/statuses.ts
+export const ACTIVITY_STATUSES = {
+  SCHEDULED: "scheduled",
+  RUNNING: "running",
+  COMPLETED: "completed",
+} as const;
+export type ActivityStatus = (typeof ACTIVITY_STATUSES)[keyof typeof ACTIVITY_STATUSES];
+```
+
+### Existing Constant Files
+
+| File | Constants |
+|------|----------|
+| `constants/inngest.ts` | `INNGEST_FUNCTION_IDS`, `INNGEST_EVENTS` |
+| `constants/statuses.ts` | `ACTIVITY_STATUSES`, `AGENT_STATUSES`, `RECURRING_ACTIVITY_STATUSES` |
+| `constants/conversation.ts` | `CONVERSATION_TYPES`, `MESSAGE_ROLES` |
+| `constants/outcomes.ts` | `ACTIVITY_OUTCOME_TYPES` |
+| `constants/logbook.ts` | `LOGBOOK_EVENT_TYPES` |
+| `constants/pricing.ts` | `MODEL_PRICING`, `DEFAULT_MODEL` |
+| `constants/roles.ts` | `USER_ROLES` |
+| `activities.ts` | `ACTIVITIES` (activity type definitions) |
+| `types/notification.ts` | `NOTIFICATION_TYPE`, `NOTIFICATION_TYPES` |
+| `types/file.ts` | `FILE_CATEGORIES`, `ALLOWED_MIME_TYPES`, `MAX_FILE_SIZE` |
+
+### Rules
+- Types should be **derived from constants** using `typeof` patterns, not defined as separate string unions
+- Zod schemas should reference constants: `z.enum(Object.values(CONSTANT) as [T, ...T[]])`
+- SQL queries should interpolate constants: `` WHERE status = ${ACTIVITY_STATUSES.SCHEDULED} ``
+- When adding a new domain value (status, type, etc.), add it to the appropriate constant file first, then use it
 
 ## Migrations
 

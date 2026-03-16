@@ -3,7 +3,7 @@ import type { Tool } from "ai";
 import { getModel } from "../model";
 import { MEETING_MASTER_PROMPT, MEETING_SUPERVISOR_PROMPT, SUMMARY_AGENT_PROMPT } from "./meetingAgents";
 import { getToolById } from "../tools";
-import type { Agent, DbMessage } from "@community/shared";
+import type { Agent, DbMessage, ActivityOutcome, ActivityOutcomeType } from "@community/shared";
 import { chatService } from "@community/backend";
 
 // --- Types ---
@@ -299,7 +299,7 @@ export async function generateSummary(
   agenda: string,
   participantNames: string[],
   durationMinutes: number
-): Promise<string> {
+): Promise<{ summary: string; outcome: ActivityOutcome }> {
   const transcript = formatTranscript(history);
 
   const { text } = await generateText({
@@ -312,5 +312,30 @@ export async function generateSummary(
       },
     ],
   });
-  return text;
+
+  try {
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error("No JSON found");
+
+    const parsed = JSON.parse(jsonMatch[0]);
+    const outcomeType: ActivityOutcomeType =
+      parsed.outcome_type === "needs_user_input" || parsed.outcome_type === "needs_follow_up"
+        ? parsed.outcome_type
+        : "goal_reached";
+
+    const outcome: ActivityOutcome = {
+      type: outcomeType,
+      summary: String(parsed.summary || "Meeting completed."),
+      user_prompt: parsed.user_prompt ? String(parsed.user_prompt) : undefined,
+      follow_up_hint: parsed.follow_up_hint ? String(parsed.follow_up_hint) : undefined,
+    };
+
+    return { summary: outcome.summary, outcome };
+  } catch {
+    console.log("[meeting] Failed to parse outcome summary, defaulting to goal_reached");
+    return {
+      summary: text,
+      outcome: { type: "goal_reached", summary: text },
+    };
+  }
 }

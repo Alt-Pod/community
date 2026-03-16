@@ -9,6 +9,7 @@
     "tools": "Strumenti",
     "meetings": "Riunioni",
     "planning": "Pianificazione",
+    "logbook": "Diario di bordo",
     "logs": "Registro",
     "admin": "Admin",
     "billing": "Fatturazione",
@@ -53,6 +54,13 @@
       "title": "Notifiche",
       "viewAll": "Vedi tutto",
       "empty": "Nessuna nuova notifica."
+    },
+    "logbook": {
+      "title": "Diario di oggi",
+      "viewAll": "Vedi tutte le voci",
+      "empty": "Nessuna voce nel diario per oggi.",
+      "updatedTimes": "Aggiornato {count} volte",
+      "lastUpdated": "Ultimo aggiornamento {time}"
     }
   },
   "notifications": {
@@ -319,7 +327,9 @@
       "noMessages": "La riunione non è ancora iniziata.",
       "readOnly": "Questa è una riunione tra agenti. Stai osservando.",
       "meetingMaster": "Moderatore",
-      "unknownAgent": "Agente sconosciuto"
+      "unknownAgent": "Agente sconosciuto",
+      "actualDuration": "effettivo",
+      "scheduledDuration": "previsto"
     }
   },
   "tools": {
@@ -368,6 +378,10 @@
       "deleteAgent": {
         "name": "Elimina agente",
         "description": "Rimuovi permanentemente un agente"
+      },
+      "getAgentPrompt": {
+        "name": "Vedi prompt dell'agente",
+        "description": "Ottenere il prompt di sistema completo di un agente"
       }
     },
     "knowledge": {
@@ -460,6 +474,10 @@
       "listRecurringActivities": {
         "name": "Elenco attività ricorrenti",
         "description": "Elenco delle attività ricorrenti"
+      },
+      "scheduleTask": {
+        "name": "Pianifica attività",
+        "description": "Pianifica un'attività individuale di un agente verso un obiettivo"
       }
     },
     "notifications": {
@@ -651,6 +669,16 @@
     "googleAiStudioDashboard": "Google AI Studio",
     "cloudflareR2Dashboard": "Cloudflare R2",
     "loading": "Caricamento dati di utilizzo..."
+  },
+  "logbook": {
+    "title": "Diario di bordo aziendale",
+    "subtitle": "Resoconto giornaliero di tutto ciò che accade nella tua organizzazione",
+    "noEntry": "Nessuna voce per questa data.",
+    "previousDay": "Precedente",
+    "nextDay": "Successivo",
+    "today": "Oggi",
+    "entries": "Voci recenti",
+    "version": "Versione {version}"
   },
   "search": {
     "placeholder": "Cerca…",

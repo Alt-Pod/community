@@ -1,13 +1,14 @@
 import { inngest, scheduledActivityRepository, jobService } from "@community/backend";
+import { INNGEST_FUNCTION_IDS, INNGEST_EVENTS, ACTIVITY_STATUSES } from "@community/shared";
 
 /**
  * Handles non-meeting activity execution.
  * Meetings are handled by the meetingStart function chain.
  */
 export const activityExecution = inngest.createFunction(
-  { id: "activity-execution", retries: 2 },
+  { id: INNGEST_FUNCTION_IDS.ACTIVITY_EXECUTION },
   {
-    event: "job/started",
+    event: INNGEST_EVENTS.JOB_STARTED,
     if: "event.data.type == 'activity.execute' && event.data.metadata.activityType != 'meeting' && event.data.metadata.activityType != 'scheduled_notification'",
   },
   async ({ event, step }) => {
@@ -18,7 +19,7 @@ export const activityExecution = inngest.createFunction(
       return scheduledActivityRepository.findById(activityId);
     });
 
-    if (!activity || activity.status === "cancelled") {
+    if (!activity || activity.status === ACTIVITY_STATUSES.CANCELLED) {
       await step.run("skip-cancelled", async () => {
         await jobService.markCompleted(jobId, { skipped: true, reason: "cancelled" });
       });
@@ -32,7 +33,7 @@ export const activityExecution = inngest.createFunction(
       return scheduledActivityRepository.findById(activityId);
     });
 
-    if (!current || current.status === "cancelled") {
+    if (!current || current.status === ACTIVITY_STATUSES.CANCELLED) {
       await step.run("skip-cancelled-after-sleep", async () => {
         await jobService.markCompleted(jobId, { skipped: true, reason: "cancelled_while_waiting" });
       });
@@ -40,7 +41,7 @@ export const activityExecution = inngest.createFunction(
     }
 
     await step.run("mark-running", async () => {
-      await scheduledActivityRepository.updateStatus(activityId, "running");
+      await scheduledActivityRepository.updateStatus(activityId, ACTIVITY_STATUSES.RUNNING);
       await jobService.markRunning(jobId);
     });
 

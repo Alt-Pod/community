@@ -9,6 +9,7 @@
     "tools": "Herramientas",
     "meetings": "Reuniones",
     "planning": "Planificación",
+    "logbook": "Bitácora",
     "logs": "Registro",
     "admin": "Admin",
     "billing": "Facturación",
@@ -53,6 +54,13 @@
       "title": "Notificaciones",
       "viewAll": "Ver todo",
       "empty": "Sin notificaciones nuevas."
+    },
+    "logbook": {
+      "title": "Bitácora del día",
+      "viewAll": "Ver todas las entradas",
+      "empty": "Sin entrada en la bitácora hoy.",
+      "updatedTimes": "Actualizado {count} veces",
+      "lastUpdated": "Última actualización {time}"
     }
   },
   "notifications": {
@@ -319,7 +327,9 @@
       "noMessages": "La reunión aún no ha comenzado.",
       "readOnly": "Esta es una reunión entre agentes. Estás observando.",
       "meetingMaster": "Moderador",
-      "unknownAgent": "Agente desconocido"
+      "unknownAgent": "Agente desconocido",
+      "actualDuration": "real",
+      "scheduledDuration": "previsto"
     }
   },
   "tools": {
@@ -368,6 +378,10 @@
       "deleteAgent": {
         "name": "Eliminar agente",
         "description": "Eliminar permanentemente un agente"
+      },
+      "getAgentPrompt": {
+        "name": "Ver prompt del agente",
+        "description": "Obtener el prompt del sistema completo de un agente"
       }
     },
     "knowledge": {
@@ -460,6 +474,10 @@
       "listRecurringActivities": {
         "name": "Listar actividades recurrentes",
         "description": "Listar actividades recurrentes"
+      },
+      "scheduleTask": {
+        "name": "Programar tarea",
+        "description": "Programar una tarea individual de un agente hacia un objetivo"
       }
     },
     "notifications": {
@@ -651,6 +669,16 @@
     "googleAiStudioDashboard": "Google AI Studio",
     "cloudflareR2Dashboard": "Cloudflare R2",
     "loading": "Cargando datos de uso..."
+  },
+  "logbook": {
+    "title": "Bitácora de la empresa",
+    "subtitle": "Registro diario de todo lo que sucede en tu organización",
+    "noEntry": "Sin entrada para esta fecha.",
+    "previousDay": "Anterior",
+    "nextDay": "Siguiente",
+    "today": "Hoy",
+    "entries": "Entradas recientes",
+    "version": "Versión {version}"
   },
   "search": {
     "placeholder": "Buscar…",

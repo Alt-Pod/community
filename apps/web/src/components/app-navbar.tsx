@@ -82,6 +82,11 @@ export default function AppNavbar() {
       active: pathname.startsWith("/meetings"),
     },
     {
+      href: "/logbook",
+      label: t("logbook"),
+      active: pathname.startsWith("/logbook"),
+    },
+    {
       href: "/planning",
       label: t("planning"),
       active: pathname.startsWith("/planning"),

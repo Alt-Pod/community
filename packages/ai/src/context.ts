@@ -62,6 +62,7 @@ You can read the user's own data using these tools:
 - **data.list_agents**: List all available agents in the system, including each agent's assigned tool IDs.
 - **data.list_tools**: List all available tools with their IDs, categories, and descriptions. Use this to discover tool IDs when creating or updating agents.
 - **data.get_agent_details**: Get detailed information about a specific agent, including its currently assigned tool IDs. Use this to inspect a single agent's configuration before modifying it.
+- **agents.get_agent_prompt**: Get the full system prompt (instructions) of a specific agent. Use this when the user wants to see, review, or copy an agent's prompt.
 - **data.my_jobs**: List the user's background jobs with optional status/type filters.
 - **data.my_logs**: Read the user's activity logs (audit trail). Shows events like conversations created, meetings started/completed, agents created/updated/deleted, etc. Can filter by event_type or entity_type.
 - **data.my_meetings**: List the user's meetings with agenda, participants, status, and scheduled time. Can filter by status (scheduled, running, completed, failed, cancelled).
@@ -73,18 +74,28 @@ const PLANNING_INSTRUCTIONS = `
 ## Activity Planning
 You can schedule future activities using these tools:
 - **planning.schedule_activity**: Schedule an activity for a specific future date/time. You must specify an activity_type from the available types: report_generation, meeting.
-- **planning.schedule_meeting**: Schedule a meeting between multiple agents. This is the preferred tool for scheduling meetings — it provides a structured interface for agenda, participants, duration, and timezone.
+- **planning.schedule_meeting**: Schedule a meeting between multiple agents. Provides a structured interface for agenda, participants, duration, and timezone. Starts immediately by default.
+- **planning.schedule_task**: Schedule a solo agent task — one agent works independently with tools toward a goal. Tasks always start immediately. Use this when an agent needs to do independent work (research, investigation, file management, etc.).
 - **planning.list_scheduled_activities**: List the user's scheduled activities, optionally filtered by status or date range.
 - **planning.cancel_scheduled_activity**: Cancel a scheduled activity that hasn't been executed yet.
 
 Available activity types:
 - **report_generation**: Generate and deliver a report on a given topic. Payload: { topic: string, format?: string }
-- **meeting**: A scheduled meeting between agents. Use planning.schedule_meeting to schedule meetings. Requires participant agent IDs, an agenda, scheduled time, duration (5-120 min), and timezone. A Meeting Master agent will orchestrate the discussion and a summary will be generated automatically.
+- **meeting**: A meeting between agents. Use planning.schedule_meeting. Requires participant agent IDs, agenda, duration (5-120 min), and timezone. Starts immediately by default. A Meeting Master agent orchestrates the discussion and a summary with outcome is generated automatically.
+- **task**: A solo agent task. Use planning.schedule_task. One agent works independently with tools toward a goal. Tasks always start immediately. The agent iterates until the goal is reached or it gets blocked.
 - **scheduled_notification**: A reminder notification delivered at a specific time. Use notifications.schedule_notification to schedule these — it provides a more ergonomic interface than planning.schedule_activity.
 
-Use these when the user asks you to schedule something, plan a report, schedule a meeting, or any future task. Always confirm the scheduled time with the user before creating the activity.
+Use these when the user asks you to schedule something, plan a report, schedule a meeting, or any future task.
+**Default to starting activities immediately** unless the user specifically requests a future time.
 When scheduling a meeting, use data.list_agents first to show available agents and let the user pick participants.
-When scheduling a meeting, use the user's preferred timezone (available via data.my_profile) as the default unless they specify otherwise.
+When scheduling a meeting or task, use the user's preferred timezone (available via data.my_profile) as the default unless they specify otherwise.
+
+### Activity Outcomes
+Every meeting and task produces one of three outcomes:
+- **goal_reached**: The goal was accomplished. Nothing more to do.
+- **needs_user_input**: The goal can't be achieved without information or a decision from the user.
+- **needs_follow_up**: The goal needs more work — another task or meeting with a different approach or agents.
+The company loop will automatically pick up follow-up work in the next cycle.
 
 ### Recurring Activities
 You can create activities that repeat on a schedule:

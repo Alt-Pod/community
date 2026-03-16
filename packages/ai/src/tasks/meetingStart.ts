@@ -8,6 +8,13 @@ import {
   auditLogService,
   withJobTracking,
 } from "@community/backend";
+import {
+  INNGEST_FUNCTION_IDS,
+  INNGEST_EVENTS,
+  ACTIVITIES,
+  ACTIVITY_STATUSES,
+  MESSAGE_ROLES,
+} from "@community/shared";
 import type { MeetingPayload, Agent } from "@community/shared";
 import { generateMasterOpening } from "./meetingHelper";
 
@@ -18,7 +25,7 @@ import { generateMasterOpening } from "./meetingHelper";
  * - "scheduled_notification" → emits "notification/ready"
  */
 export const activityCron = inngest.createFunction(
-  { id: "activity-cron" },
+  { id: INNGEST_FUNCTION_IDS.ACTIVITY_CRON },
   { cron: "* * * * *" }, // every minute
   async ({ step }) => {
     const now = new Date();
@@ -28,7 +35,7 @@ export const activityCron = inngest.createFunction(
 
     const activities = await step.run("find-due-activities", async () => {
       const all = await scheduledActivityRepository.findDueActivities(from, to);
-      return all.filter((a) => a.status === "scheduled");
+      return all.filter((a) => a.status === ACTIVITY_STATUSES.SCHEDULED);
     });
 
     if (activities.length === 0) {
@@ -43,14 +50,19 @@ export const activityCron = inngest.createFunction(
         userId: activity.user_id,
       };
 
-      if (activity.activity_type === "meeting") {
+      if (activity.activity_type === ACTIVITIES.meeting.id) {
         await step.sendEvent(`trigger-meeting-${activity.id}`, {
-          name: "meeting/ready",
+          name: INNGEST_EVENTS.MEETING_READY,
           data: eventData,
         });
-      } else if (activity.activity_type === "scheduled_notification") {
+      } else if (activity.activity_type === ACTIVITIES.scheduled_notification.id) {
         await step.sendEvent(`trigger-notification-${activity.id}`, {
-          name: "notification/ready",
+          name: INNGEST_EVENTS.NOTIFICATION_READY,
+          data: eventData,
+        });
+      } else if (activity.activity_type === ACTIVITIES.task.id) {
+        await step.sendEvent(`trigger-task-${activity.id}`, {
+          name: INNGEST_EVENTS.TASK_READY,
           data: eventData,
         });
       }
@@ -65,8 +77,8 @@ export const activityCron = inngest.createFunction(
  * Creates conversation, generates opening, and kicks off the round chain.
  */
 export const meetingStart = inngest.createFunction(
-  { id: "meeting-start", retries: 2 },
-  { event: "meeting/ready" },
+  { id: INNGEST_FUNCTION_IDS.MEETING_START, retries: 2 },
+  { event: INNGEST_EVENTS.MEETING_READY },
   async ({ event, step }) => {
     const { activityId, jobId, userId } = event.data;
 
@@ -75,7 +87,7 @@ export const meetingStart = inngest.createFunction(
       return scheduledActivityRepository.findById(activityId);
     });
 
-    if (!activity || activity.status !== "scheduled") {
+    if (!activity || activity.status !== ACTIVITY_STATUSES.SCHEDULED) {
       await step.run("skip", async () => {
         if (jobId) {
           await jobService.markCompleted(jobId, { skipped: true, reason: "not_scheduled" });
@@ -86,7 +98,7 @@ export const meetingStart = inngest.createFunction(
 
     // Mark running
     await step.run("mark-running", async () => {
-      await scheduledActivityRepository.updateStatus(activityId, "running");
+      await scheduledActivityRepository.updateStatus(activityId, ACTIVITY_STATUSES.RUNNING);
       if (jobId) await jobService.markRunning(jobId);
     });
 
@@ -126,7 +138,7 @@ export const meetingStart = inngest.createFunction(
           console.log(`[meeting] Master opening — content length: ${opening.length}`);
           await messageRepository.create({
             conversationId: conversation.id,
-            role: "assistant",
+            role: MESSAGE_ROLES.ASSISTANT,
             content: opening,
             agentId: null,
           });
@@ -156,7 +168,7 @@ export const meetingStart = inngest.createFunction(
 
     // Emit event for first round
     await step.sendEvent("trigger-first-round", {
-      name: "meeting/started",
+      name: INNGEST_EVENTS.MEETING_STARTED,
       data: {
         activityId,
         jobId,

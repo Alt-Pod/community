@@ -1,7 +1,8 @@
 import type { Sql, JSONValue } from "postgres";
-import type { ScheduledActivity } from "@community/shared";
+import type { ScheduledActivity, ActivityOutcome, ActivityStatus } from "@community/shared";
+import { ACTIVITY_STATUSES } from "@community/shared";
 
-export type ScheduledActivityStatus = "scheduled" | "running" | "completed" | "failed" | "cancelled";
+export type ScheduledActivityStatus = ActivityStatus;
 
 export class ScheduledActivityRepository {
   constructor(
@@ -111,21 +112,33 @@ export class ScheduledActivityRepository {
     `;
   }
 
-  async markCompleted(id: string, output: Record<string, unknown>): Promise<void> {
-    await this.sql`
-      UPDATE ${this.sql(this.table)}
-      SET status = 'completed',
-          output = ${this.sql.json(output as JSONValue)},
-          updated_at = now(),
-          completed_at = now()
-      WHERE id = ${id}
-    `;
+  async markCompleted(id: string, output: Record<string, unknown>, outcome?: ActivityOutcome): Promise<void> {
+    if (outcome) {
+      await this.sql`
+        UPDATE ${this.sql(this.table)}
+        SET status = ${ACTIVITY_STATUSES.COMPLETED},
+            output = ${this.sql.json(output as JSONValue)},
+            outcome = ${this.sql.json(outcome as unknown as JSONValue)},
+            updated_at = now(),
+            completed_at = now()
+        WHERE id = ${id}
+      `;
+    } else {
+      await this.sql`
+        UPDATE ${this.sql(this.table)}
+        SET status = ${ACTIVITY_STATUSES.COMPLETED},
+            output = ${this.sql.json(output as JSONValue)},
+            updated_at = now(),
+            completed_at = now()
+        WHERE id = ${id}
+      `;
+    }
   }
 
   async markFailed(id: string, error: string): Promise<void> {
     await this.sql`
       UPDATE ${this.sql(this.table)}
-      SET status = 'failed',
+      SET status = ${ACTIVITY_STATUSES.FAILED},
           error = ${error},
           updated_at = now(),
           completed_at = now()
@@ -141,7 +154,7 @@ export class ScheduledActivityRepository {
       SELECT * FROM ${this.sql(this.table)}
       WHERE scheduled_at >= ${from}
         AND scheduled_at <= ${to}
-        AND status = 'scheduled'
+        AND status = ${ACTIVITY_STATUSES.SCHEDULED}
       ORDER BY scheduled_at ASC
     `;
   }
@@ -165,11 +178,46 @@ export class ScheduledActivityRepository {
   async cancelByRecurringActivityId(recurringActivityId: string): Promise<number> {
     const result = await this.sql`
       UPDATE ${this.sql(this.table)}
-      SET status = 'cancelled', updated_at = now()
+      SET status = ${ACTIVITY_STATUSES.CANCELLED}, updated_at = now()
       WHERE recurring_activity_id = ${recurringActivityId}
-        AND status = 'scheduled'
+        AND status = ${ACTIVITY_STATUSES.SCHEDULED}
     `;
     return result.count;
+  }
+
+  async findRunningByAgent(agentId: string): Promise<ScheduledActivity[]> {
+    return this.sql<ScheduledActivity[]>`
+      SELECT * FROM ${this.sql(this.table)}
+      WHERE status = ${ACTIVITY_STATUSES.RUNNING}
+        AND (
+          agent_id = ${agentId}
+          OR payload->>'agent_id' = ${agentId}
+          OR payload->'participant_agent_ids' @> ${this.sql.json([agentId] as JSONValue)}
+        )
+      ORDER BY scheduled_at ASC
+    `;
+  }
+
+  async findRunningByUser(userId: string): Promise<ScheduledActivity[]> {
+    return this.sql<ScheduledActivity[]>`
+      SELECT * FROM ${this.sql(this.table)}
+      WHERE user_id = ${userId} AND status = ${ACTIVITY_STATUSES.RUNNING}
+      ORDER BY scheduled_at ASC
+    `;
+  }
+
+  async findRecentByAgent(agentId: string, limit: number = 10): Promise<ScheduledActivity[]> {
+    return this.sql<ScheduledActivity[]>`
+      SELECT * FROM ${this.sql(this.table)}
+      WHERE status = ${ACTIVITY_STATUSES.COMPLETED}
+        AND (
+          agent_id = ${agentId}
+          OR payload->>'agent_id' = ${agentId}
+          OR payload->'participant_agent_ids' @> ${this.sql.json([agentId] as JSONValue)}
+        )
+      ORDER BY completed_at DESC
+      LIMIT ${limit}
+    `;
   }
 
   async findByRecurringActivityId(

@@ -2,7 +2,8 @@ import { tool, zodSchema } from "ai";
 import { z } from "zod";
 import { scheduledActivityService, agentService } from "@community/backend";
 import type { CommunityToolDefinition } from "../types";
-import type { MeetingPayload } from "@community/shared";
+import { ACTIVITIES, ACTIVITY_STATUSES } from "@community/shared";
+import type { MeetingPayload, ActivityStatus } from "@community/shared";
 
 export const myMeetingsTool: CommunityToolDefinition = {
   meta: {
@@ -19,7 +20,7 @@ export const myMeetingsTool: CommunityToolDefinition = {
       inputSchema: zodSchema(
         z.object({
           status: z
-            .enum(["scheduled", "running", "completed", "failed", "cancelled"])
+            .enum(Object.values(ACTIVITY_STATUSES) as [ActivityStatus, ...ActivityStatus[]])
             .optional()
             .describe("Filter by meeting status"),
         })
@@ -28,13 +29,13 @@ export const myMeetingsTool: CommunityToolDefinition = {
         const activities = await scheduledActivityService.getByUserId(
           ctx.userId,
           {
-            activityType: "meeting",
+            activityType: ACTIVITIES.meeting.id,
             status,
           }
         );
 
         const meetings = activities.filter(
-          (a) => a.activity_type === "meeting"
+          (a) => a.activity_type === ACTIVITIES.meeting.id
         );
 
         // Enrich with participant names

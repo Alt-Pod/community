@@ -10,6 +10,7 @@ export const saveKnowledgeEntryTool: CommunityToolDefinition = {
     displayName: "tools.knowledge.saveEntry.name",
     description: "Save a fact or piece of information to the knowledge base",
     requiresConfirmation: true,
+    universal: true,
   },
   toolFactory: (ctx) =>
     tool({

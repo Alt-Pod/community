@@ -56,42 +56,4 @@ CREATE TABLE IF NOT EXISTS messages (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- Seed: Core department + Chief of Staff
--- Wrapped in DO block because migration 003 drops these columns/tables.
--- If re-run after 003, the columns won't exist so we skip the seed.
-DO $$
-BEGIN
-  IF EXISTS (
-    SELECT 1 FROM information_schema.columns
-    WHERE table_name = 'agents' AND column_name = 'department_id'
-  ) THEN
-    INSERT INTO departments (id, name, purpose)
-    VALUES ('00000000-0000-0000-0000-000000000001', 'Core', 'Central coordination and user understanding')
-    ON CONFLICT DO NOTHING;
-
-    INSERT INTO agents (id, name, department_id, purpose, responsibilities, reports_to, triggers, status)
-    VALUES (
-      '00000000-0000-0000-0000-000000000010',
-      'Chief of Staff',
-      '00000000-0000-0000-0000-000000000001',
-      'Know the user deeply and build a structured profile that all future agents will query',
-      ARRAY['Learn user preferences, habits, and goals', 'Maintain and update the user profile', 'Route conversations to appropriate agents', 'Recommend new agents and departments'],
-      NULL,
-      ARRAY['conversation', 'schedule:daily'],
-      'active'
-    )
-    ON CONFLICT DO NOTHING;
-  ELSE
-    -- Post-migration-003 schema: seed with new columns
-    INSERT INTO agents (id, name, description, system_prompt, status)
-    VALUES (
-      '00000000-0000-0000-0000-000000000010',
-      'Chief of Staff',
-      'Your main point of contact.',
-      'You are the Chief of Staff.',
-      'active'
-    )
-    ON CONFLICT DO NOTHING;
-  END IF;
-END
-$$;
+-- Seed data is now managed by scripts/seed.js (run via yarn db:seed or yarn db:reset)
