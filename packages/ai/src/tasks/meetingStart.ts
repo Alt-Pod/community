@@ -12,41 +12,48 @@ import type { MeetingPayload, Agent } from "@community/shared";
 import { generateMasterOpening } from "./meetingHelper";
 
 /**
- * Cron: runs every minute and checks for meetings that need to start.
- * Emits "meeting/ready" for each meeting whose scheduled_at has passed
- * and status is still "scheduled".
+ * Cron: runs every minute and checks for activities that need to start.
+ * Dispatches by activity_type:
+ * - "meeting" → emits "meeting/ready"
+ * - "scheduled_notification" → emits "notification/ready"
  */
-export const meetingCron = inngest.createFunction(
-  { id: "meeting-cron" },
+export const activityCron = inngest.createFunction(
+  { id: "activity-cron" },
   { cron: "* * * * *" }, // every minute
   async ({ step }) => {
     const now = new Date();
-    // Find meetings scheduled in the past that haven't started yet
-    // We look back 5 minutes to catch any that were just missed
+    // Look back 5 minutes to catch any that were just missed
     const from = new Date(now.getTime() - 5 * 60 * 1000).toISOString();
     const to = now.toISOString();
 
-    const activities = await step.run("find-due-meetings", async () => {
-      // Get all scheduled activities in the time window
-      // We can't filter by activityType in the repository, so we filter in code
+    const activities = await step.run("find-due-activities", async () => {
       const all = await scheduledActivityRepository.findDueActivities(from, to);
-      return all.filter((a) => a.activity_type === "meeting" && a.status === "scheduled");
+      return all.filter((a) => a.status === "scheduled");
     });
 
     if (activities.length === 0) {
       return { triggered: 0 };
     }
 
-    // Emit a meeting/ready event for each due meeting
+    // Dispatch each activity by type
     for (const activity of activities) {
-      await step.sendEvent(`trigger-meeting-${activity.id}`, {
-        name: "meeting/ready",
-        data: {
-          activityId: activity.id,
-          jobId: activity.job_id ?? "",
-          userId: activity.user_id,
-        },
-      });
+      const eventData = {
+        activityId: activity.id,
+        jobId: activity.job_id ?? "",
+        userId: activity.user_id,
+      };
+
+      if (activity.activity_type === "meeting") {
+        await step.sendEvent(`trigger-meeting-${activity.id}`, {
+          name: "meeting/ready",
+          data: eventData,
+        });
+      } else if (activity.activity_type === "scheduled_notification") {
+        await step.sendEvent(`trigger-notification-${activity.id}`, {
+          name: "notification/ready",
+          data: eventData,
+        });
+      }
     }
 
     return { triggered: activities.length };
@@ -116,6 +123,7 @@ export const meetingStart = inngest.createFunction(
 
           // Master opening
           const opening = await generateMasterOpening(agenda, participantNames);
+          console.log(`[meeting] Master opening — content length: ${opening.length}`);
           await messageRepository.create({
             conversationId: conversation.id,
             role: "assistant",

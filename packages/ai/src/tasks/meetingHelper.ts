@@ -1,10 +1,9 @@
-import { generateText } from "ai";
+import { generateText, stepCountIs } from "ai";
 import type { Tool } from "ai";
 import { getModel } from "../model";
 import { MEETING_MASTER_PROMPT, MEETING_SUPERVISOR_PROMPT, SUMMARY_AGENT_PROMPT } from "./meetingAgents";
 import { getToolById } from "../tools";
 import type { Agent, DbMessage } from "@community/shared";
-import { DEFAULT_ASSISTANT_ID } from "@community/shared";
 import { chatService } from "@community/backend";
 
 // --- Types ---
@@ -26,14 +25,20 @@ export async function loadMeetingHistory(
   const messages = await chatService.getMessages(conversationId) as unknown as DbMessage[];
   const agentMap = new Map(agents.map((a) => [a.id, a.name]));
 
-  return messages.map((msg) => ({
-    speaker: msg.agent_id === DEFAULT_ASSISTANT_ID
-      ? "Assistant"
-      : msg.agent_id
-        ? agentMap.get(msg.agent_id) ?? "Unknown Agent"
-        : "Meeting Master",
-    content: msg.content,
-  }));
+  return messages.map((msg) => {
+    const parts = (msg.parts ?? []) as { type?: string; speakerType?: string }[];
+    const isDefaultAssistant = parts.some(
+      (p) => p.type === "speaker-tag" && p.speakerType === "default-assistant"
+    );
+    return {
+      speaker: isDefaultAssistant
+        ? "Assistant"
+        : msg.agent_id
+          ? agentMap.get(msg.agent_id) ?? "Unknown Agent"
+          : "Meeting Master",
+      content: msg.content,
+    };
+  });
 }
 
 function formatTranscript(history: { speaker: string; content: string }[]): string {
@@ -175,12 +180,13 @@ export async function generateAgentTurnWithTools(
   participantNames: string[],
   tools: Record<string, Tool>
 ): Promise<{ text: string; toolActions: ToolAction[] }> {
-  const meetingContext = `You are participating in a meeting. The agenda is:\n\n${agenda}\n\nOther participants: ${participantNames.join(", ")}\n\nContribute meaningfully to the discussion based on the conversation so far. Be concise and on-topic. You have access to tools — use them if relevant to the discussion.`;
+  const meetingContext = `You are participating in a meeting. The agenda is:\n\n${agenda}\n\nOther participants: ${participantNames.join(", ")}\n\nContribute meaningfully to the discussion based on the conversation so far. Be concise and on-topic. You have access to tools — use them if relevant to the discussion. IMPORTANT: You MUST always produce a spoken response with your contribution to the meeting. If you use tools, summarize what you found or did in your response.`;
 
   const transcript = formatTranscript(history);
 
   const toolActions: ToolAction[] = [];
 
+  const hasTools = Object.keys(tools).length > 0;
   const result = await generateText({
     model: getModel(),
     system: `${agent.system_prompt}\n\n${meetingContext}`,
@@ -190,8 +196,12 @@ export async function generateAgentTurnWithTools(
         content: `Here is the meeting transcript so far:\n\n${transcript}\n\nIt's your turn to speak. Respond to the discussion.`,
       },
     ],
-    tools: Object.keys(tools).length > 0 ? tools : undefined,
+    tools: hasTools ? tools : undefined,
+    stopWhen: hasTools ? stepCountIs(5) : undefined,
   });
+
+  const allToolCalls = result.steps.flatMap((s) => (s as any).toolCalls ?? []);
+  console.log(`[meeting] Agent "${agent.name}" turn — steps: ${result.steps.length}, text length: ${result.text.length}, finishReason: ${result.finishReason}, tools called: [${allToolCalls.map((tc: any) => tc.toolName).join(", ")}], available tools: [${Object.keys(tools).join(", ")}]`);
 
   // Collect tool actions from steps
   for (const s of result.steps) {
@@ -226,12 +236,13 @@ export async function generateDefaultAssistantTurn(
   participantNames: string[],
   tools: Record<string, Tool>
 ): Promise<{ text: string; toolActions: ToolAction[] }> {
-  const meetingContext = `You are the default Assistant participating in a meeting. The agenda is:\n\n${agenda}\n\nOther participants: ${participantNames.join(", ")}\n\nContribute meaningfully to the discussion based on the conversation so far. Be concise and on-topic. You have access to a wide range of tools — use them if relevant to the discussion.`;
+  const meetingContext = `You are the default Assistant participating in a meeting. The agenda is:\n\n${agenda}\n\nOther participants: ${participantNames.join(", ")}\n\nContribute meaningfully to the discussion based on the conversation so far. Be concise and on-topic. You have access to a wide range of tools — use them if relevant to the discussion. IMPORTANT: You MUST always produce a spoken response with your contribution to the meeting. If you use tools, summarize what you found or did in your response.`;
 
   const transcript = formatTranscript(history);
 
   const toolActions: ToolAction[] = [];
 
+  const hasAssistantTools = Object.keys(tools).length > 0;
   const result = await generateText({
     model: getModel(),
     system: `${systemPrompt}\n\n${meetingContext}`,
@@ -241,8 +252,12 @@ export async function generateDefaultAssistantTurn(
         content: `Here is the meeting transcript so far:\n\n${transcript}\n\nIt's your turn to speak. Respond to the discussion.`,
       },
     ],
-    tools: Object.keys(tools).length > 0 ? tools : undefined,
+    tools: hasAssistantTools ? tools : undefined,
+    stopWhen: hasAssistantTools ? stepCountIs(5) : undefined,
   });
+
+  const allAssistantToolCalls = result.steps.flatMap((s) => (s as any).toolCalls ?? []);
+  console.log(`[meeting] Default assistant turn — steps: ${result.steps.length}, text length: ${result.text.length}, finishReason: ${result.finishReason}, tools called: [${allAssistantToolCalls.map((tc: any) => tc.toolName).join(", ")}], available tools: [${Object.keys(tools).join(", ")}]`);
 
   for (const s of result.steps) {
     const stepAny = s as any;

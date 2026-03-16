@@ -38,6 +38,7 @@ export type {
   Notification,
   NotificationType,
   PushSubscriptionRecord,
+  ScheduledNotificationPayload,
 } from "./types/notification";
 export { NOTIFICATION_TYPES } from "./types/notification";
 export {
@@ -45,6 +46,3 @@ export {
   fuzzyMatch,
   fuzzySearchItems,
 } from "./fuzzySearch";
-
-/** Sentinel agentId used for the default assistant in meetings */
-export const DEFAULT_ASSISTANT_ID = "default-assistant";

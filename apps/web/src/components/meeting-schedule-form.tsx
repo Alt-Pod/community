@@ -1,8 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { Button, TextInput, TextArea, Select, Heading } from "@community/ui";
+import { useState, useMemo } from "react";
+import { useTranslations, useLocale } from "next-intl";
+import { enUS, fr, es, it, de } from "date-fns/locale";
+import {
+  Button,
+  TextInput,
+  TextArea,
+  Select,
+  Heading,
+  DatePicker,
+  TimePicker,
+} from "@community/ui";
 import { useAgents } from "@/requests/useAgents";
 import { useScheduleMeeting } from "@/requests/useMeetings";
 
@@ -37,23 +46,45 @@ const TIMEZONE_OPTIONS = [
   { value: "Asia/Shanghai", label: "Asia/Shanghai" },
 ];
 
+const LOCALE_MAP: Record<string, typeof enUS> = { en: enUS, fr, es, it, de };
+
 export default function MeetingScheduleForm({
   defaultTimezone,
   onSuccess,
   onCancel,
 }: MeetingScheduleFormProps) {
   const t = useTranslations("meetings");
+  const locale = useLocale();
+  const dateFnsLocale = LOCALE_MAP[locale] || enUS;
   const { data: agents = [] } = useAgents();
   const scheduleMeeting = useScheduleMeeting();
 
   const [title, setTitle] = useState("");
   const [agenda, setAgenda] = useState("");
   const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
-  const [scheduledAt, setScheduledAt] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [selectedTime, setSelectedTime] = useState("09:00");
   const [durationMinutes, setDurationMinutes] = useState("30");
   const [timezone, setTimezone] = useState(
     defaultTimezone || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"
   );
+
+  // When the selected date is today, compute minTime from current time
+  const minTime = useMemo(() => {
+    if (!selectedDate) return undefined;
+    const now = new Date();
+    const isToday =
+      selectedDate.getFullYear() === now.getFullYear() &&
+      selectedDate.getMonth() === now.getMonth() &&
+      selectedDate.getDate() === now.getDate();
+    if (!isToday) return undefined;
+    // Round up to next 15-min interval
+    const m = now.getHours() * 60 + now.getMinutes();
+    const next = Math.ceil(m / 15) * 15;
+    const hh = String(Math.floor(next / 60)).padStart(2, "0");
+    const mm = String(next % 60).padStart(2, "0");
+    return `${hh}:${mm}`;
+  }, [selectedDate]);
 
   function toggleAgent(agentId: string) {
     setSelectedAgents((prev) =>
@@ -66,13 +97,17 @@ export default function MeetingScheduleForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!title || !agenda || !scheduledAt) return;
+    if (!title || !agenda || !selectedDate) return;
+
+    const [hours, minutes] = selectedTime.split(":").map(Number);
+    const scheduledDate = new Date(selectedDate);
+    scheduledDate.setHours(hours, minutes, 0, 0);
 
     await scheduleMeeting.mutateAsync({
       title,
       agenda,
       participant_agent_ids: selectedAgents,
-      scheduled_at: new Date(scheduledAt).toISOString(),
+      scheduled_at: scheduledDate.toISOString(),
       duration_minutes: parseInt(durationMinutes, 10),
       timezone,
     });
@@ -153,17 +188,28 @@ export default function MeetingScheduleForm({
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         <div>
           <label className="block text-sm font-medium text-text-secondary mb-1">
             {t("scheduleForm.dateLabel")}
           </label>
-          <input
-            type="datetime-local"
-            value={scheduledAt}
-            onChange={(e) => setScheduledAt(e.target.value)}
-            className="w-full rounded-lg border border-border bg-bg-primary px-3 py-2 text-sm text-text-primary"
-            required
+          <DatePicker
+            value={selectedDate}
+            onChange={setSelectedDate}
+            minDate={new Date()}
+            placeholder={t("scheduleForm.datePlaceholder")}
+            locale={dateFnsLocale}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-text-secondary mb-1">
+            {t("scheduleForm.timeLabel")}
+          </label>
+          <TimePicker
+            value={selectedTime}
+            onChange={setSelectedTime}
+            minTime={minTime}
+            placeholder={t("scheduleForm.timePlaceholder")}
           />
         </div>
         <div>
@@ -196,7 +242,7 @@ export default function MeetingScheduleForm({
             scheduleMeeting.isPending ||
             !title ||
             !agenda ||
-            !scheduledAt
+            !selectedDate
           }
         >
           {scheduleMeeting.isPending

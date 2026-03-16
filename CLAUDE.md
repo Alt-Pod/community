@@ -246,13 +246,13 @@ Meetings are the first activity type. A meeting is an automated multi-agent conv
 ### Architecture
 
 - **Scheduling**: Meetings are `scheduled_activities` with `activity_type = 'meeting'`. Config stored in `payload` JSONB as `MeetingPayload`.
-- **Execution**: Inngest `activityExecution` dispatches to `runMeeting()` when `activity_type === "meeting"`. Uses `generateText` (not streaming) for each turn.
+- **Execution**: The `activityCron` (every minute) finds due activities and dispatches by type. For meetings it emits `meeting/ready`, triggering the `meetingStart` → `meetingRound` → `meetingClosing` → `meetingSummary` chain. Uses `generateText` (not streaming) for each turn.
 - **Conversation**: Stored as a `conversation` with `type = 'meeting'`. The user owns it but doesn't participate — only agents talk.
 - **Hardcoded agents**: Meeting Master and Summary Agent are system prompt constants in `packages/ai/src/tasks/meetingAgents.ts`, not database agent rows.
 
 ### Meeting Flow
 
-1. Inngest sleeps until scheduled time
+1. `activityCron` detects due meeting and emits `meeting/ready`
 2. Creates a meeting conversation (`type: 'meeting'`)
 3. Meeting Master opens with agenda intro
 4. Round-robin: each participant agent speaks per round
@@ -265,7 +265,8 @@ Meetings are the first activity type. A meeting is an automated multi-agent conv
 
 | File | Purpose |
 |------|---------|
-| `packages/ai/src/tasks/activityExecution.ts` | Inngest function with meeting dispatch |
+| `packages/ai/src/tasks/meetingStart.ts` | `activityCron` (generic dispatcher) + `meetingStart` handler |
+| `packages/ai/src/tasks/activityExecution.ts` | Inngest handler for non-meeting/non-notification activities |
 | `packages/ai/src/tasks/meetingHelper.ts` | generateText helpers for each turn |
 | `packages/ai/src/tasks/meetingAgents.ts` | Hardcoded Meeting Master + Summary Agent prompts |
 | `packages/ai/src/tools/planning/schedule-meeting.ts` | `planning.schedule_meeting` tool |
@@ -341,7 +342,8 @@ packages/backend/src/
   repositories/pushSubscriptionRepository.ts  → Web Push subscription storage
   services/notificationService.ts             → Create (+ push delivery), list, markRead, delete
   helpers/pushHelper.ts                       → web-push VAPID delivery
-packages/ai/src/tools/notifications/          → notifications.send_notification tool
+packages/ai/src/tools/notifications/          → notifications.send_notification + notifications.schedule_notification tools
+packages/ai/src/tasks/notificationExecution.ts → Inngest handler for scheduled notification delivery
 apps/web/src/app/notifications/               → Notifications page
 apps/web/src/components/notification-*.tsx     → Badge, item, list, home section
 apps/web/public/sw.js                         → Service worker (push + notificationclick)
@@ -350,7 +352,11 @@ apps/web/public/manifest.json                 → PWA web app manifest
 
 ### Notification Types
 
-`info` | `success` | `warning` | `meeting` | `agent` — used for icon/color differentiation in the UI.
+`info` | `success` | `warning` | `meeting` | `agent` | `scheduled` — used for icon/color differentiation in the UI.
+
+### Scheduled Notifications (Reminders)
+
+Users can schedule reminders via chat ("remind me at 3pm to..."). The `notifications.schedule_notification` tool creates a `scheduled_notification` activity in the `scheduled_activities` table. The `activityCron` (runs every minute) picks it up when due and emits a `notification/ready` Inngest event. The `notificationExecution` handler then delivers the notification (in-app + push).
 
 ### Push Notifications (PWA)
 

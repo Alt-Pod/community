@@ -1,23 +1,26 @@
 export { titleGeneration } from "./titleGeneration";
 export { activityExecution } from "./activityExecution";
-export { meetingCron, meetingStart } from "./meetingStart";
+export { activityCron, meetingStart } from "./meetingStart";
 export { meetingRound } from "./meetingRound";
 export { meetingClosing } from "./meetingClosing";
 export { meetingSummary } from "./meetingSummary";
+export { notificationExecution } from "./notificationExecution";
 
 import { titleGeneration } from "./titleGeneration";
 import { activityExecution } from "./activityExecution";
-import { meetingCron, meetingStart } from "./meetingStart";
+import { activityCron, meetingStart } from "./meetingStart";
 import { meetingRound } from "./meetingRound";
 import { meetingClosing } from "./meetingClosing";
 import { meetingSummary } from "./meetingSummary";
+import { notificationExecution } from "./notificationExecution";
 
 export const allFunctions = [
   titleGeneration,
   activityExecution,
-  meetingCron,
+  activityCron,
   meetingStart,
   meetingRound,
   meetingClosing,
   meetingSummary,
+  notificationExecution,
 ];

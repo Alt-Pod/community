@@ -38,6 +38,9 @@ export async function GET(req: Request) {
   const agents = await agentService.getAll();
   const agentMap = new Map(agents.map((a) => [a.id, a]));
 
+  // Sort most recent first
+  meetings.sort((a, b) => new Date(b.scheduled_at).getTime() - new Date(a.scheduled_at).getTime());
+
   const enriched = meetings.map((m) => {
     const payload = m.payload as unknown as MeetingPayload;
     const participants = (payload.participant_agent_ids ?? [])

@@ -37,6 +37,13 @@ export async function GET(
     .filter(Boolean)
     .map((a) => ({ id: a!.id, name: a!.name, description: a!.description }));
 
+  // Always include the default assistant as a participant
+  participants.push({
+    id: "assistant",
+    name: "Assistant",
+    description: "Default assistant",
+  });
+
   // Load meeting transcript if conversation exists
   let messages: unknown[] = [];
   if (payload.conversation_id) {

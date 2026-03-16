@@ -17,7 +17,8 @@ export type NotificationType =
   | "success"
   | "warning"
   | "meeting"
-  | "agent";
+  | "agent"
+  | "scheduled";
 
 export const NOTIFICATION_TYPES: NotificationType[] = [
   "info",
@@ -25,7 +26,15 @@ export const NOTIFICATION_TYPES: NotificationType[] = [
   "warning",
   "meeting",
   "agent",
+  "scheduled",
 ];
+
+export interface ScheduledNotificationPayload {
+  title: string;
+  body: string;
+  type?: string;
+  link?: string | null;
+}
 
 export interface PushSubscriptionRecord {
   id: string;

@@ -8,7 +8,7 @@ export const activityExecution = inngest.createFunction(
   { id: "activity-execution", retries: 2 },
   {
     event: "job/started",
-    if: "event.data.type == 'activity.execute' && event.data.metadata.activityType != 'meeting'",
+    if: "event.data.type == 'activity.execute' && event.data.metadata.activityType != 'meeting' && event.data.metadata.activityType != 'scheduled_notification'",
   },
   async ({ event, step }) => {
     const { jobId, metadata } = event.data;

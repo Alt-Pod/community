@@ -52,11 +52,13 @@ export const DEFAULT_ASSISTANT_TOOL_IDS = [
   "files.update_file",
   "files.delete_file",
   "notifications.send_notification",
+  "notifications.schedule_notification",
 ];
 
 export function buildToolsForAgent(
   toolIds: string[],
-  ctx?: ToolContext
+  ctx?: ToolContext,
+  options?: { serverOnly?: boolean }
 ): Record<string, Tool> {
   const universalIds = Array.from(toolRegistry.values())
     .filter((d) => d.meta.universal)
@@ -67,10 +69,16 @@ export function buildToolsForAgent(
   for (const id of allIds) {
     const def = toolRegistry.get(id);
     if (!def) continue;
+    let builtTool: Tool | undefined;
     if (def.toolFactory && ctx) {
-      tools[id] = def.toolFactory(ctx);
+      builtTool = def.toolFactory(ctx);
     } else if (def.tool) {
-      tools[id] = def.tool;
+      builtTool = def.tool;
+    }
+    // In server-only mode, skip tools that have no execute (client-side tools)
+    if (builtTool) {
+      if (options?.serverOnly && !builtTool.execute) continue;
+      tools[id] = builtTool;
     }
   }
   return tools;

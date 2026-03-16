@@ -217,7 +217,10 @@
       "participantsLabel": "Teilnehmer",
       "noAgents": "Keine Agenten verfügbar. Erstellen Sie zuerst Agenten.",
       "selected": "ausgewählt",
-      "dateLabel": "Datum und Uhrzeit",
+      "dateLabel": "Datum",
+      "datePlaceholder": "Datum auswählen",
+      "timeLabel": "Uhrzeit",
+      "timePlaceholder": "Uhrzeit auswählen",
       "durationLabel": "Dauer",
       "timezoneLabel": "Zeitzone",
       "submit": "Meeting planen",
@@ -372,6 +375,10 @@
       "sendNotification": {
         "name": "Benachrichtigung senden",
         "description": "Eine Benachrichtigung an den Benutzer senden"
+      },
+      "scheduleNotification": {
+        "name": "Erinnerung planen",
+        "description": "Eine Benachrichtigung für einen zukünftigen Zeitpunkt planen"
       }
     },
     "files": {

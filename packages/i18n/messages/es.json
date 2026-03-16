@@ -217,7 +217,10 @@
       "participantsLabel": "Participantes",
       "noAgents": "No hay agentes disponibles. Crea agentes primero.",
       "selected": "seleccionado(s)",
-      "dateLabel": "Fecha y hora",
+      "dateLabel": "Fecha",
+      "datePlaceholder": "Seleccionar fecha",
+      "timeLabel": "Hora",
+      "timePlaceholder": "Seleccionar hora",
       "durationLabel": "Duración",
       "timezoneLabel": "Zona horaria",
       "submit": "Programar reunión",
@@ -372,6 +375,10 @@
       "sendNotification": {
         "name": "Enviar notificación",
         "description": "Enviar una notificación al usuario"
+      },
+      "scheduleNotification": {
+        "name": "Programar recordatorio",
+        "description": "Programar una notificación para una fecha futura"
       }
     },
     "files": {

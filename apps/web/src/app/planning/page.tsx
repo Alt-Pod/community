@@ -23,12 +23,17 @@ export default function PlanningPage() {
   const from = new Date(year, month, 1).toISOString();
   const to = new Date(year, month + 1, 1).toISOString();
 
-  const { data: activities = [], isLoading: activitiesLoading } = useScheduledActivities(
+  const { data: allActivities = [], isLoading: activitiesLoading } = useScheduledActivities(
     from,
     to,
     agentFilter || undefined
   );
   const { data: agents = [], isLoading: agentsLoading } = useAgents();
+
+  const activities = useMemo(
+    () => allActivities.filter((a) => a.status !== "cancelled"),
+    [allActivities]
+  );
 
   const agentNames = useMemo(() => {
     const map: Record<string, string> = {};

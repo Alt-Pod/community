@@ -217,7 +217,10 @@
       "participantsLabel": "Partecipanti",
       "noAgents": "Nessun agente disponibile. Crea prima degli agenti.",
       "selected": "selezionato/i",
-      "dateLabel": "Data e ora",
+      "dateLabel": "Data",
+      "datePlaceholder": "Seleziona una data",
+      "timeLabel": "Ora",
+      "timePlaceholder": "Seleziona un orario",
       "durationLabel": "Durata",
       "timezoneLabel": "Fuso orario",
       "submit": "Programma riunione",
@@ -372,6 +375,10 @@
       "sendNotification": {
         "name": "Invia notifica",
         "description": "Invia una notifica all'utente"
+      },
+      "scheduleNotification": {
+        "name": "Programma promemoria",
+        "description": "Programma una notifica per una data futura"
       }
     },
     "files": {

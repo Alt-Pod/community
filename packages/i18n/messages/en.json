@@ -217,7 +217,10 @@
       "participantsLabel": "Participants",
       "noAgents": "No agents available. Create agents first.",
       "selected": "selected",
-      "dateLabel": "Date & time",
+      "dateLabel": "Date",
+      "datePlaceholder": "Select a date",
+      "timeLabel": "Time",
+      "timePlaceholder": "Select a time",
       "durationLabel": "Duration",
       "timezoneLabel": "Timezone",
       "submit": "Schedule Meeting",
@@ -413,6 +416,10 @@
       "sendNotification": {
         "name": "Send notification",
         "description": "Send a notification to the user"
+      },
+      "scheduleNotification": {
+        "name": "Schedule reminder",
+        "description": "Schedule a notification for a future time"
       }
     },
     "prompt": {

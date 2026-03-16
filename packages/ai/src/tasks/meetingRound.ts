@@ -11,7 +11,6 @@ import {
 import { buildToolsForAgent, DEFAULT_ASSISTANT_TOOL_IDS } from "../tools";
 import { buildDefaultSystemPrompt } from "../context";
 import type { Agent } from "@community/shared";
-import { DEFAULT_ASSISTANT_ID } from "@community/shared";
 import {
   loadMeetingHistory,
   generateAgentTurnWithTools,
@@ -36,6 +35,7 @@ export const meetingRound = inngest.createFunction(
       userId,
       agenda,
       participantAgentIds,
+      durationMinutes,
       endTime,
     } = event.data;
 
@@ -72,7 +72,7 @@ export const meetingRound = inngest.createFunction(
 
             // Build agent's tools with supervisor wrapping
             const toolIds = await toolService.getToolsForAgent(agent.id);
-            const rawTools = buildToolsForAgent(toolIds, { userId, agentId: agent.id });
+            const rawTools = buildToolsForAgent(toolIds, { userId, agentId: agent.id }, { serverOnly: true });
             const tools = wrapToolsWithSupervisor(
               rawTools,
               agenda,
@@ -98,6 +98,7 @@ export const meetingRound = inngest.createFunction(
                 }))
               : undefined;
 
+            console.log(`[meeting] Saving agent "${agent.name}" message — content length: ${text.length}, tool actions: ${toolActions.length}`);
             await messageRepository.create({
               conversationId,
               role: "assistant",
@@ -112,7 +113,7 @@ export const meetingRound = inngest.createFunction(
             const assistantHistory = await loadMeetingHistory(conversationId, agents);
             const allAgents = await agentService.getAll();
             const assistantSystemPrompt = buildDefaultSystemPrompt(allAgents);
-            const assistantRawTools = buildToolsForAgent(DEFAULT_ASSISTANT_TOOL_IDS, { userId });
+            const assistantRawTools = buildToolsForAgent(DEFAULT_ASSISTANT_TOOL_IDS, { userId }, { serverOnly: true });
             const assistantTools = wrapToolsWithSupervisor(
               assistantRawTools,
               agenda,
@@ -128,21 +129,23 @@ export const meetingRound = inngest.createFunction(
                 assistantTools
               );
 
-            const assistantParts = assistantToolActions.length > 0
-              ? assistantToolActions.map((ta) => ({
-                  type: "tool-action",
-                  toolName: ta.toolName,
-                  approved: ta.approved,
-                  reason: ta.reason,
-                }))
-              : undefined;
+            const assistantParts: unknown[] = [
+              { type: "speaker-tag", speakerType: "default-assistant" },
+              ...assistantToolActions.map((ta) => ({
+                type: "tool-action",
+                toolName: ta.toolName,
+                approved: ta.approved,
+                reason: ta.reason,
+              })),
+            ];
 
+            console.log(`[meeting] Saving default assistant message — content length: ${assistantText.length}, tool actions: ${assistantToolActions.length}`);
             await messageRepository.create({
               conversationId,
               role: "assistant",
               content: assistantText,
-              agentId: DEFAULT_ASSISTANT_ID,
-              parts: assistantParts as unknown[] | undefined,
+              agentId: null,
+              parts: assistantParts,
             });
           }
 
@@ -166,6 +169,7 @@ export const meetingRound = inngest.createFunction(
           userId,
           agenda,
           participantAgentIds,
+          durationMinutes,
         },
       });
 
@@ -200,6 +204,7 @@ export const meetingRound = inngest.createFunction(
         roundNumber: roundNumber + 1,
         agenda,
         participantAgentIds,
+        durationMinutes,
         endTime,
       },
     });

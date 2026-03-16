@@ -110,11 +110,19 @@ export default function MeetingViewer({ meetingId }: MeetingViewerProps) {
             {t("viewer.transcript")}
           </Heading>
           {(messages as DbMessage[]).map((msg) => {
-            const speakerName = msg.agent_id
-              ? agentNameMap.get(msg.agent_id) ?? t("viewer.unknownAgent")
-              : t("viewer.meetingMaster");
+            const parts = ((msg as any).parts ?? []) as { type?: string; speakerType?: string }[];
+            const isDefaultAssistant = parts.some(
+              (p) => p.type === "speaker-tag" && p.speakerType === "default-assistant"
+            );
+            const isMaster = !msg.agent_id && !isDefaultAssistant;
 
-            const isMaster = !msg.agent_id;
+            const speakerName = isDefaultAssistant
+              ? "Assistant"
+              : isMaster
+                ? t("viewer.meetingMaster")
+                : msg.agent_id
+                  ? agentNameMap.get(msg.agent_id) ?? t("viewer.unknownAgent")
+                  : t("viewer.meetingMaster");
 
             return (
               <div
@@ -124,6 +132,7 @@ export default function MeetingViewer({ meetingId }: MeetingViewerProps) {
                     ? "bg-bg-secondary border border-border"
                     : "bg-bg-primary border border-border"
                 }`}
+
               >
                 <div className="flex items-center gap-2 mb-1">
                   <span

@@ -80,6 +80,7 @@ You can schedule future activities using these tools:
 Available activity types:
 - **report_generation**: Generate and deliver a report on a given topic. Payload: { topic: string, format?: string }
 - **meeting**: A scheduled meeting between agents. Use planning.schedule_meeting to schedule meetings. Requires participant agent IDs, an agenda, scheduled time, duration (5-120 min), and timezone. A Meeting Master agent will orchestrate the discussion and a summary will be generated automatically.
+- **scheduled_notification**: A reminder notification delivered at a specific time. Use notifications.schedule_notification to schedule these — it provides a more ergonomic interface than planning.schedule_activity.
 
 Use these when the user asks you to schedule something, plan a report, schedule a meeting, or any future task. Always confirm the scheduled time with the user before creating the activity.
 When scheduling a meeting, use data.list_agents first to show available agents and let the user pick participants.
@@ -106,12 +107,20 @@ When the user sends a message with attached files, you will see references like 
 const NOTIFICATION_INSTRUCTIONS = `
 ## Notifications
 You can send notifications to the user using the **notifications.send_notification** tool.
+You can also schedule reminders using the **notifications.schedule_notification** tool.
+
 Use notifications to alert the user about:
 - Completed tasks or activities (meetings finished, reports generated)
 - Important events or reminders
 - Results that the user should be aware of
 
-Notification types: info (general), success (completed tasks), warning (attention needed), meeting (meeting-related), agent (agent activity).
+Use scheduled notifications (reminders) when the user says things like:
+- "Remind me at 3pm to..."
+- "Send me a reminder Thursday about..."
+- "Don't let me forget to... tomorrow morning"
+The tool schedules a notification for the specified time. It requires confirmation since it creates a scheduled activity.
+
+Notification types: info (general), success (completed tasks), warning (attention needed), meeting (meeting-related), agent (agent activity), scheduled (timed reminders).
 You can include an optional link so the user can navigate directly to the relevant page.
 Do NOT send notifications for trivial things the user can already see in the current chat.`;
 

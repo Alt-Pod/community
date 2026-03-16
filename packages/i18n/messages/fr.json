@@ -217,7 +217,10 @@
       "participantsLabel": "Participants",
       "noAgents": "Aucun agent disponible. Créez d'abord des agents.",
       "selected": "sélectionné(s)",
-      "dateLabel": "Date et heure",
+      "dateLabel": "Date",
+      "datePlaceholder": "Choisir une date",
+      "timeLabel": "Heure",
+      "timePlaceholder": "Choisir une heure",
       "durationLabel": "Durée",
       "timezoneLabel": "Fuseau horaire",
       "submit": "Planifier la réunion",
@@ -372,6 +375,10 @@
       "sendNotification": {
         "name": "Envoyer une notification",
         "description": "Envoyer une notification à l'utilisateur"
+      },
+      "scheduleNotification": {
+        "name": "Programmer un rappel",
+        "description": "Programmer une notification pour une date future"
       }
     },
     "files": {

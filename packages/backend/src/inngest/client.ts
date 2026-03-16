@@ -37,6 +37,7 @@ type Events = {
       roundNumber: number;
       agenda: string;
       participantAgentIds: string[];
+      durationMinutes: number;
       endTime: number;
     };
   };
@@ -48,6 +49,7 @@ type Events = {
       userId: string;
       agenda: string;
       participantAgentIds: string[];
+      durationMinutes: number;
     };
   };
   "meeting/summarize": {
@@ -59,6 +61,13 @@ type Events = {
       agenda: string;
       participantAgentIds: string[];
       durationMinutes: number;
+    };
+  };
+  "notification/ready": {
+    data: {
+      activityId: string;
+      jobId: string;
+      userId: string;
     };
   };
 };

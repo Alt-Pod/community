@@ -20,6 +20,7 @@ export const meetingClosing = inngest.createFunction(
       userId,
       agenda,
       participantAgentIds,
+      durationMinutes,
     } = event.data;
 
     await step.run("closing", async () => {
@@ -37,6 +38,7 @@ export const meetingClosing = inngest.createFunction(
 
           const history = await loadMeetingHistory(conversationId, agents);
           const closing = await generateMasterClosing(history);
+          console.log(`[meeting] Master closing — content length: ${closing.length}`);
 
           await messageRepository.create({
             conversationId,
@@ -58,7 +60,7 @@ export const meetingClosing = inngest.createFunction(
         userId,
         agenda,
         participantAgentIds,
-        durationMinutes: 0, // not critical for summary, just metadata
+        durationMinutes: durationMinutes ?? 0,
       },
     });
 

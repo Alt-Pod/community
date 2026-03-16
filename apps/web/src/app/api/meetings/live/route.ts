@@ -43,7 +43,7 @@ export async function GET() {
   unique.sort((a, b) => {
     if (a.status === "running" && b.status !== "running") return -1;
     if (b.status === "running" && a.status !== "running") return 1;
-    return new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime();
+    return new Date(b.scheduled_at).getTime() - new Date(a.scheduled_at).getTime();
   });
 
   // Enrich with participants
