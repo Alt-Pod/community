@@ -89,7 +89,7 @@ export default function LiveMeetings() {
         </Link>
       </div>
       <div className="space-y-2">
-        {meetings.map((meeting) => (
+        {meetings.slice(0, 5).map((meeting) => (
           <Link
             key={meeting.id}
             href={`/meetings/${meeting.id}`}

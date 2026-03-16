@@ -21,19 +21,8 @@ export async function fetchUnreadCount(): Promise<{ count: number }> {
   return res.json();
 }
 
-export async function markNotificationRead(id: string): Promise<Notification> {
-  const res = await fetch(`/api/notifications/${id}`, { method: "PATCH" });
-  if (!res.ok) throw new Error("Failed to mark notification as read");
-  return res.json();
-}
-
 export async function markAllNotificationsRead(): Promise<{ count: number }> {
   const res = await fetch("/api/notifications/read-all", { method: "POST" });
   if (!res.ok) throw new Error("Failed to mark all as read");
   return res.json();
-}
-
-export async function deleteNotification(id: string): Promise<void> {
-  const res = await fetch(`/api/notifications/${id}`, { method: "DELETE" });
-  if (!res.ok) throw new Error("Failed to delete notification");
 }

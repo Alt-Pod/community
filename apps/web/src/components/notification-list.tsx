@@ -7,16 +7,12 @@ interface NotificationListProps {
   notifications: Notification[];
   loading?: boolean;
   emptyMessage?: string;
-  onMarkRead?: (id: string) => void;
-  onDelete?: (id: string) => void;
 }
 
 export default function NotificationList({
   notifications,
   loading,
   emptyMessage = "No notifications yet.",
-  onMarkRead,
-  onDelete,
 }: NotificationListProps) {
   if (loading) {
     return (
@@ -45,8 +41,6 @@ export default function NotificationList({
         <NotificationItem
           key={notification.id}
           notification={notification}
-          onMarkRead={onMarkRead}
-          onDelete={onDelete}
         />
       ))}
     </div>

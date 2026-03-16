@@ -54,14 +54,10 @@ function TypeIcon({ type }: { type: string }) {
 
 interface NotificationItemProps {
   notification: Notification;
-  onMarkRead?: (id: string) => void;
-  onDelete?: (id: string) => void;
 }
 
 export default function NotificationItem({
   notification,
-  onMarkRead,
-  onDelete,
 }: NotificationItemProps) {
   const content = (
     <div
@@ -91,38 +87,6 @@ export default function NotificationItem({
         <span className="text-[11px] text-text-tertiary mt-1 block">
           {timeAgo(notification.created_at)}
         </span>
-      </div>
-      <div className="flex-shrink-0 flex items-center gap-1">
-        {!notification.read && onMarkRead && (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onMarkRead(notification.id);
-            }}
-            className="p-1 text-text-tertiary hover:text-text-primary rounded-sm hover:bg-surface-tertiary transition-colors"
-            title="Mark as read"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-          </button>
-        )}
-        {onDelete && (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onDelete(notification.id);
-            }}
-            className="p-1 text-text-tertiary hover:text-red-500 rounded-sm hover:bg-surface-tertiary transition-colors"
-            title="Delete"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        )}
       </div>
     </div>
   );

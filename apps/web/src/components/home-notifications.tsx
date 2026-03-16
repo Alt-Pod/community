@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useNotifications, useMarkNotificationRead, useDeleteNotification } from "@/requests/useNotifications";
+import { useNotifications, useMarkAllNotificationsRead } from "@/requests/useNotifications";
 import NotificationList from "./notification-list";
 
 export default function HomeNotifications() {
@@ -11,8 +12,14 @@ export default function HomeNotifications() {
     unread: true,
     limit: 5,
   });
-  const markRead = useMarkNotificationRead();
-  const deleteNotification = useDeleteNotification();
+  const markAllRead = useMarkAllNotificationsRead();
+
+  useEffect(() => {
+    if (!isLoading && notifications.length > 0) {
+      markAllRead.mutate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
 
   return (
     <div>
@@ -31,8 +38,6 @@ export default function HomeNotifications() {
         notifications={notifications}
         loading={isLoading}
         emptyMessage={t("notifications.empty")}
-        onMarkRead={(id) => markRead.mutate(id)}
-        onDelete={(id) => deleteNotification.mutate(id)}
       />
     </div>
   );

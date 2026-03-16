@@ -112,9 +112,17 @@ export const meetingStart = inngest.createFunction(
           const payload = activity.payload as unknown as MeetingPayload;
           const { participant_agent_ids, agenda, duration_minutes } = payload;
 
+          // Validate participant IDs are UUIDs (company loop may have stored names instead)
+          const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+          const validIds = participant_agent_ids.filter((id) => uuidRegex.test(id));
+          if (validIds.length === 0) {
+            console.log(`[meeting] No valid agent UUIDs in participant_agent_ids:`, participant_agent_ids);
+            throw new Error(`Meeting has no valid participant UUIDs (got: ${participant_agent_ids.join(", ")})`);
+          }
+
           // Load agents
           const agents: Agent[] = [];
-          for (const agentId of participant_agent_ids) {
+          for (const agentId of validIds) {
             const agent = await agentRepository.findById(agentId);
             if (agent) agents.push(agent);
           }

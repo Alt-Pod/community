@@ -41,7 +41,7 @@ function formatRecentActivity(activities: ScheduledActivity[]): string {
 function formatAgentList(agents: Agent[], currentAgentId: string): string {
   return agents
     .filter((a) => a.id !== currentAgentId)
-    .map((a) => `- **${a.name}**: ${a.description || "No description"}`)
+    .map((a) => `- [id: ${a.id}] **${a.name}**: ${a.description || "No description"}`)
     .join("\n");
 }
 
@@ -79,13 +79,14 @@ ${formatRunningActivities(context.runningActivities)}
 
 Based on all this, decide what to do next:
 - If you have a goal to pursue alone (research, investigation, file work, etc.) → respond with action: "task"
-- If you need to collaborate with other agents to discuss or decide something → respond with action: "meeting" and specify which agent_ids to include
+- If you need to collaborate with other agents to discuss or decide something → respond with action: "meeting" and specify which agent_ids to include (MUST be UUIDs from the list above, NOT names)
 - If there's nothing to do right now → respond with action: "nothing"
 
 IMPORTANT: Only choose "task" or "meeting" if there is a concrete, actionable goal. Do not create work for the sake of it.
+IMPORTANT: agent_ids MUST be valid UUIDs (e.g. "5921b0db-b5a8-49cc-8331-d86b75d382a8"), never agent names.
 
 Respond with ONLY valid JSON, no other text:
-{ "action": "task" | "meeting" | "nothing", "title": "short title", "goal": "what you want to accomplish", "agent_ids": ["id1", "id2"], "reason": "why" }`;
+{ "action": "task" | "meeting" | "nothing", "title": "short title", "goal": "what you want to accomplish", "agent_ids": ["uuid1", "uuid2"], "reason": "why" }`;
 
   const { text } = await generateText({
     model: getModel(),
@@ -98,11 +99,16 @@ Respond with ONLY valid JSON, no other text:
     if (!jsonMatch) return { action: "nothing" };
 
     const parsed = JSON.parse(jsonMatch[0]);
+    // Validate agent_ids are actual UUIDs (not names)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const validAgentIds = Array.isArray(parsed.agent_ids)
+      ? parsed.agent_ids.filter((id: string) => uuidRegex.test(id))
+      : [];
     return {
       action: parsed.action === "task" || parsed.action === "meeting" ? parsed.action : "nothing",
       title: parsed.title,
       goal: parsed.goal,
-      agent_ids: parsed.agent_ids,
+      agent_ids: validAgentIds,
       reason: parsed.reason,
     };
   } catch {
