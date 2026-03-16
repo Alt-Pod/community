@@ -97,7 +97,7 @@ export class UserRepository {
     const [user] = await this.sql`
       INSERT INTO ${this.sql(this.table)} (email, password_hash, name)
       VALUES (${data.email}, ${data.passwordHash}, ${data.name ?? null})
-      RETURNING *
+      RETURNING id, email, name, role, created_at
     `;
     return user;
   }
