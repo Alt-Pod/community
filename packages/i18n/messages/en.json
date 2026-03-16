@@ -30,9 +30,10 @@
       "description": "Create, configure, and manage your AI agents."
     },
     "planning": {
-      "title": "This Week",
+      "title": "Today's Schedule",
       "viewAll": "View full calendar",
-      "today": "Today"
+      "today": "Today",
+      "noActivities": "No activities scheduled today"
     },
     "tools": {
       "title": "Tools",
@@ -108,6 +109,10 @@
       "uploading": "Uploading...",
       "remove": "Remove"
     },
+    "voice": {
+      "button": "Voice input",
+      "listening": "Listening..."
+    },
     "agentPicker": {
       "title": "Start a conversation",
       "subtitle": "Choose who you want to talk to",
@@ -162,6 +167,20 @@
   "planning": {
     "title": "Planning",
     "subtitle": "View scheduled activities",
+    "views": {
+      "daily": "Day",
+      "weekly": "Week",
+      "monthly": "Month"
+    },
+    "navigation": {
+      "previous": "Previous",
+      "next": "Next",
+      "today": "Today"
+    },
+    "daily": {
+      "noActivities": "No activities scheduled",
+      "now": "Now"
+    },
     "calendar": {
       "today": "Today",
       "previousMonth": "Previous",
@@ -187,7 +206,61 @@
     },
     "loading": "Loading activities...",
     "scheduleMeeting": "Schedule Meeting",
-    "hideMeetingForm": "Cancel"
+    "hideMeetingForm": "Cancel",
+    "recurring": "Recurring",
+    "recurrence": {
+      "frequencyLabel": "Frequency",
+      "intervalLabel": "Every (in {unit})",
+      "daysOfWeekLabel": "On days",
+      "dayOfMonthLabel": "Day of month",
+      "endConditionLabel": "Ends",
+      "units": {
+        "days": "days",
+        "weeks": "weeks",
+        "months": "months"
+      },
+      "frequency": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly"
+      },
+      "days": {
+        "sun": "Sun",
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat"
+      },
+      "endCondition": {
+        "never": "Never",
+        "after": "After occurrences",
+        "byDate": "Until date",
+        "datePlaceholder": "Select end date"
+      },
+      "summary": {
+        "everyDay": "Every day at {time}",
+        "everyNDays": "Every {count} days at {time}",
+        "everyWeek": "Every week on {days} at {time}",
+        "everyNWeeks": "Every {count} weeks on {days} at {time}",
+        "everyMonth": "Monthly on day {day} at {time}",
+        "everyNMonths": "Every {count} months on day {day} at {time}"
+      }
+    },
+    "recurringActivities": {
+      "title": "Recurring Activities",
+      "empty": "No recurring activities.",
+      "occurrences": "{count} occurrences created",
+      "status": {
+        "active": "Active",
+        "paused": "Paused",
+        "deleted": "Deleted"
+      },
+      "pause": "Pause",
+      "resume": "Resume",
+      "delete": "Delete"
+    }
   },
   "meetings": {
     "title": "Meetings",
@@ -229,7 +302,9 @@
       "error": "Failed to schedule meeting. Please try again.",
       "supervisor": "Meeting Supervisor",
       "supervisorNote": "(always included)",
-      "minAgents": "At least 2 agents required"
+      "minAgents": "At least 2 agents required",
+      "repeat": "Repeat",
+      "submitRecurring": "Create Recurring Meeting"
     },
     "summaries": {
       "title": "Meeting Summaries",
@@ -377,6 +452,22 @@
       "cancelScheduledActivity": {
         "name": "Cancel scheduled activity",
         "description": "Cancel a scheduled activity"
+      },
+      "createRecurringActivity": {
+        "name": "Create recurring activity",
+        "description": "Create a recurring activity on a schedule"
+      },
+      "updateRecurringActivity": {
+        "name": "Update recurring activity",
+        "description": "Update a recurring activity's schedule or details"
+      },
+      "deleteRecurringActivity": {
+        "name": "Delete recurring activity",
+        "description": "Delete a recurring activity"
+      },
+      "listRecurringActivities": {
+        "name": "List recurring activities",
+        "description": "List recurring activities"
       }
     },
     "files": {
@@ -389,7 +480,8 @@
         "upload": "Upload",
         "uploading": "Uploading...",
         "change": "Change",
-        "failed": "Upload failed"
+        "failed": "Upload failed",
+        "cancelled": "Cancelled"
       },
       "listFiles": {
         "name": "List files",

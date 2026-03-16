@@ -12,6 +12,7 @@ interface FileUploadToolProps {
     prompt?: string;
   };
   completed: boolean;
+  dismissed?: boolean;
   output?: {
     success: boolean;
     id?: string;
@@ -35,6 +36,7 @@ interface FileUploadToolProps {
 export default function FileUploadTool({
   input,
   completed,
+  dismissed,
   output,
   onSubmit,
 }: FileUploadToolProps) {
@@ -47,6 +49,19 @@ export default function FileUploadTool({
 
   if (!input?.category) {
     return null;
+  }
+
+  if (dismissed) {
+    return (
+      <Card variant="default" className="max-w-md my-2">
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-text-secondary">
+            {input.prompt || t("uploadFile.defaultPrompt")}
+          </span>
+          <span className="text-xs text-text-tertiary">{t("uploadFile.cancelled")}</span>
+        </div>
+      </Card>
+    );
   }
 
   if (completed && output) {

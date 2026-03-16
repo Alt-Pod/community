@@ -18,9 +18,10 @@ export class ScheduledActivityRepository {
     payload?: Record<string, unknown>;
     scheduledAt: string;
     jobId?: string | null;
+    recurringActivityId?: string | null;
   }): Promise<ScheduledActivity> {
     const [row] = await this.sql<ScheduledActivity[]>`
-      INSERT INTO ${this.sql(this.table)} (user_id, agent_id, activity_type, title, description, payload, scheduled_at, job_id)
+      INSERT INTO ${this.sql(this.table)} (user_id, agent_id, activity_type, title, description, payload, scheduled_at, job_id, recurring_activity_id)
       VALUES (
         ${data.userId},
         ${data.agentId ?? null},
@@ -29,7 +30,8 @@ export class ScheduledActivityRepository {
         ${data.description ?? null},
         ${this.sql.json((data.payload ?? {}) as JSONValue)},
         ${data.scheduledAt},
-        ${data.jobId ?? null}
+        ${data.jobId ?? null},
+        ${data.recurringActivityId ?? null}
       )
       RETURNING *
     `;
@@ -157,6 +159,34 @@ export class ScheduledActivityRepository {
       UPDATE ${this.sql(this.table)}
       SET job_id = ${jobId}, updated_at = now()
       WHERE id = ${id}
+    `;
+  }
+
+  async cancelByRecurringActivityId(recurringActivityId: string): Promise<number> {
+    const result = await this.sql`
+      UPDATE ${this.sql(this.table)}
+      SET status = 'cancelled', updated_at = now()
+      WHERE recurring_activity_id = ${recurringActivityId}
+        AND status = 'scheduled'
+    `;
+    return result.count;
+  }
+
+  async findByRecurringActivityId(
+    recurringActivityId: string,
+    status?: ScheduledActivityStatus
+  ): Promise<ScheduledActivity[]> {
+    if (status) {
+      return this.sql<ScheduledActivity[]>`
+        SELECT * FROM ${this.sql(this.table)}
+        WHERE recurring_activity_id = ${recurringActivityId} AND status = ${status}
+        ORDER BY scheduled_at ASC
+      `;
+    }
+    return this.sql<ScheduledActivity[]>`
+      SELECT * FROM ${this.sql(this.table)}
+      WHERE recurring_activity_id = ${recurringActivityId}
+      ORDER BY scheduled_at ASC
     `;
   }
 }

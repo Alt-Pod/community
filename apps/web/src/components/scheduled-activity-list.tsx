@@ -70,6 +70,11 @@ export default function ScheduledActivityList({
                   {activity.agent_id && agentNames[activity.agent_id] && (
                     <span>{agentNames[activity.agent_id]}</span>
                   )}
+                  {activity.recurring_activity_id && (
+                    <span title={t("recurring")} className="text-accent">
+                      ↻
+                    </span>
+                  )}
                 </div>
               </div>
               <StatusBadge

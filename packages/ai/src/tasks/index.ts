@@ -5,6 +5,7 @@ export { meetingRound } from "./meetingRound";
 export { meetingClosing } from "./meetingClosing";
 export { meetingSummary } from "./meetingSummary";
 export { notificationExecution } from "./notificationExecution";
+export { recurrenceMaterializer } from "./recurrenceMaterializer";
 
 import { titleGeneration } from "./titleGeneration";
 import { activityExecution } from "./activityExecution";
@@ -13,6 +14,7 @@ import { meetingRound } from "./meetingRound";
 import { meetingClosing } from "./meetingClosing";
 import { meetingSummary } from "./meetingSummary";
 import { notificationExecution } from "./notificationExecution";
+import { recurrenceMaterializer } from "./recurrenceMaterializer";
 
 export const allFunctions = [
   titleGeneration,
@@ -23,4 +25,5 @@ export const allFunctions = [
   meetingClosing,
   meetingSummary,
   notificationExecution,
+  recurrenceMaterializer,
 ];

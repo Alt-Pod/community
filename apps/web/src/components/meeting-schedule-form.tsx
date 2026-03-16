@@ -14,6 +14,8 @@ import {
 } from "@community/ui";
 import { useAgents } from "@/requests/useAgents";
 import { useScheduleMeeting } from "@/requests/useMeetings";
+import { useCreateRecurringActivity } from "@/requests/useRecurringActivities";
+import RecurrenceForm, { type RecurrenceRule } from "./recurrence-form";
 
 interface MeetingScheduleFormProps {
   defaultTimezone?: string;
@@ -58,6 +60,7 @@ export default function MeetingScheduleForm({
   const dateFnsLocale = LOCALE_MAP[locale] || enUS;
   const { data: agents = [] } = useAgents();
   const scheduleMeeting = useScheduleMeeting();
+  const createRecurring = useCreateRecurringActivity();
 
   const [title, setTitle] = useState("");
   const [agenda, setAgenda] = useState("");
@@ -68,6 +71,13 @@ export default function MeetingScheduleForm({
   const [timezone, setTimezone] = useState(
     defaultTimezone || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"
   );
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [recurrenceRule, setRecurrenceRule] = useState<RecurrenceRule>({
+    frequency: "weekly",
+    interval: 1,
+    daysOfWeek: [],
+    endCondition: "never",
+  });
 
   // When the selected date is today, compute minTime from current time
   const minTime = useMemo(() => {
@@ -99,18 +109,46 @@ export default function MeetingScheduleForm({
 
     if (!title || !agenda || !selectedDate) return;
 
-    const [hours, minutes] = selectedTime.split(":").map(Number);
-    const scheduledDate = new Date(selectedDate);
-    scheduledDate.setHours(hours, minutes, 0, 0);
+    if (isRecurring) {
+      const startDate = selectedDate.toISOString().split("T")[0];
+      await createRecurring.mutateAsync({
+        activity_type: "meeting",
+        title,
+        description: agenda,
+        payload: {
+          participant_agent_ids: selectedAgents,
+          agenda,
+          duration_minutes: parseInt(durationMinutes, 10),
+          timezone,
+        },
+        frequency: recurrenceRule.frequency,
+        interval: recurrenceRule.interval,
+        days_of_week: recurrenceRule.frequency === "weekly" ? recurrenceRule.daysOfWeek : undefined,
+        day_of_month: recurrenceRule.frequency === "monthly" ? recurrenceRule.dayOfMonth : undefined,
+        time_of_day: selectedTime,
+        timezone,
+        start_date: startDate,
+        end_after_occurrences:
+          recurrenceRule.endCondition === "after" ? recurrenceRule.endAfterOccurrences : undefined,
+        end_by_date:
+          recurrenceRule.endCondition === "by_date" && recurrenceRule.endByDate
+            ? recurrenceRule.endByDate.toISOString().split("T")[0]
+            : undefined,
+      });
+    } else {
+      const [hours, minutes] = selectedTime.split(":").map(Number);
+      const scheduledDate = new Date(selectedDate);
+      scheduledDate.setHours(hours, minutes, 0, 0);
 
-    await scheduleMeeting.mutateAsync({
-      title,
-      agenda,
-      participant_agent_ids: selectedAgents,
-      scheduled_at: scheduledDate.toISOString(),
-      duration_minutes: parseInt(durationMinutes, 10),
-      timezone,
-    });
+      await scheduleMeeting.mutateAsync({
+        title,
+        agenda,
+        participant_agent_ids: selectedAgents,
+        scheduled_at: scheduledDate.toISOString(),
+        duration_minutes: parseInt(durationMinutes, 10),
+        timezone,
+      });
+    }
 
     onSuccess?.();
   }
@@ -235,19 +273,39 @@ export default function MeetingScheduleForm({
         />
       </div>
 
+      <div>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={isRecurring}
+            onChange={(e) => setIsRecurring(e.target.checked)}
+            className="rounded border-border"
+          />
+          <span className="text-sm font-medium text-text-secondary">
+            {t("scheduleForm.repeat")}
+          </span>
+        </label>
+      </div>
+
+      {isRecurring && (
+        <RecurrenceForm value={recurrenceRule} onChange={setRecurrenceRule} />
+      )}
+
       <div className="flex gap-2 pt-2">
         <Button
           type="submit"
           disabled={
-            scheduleMeeting.isPending ||
+            (scheduleMeeting.isPending || createRecurring.isPending) ||
             !title ||
             !agenda ||
             !selectedDate
           }
         >
-          {scheduleMeeting.isPending
+          {(scheduleMeeting.isPending || createRecurring.isPending)
             ? t("scheduleForm.scheduling")
-            : t("scheduleForm.submit")}
+            : isRecurring
+              ? t("scheduleForm.submitRecurring")
+              : t("scheduleForm.submit")}
         </Button>
         {onCancel && (
           <Button type="button" variant="secondary" onClick={onCancel}>
@@ -256,7 +314,7 @@ export default function MeetingScheduleForm({
         )}
       </div>
 
-      {scheduleMeeting.isError && (
+      {(scheduleMeeting.isError || createRecurring.isError) && (
         <p className="text-sm text-red-500">{t("scheduleForm.error")}</p>
       )}
     </form>

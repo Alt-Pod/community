@@ -30,9 +30,10 @@
       "description": "Erstelle, konfiguriere und verwalte deine KI-Agenten."
     },
     "planning": {
-      "title": "Diese Woche",
+      "title": "Tagesplan",
       "viewAll": "Vollständigen Kalender ansehen",
-      "today": "Heute"
+      "today": "Heute",
+      "noActivities": "Keine Aktivitäten für heute geplant"
     },
     "tools": {
       "title": "Werkzeuge",
@@ -108,6 +109,10 @@
       "uploading": "Wird hochgeladen...",
       "remove": "Entfernen"
     },
+    "voice": {
+      "button": "Spracheingabe",
+      "listening": "Hört zu..."
+    },
     "agentPicker": {
       "title": "Unterhaltung starten",
       "subtitle": "Wähle deinen Gesprächspartner",
@@ -162,6 +167,20 @@
   "planning": {
     "title": "Planung",
     "subtitle": "Geplante Aktivitäten anzeigen",
+    "views": {
+      "daily": "Tag",
+      "weekly": "Woche",
+      "monthly": "Monat"
+    },
+    "navigation": {
+      "previous": "Zurück",
+      "next": "Weiter",
+      "today": "Heute"
+    },
+    "daily": {
+      "noActivities": "Keine Aktivitäten geplant",
+      "now": "Jetzt"
+    },
     "calendar": {
       "today": "Heute",
       "previousMonth": "Zurück",
@@ -187,7 +206,61 @@
     },
     "loading": "Aktivitäten werden geladen...",
     "scheduleMeeting": "Meeting planen",
-    "hideMeetingForm": "Abbrechen"
+    "hideMeetingForm": "Abbrechen",
+    "recurring": "Wiederkehrend",
+    "recurrence": {
+      "frequencyLabel": "Häufigkeit",
+      "intervalLabel": "Alle (in {unit})",
+      "daysOfWeekLabel": "An Tagen",
+      "dayOfMonthLabel": "Tag des Monats",
+      "endConditionLabel": "Endet",
+      "units": {
+        "days": "Tage",
+        "weeks": "Wochen",
+        "months": "Monate"
+      },
+      "frequency": {
+        "daily": "Täglich",
+        "weekly": "Wöchentlich",
+        "monthly": "Monatlich"
+      },
+      "days": {
+        "sun": "So",
+        "mon": "Mo",
+        "tue": "Di",
+        "wed": "Mi",
+        "thu": "Do",
+        "fri": "Fr",
+        "sat": "Sa"
+      },
+      "endCondition": {
+        "never": "Nie",
+        "after": "Nach Wiederholungen",
+        "byDate": "Bis zum Datum",
+        "datePlaceholder": "Enddatum wählen"
+      },
+      "summary": {
+        "everyDay": "Jeden Tag um {time}",
+        "everyNDays": "Alle {count} Tage um {time}",
+        "everyWeek": "Jede Woche am {days} um {time}",
+        "everyNWeeks": "Alle {count} Wochen am {days} um {time}",
+        "everyMonth": "Monatlich am {day}. um {time}",
+        "everyNMonths": "Alle {count} Monate am {day}. um {time}"
+      }
+    },
+    "recurringActivities": {
+      "title": "Wiederkehrende Aktivitäten",
+      "empty": "Keine wiederkehrenden Aktivitäten.",
+      "occurrences": "{count} Wiederholungen erstellt",
+      "status": {
+        "active": "Aktiv",
+        "paused": "Pausiert",
+        "deleted": "Gelöscht"
+      },
+      "pause": "Pausieren",
+      "resume": "Fortsetzen",
+      "delete": "Löschen"
+    }
   },
   "meetings": {
     "title": "Meetings",
@@ -229,7 +302,9 @@
       "error": "Meeting konnte nicht geplant werden. Bitte versuchen Sie es erneut.",
       "supervisor": "Meeting-Supervisor",
       "supervisorNote": "(immer enthalten)",
-      "minAgents": "Mindestens 2 Agenten erforderlich"
+      "minAgents": "Mindestens 2 Agenten erforderlich",
+      "repeat": "Wiederholen",
+      "submitRecurring": "Wiederkehrendes Meeting erstellen"
     },
     "summaries": {
       "title": "Meeting-Zusammenfassungen",
@@ -369,6 +444,22 @@
       "scheduleMeeting": {
         "name": "Meeting planen",
         "description": "Ein Meeting zwischen mehreren Agenten planen"
+      },
+      "createRecurringActivity": {
+        "name": "Wiederkehrende Aktivität erstellen",
+        "description": "Eine wiederkehrende Aktivität nach Zeitplan erstellen"
+      },
+      "updateRecurringActivity": {
+        "name": "Wiederkehrende Aktivität aktualisieren",
+        "description": "Zeitplan oder Details einer wiederkehrenden Aktivität aktualisieren"
+      },
+      "deleteRecurringActivity": {
+        "name": "Wiederkehrende Aktivität löschen",
+        "description": "Eine wiederkehrende Aktivität löschen"
+      },
+      "listRecurringActivities": {
+        "name": "Wiederkehrende Aktivitäten auflisten",
+        "description": "Wiederkehrende Aktivitäten auflisten"
       }
     },
     "notifications": {
@@ -391,7 +482,8 @@
         "upload": "Hochladen",
         "uploading": "Wird hochgeladen...",
         "change": "Ändern",
-        "failed": "Hochladen fehlgeschlagen"
+        "failed": "Hochladen fehlgeschlagen",
+        "cancelled": "Abgebrochen"
       },
       "listFiles": {
         "name": "Dateien auflisten",

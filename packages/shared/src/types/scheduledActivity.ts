@@ -14,4 +14,5 @@ export interface ScheduledActivity {
   created_at: string;
   updated_at: string;
   completed_at: string | null;
+  recurring_activity_id: string | null;
 }

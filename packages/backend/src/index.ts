@@ -13,6 +13,7 @@ export { JobRepository } from "./repositories/jobRepository";
 export type { JobStatus } from "./repositories/jobRepository";
 export { ScheduledActivityRepository } from "./repositories/scheduledActivityRepository";
 export type { ScheduledActivityStatus } from "./repositories/scheduledActivityRepository";
+export { RecurringActivityRepository } from "./repositories/recurringActivityRepository";
 export { UsageRepository } from "./repositories/usageRepository";
 export { FileRepository } from "./repositories/fileRepository";
 export { AuditLogRepository } from "./repositories/auditLogRepository";
@@ -28,6 +29,7 @@ export { ToolService } from "./services/toolService";
 export { KnowledgeService } from "./services/knowledgeService";
 export { JobService } from "./services/jobService";
 export { ScheduledActivityService } from "./services/scheduledActivityService";
+export { RecurringActivityService } from "./services/recurringActivityService";
 export { UsageService } from "./services/usageService";
 export { FileService } from "./services/fileService";
 export type { FileWithUrl } from "./services/fileService";
@@ -39,6 +41,8 @@ export { buildPartsFromSteps } from "./helpers/partsHelper";
 export { uploadToStorage, deleteFromStorage, downloadFromStorage, getSignedUrl } from "./helpers/storageHelper";
 export { extractFileContent } from "./helpers/contentExtractionHelper";
 export { withJobTracking } from "./helpers/jobTrackingHelper";
+export { computeNextOccurrences } from "./helpers/recurrenceHelper";
+export type { RecurrenceRule } from "./helpers/recurrenceHelper";
 export { sendPushToUser } from "./helpers/pushHelper";
 
 // Inngest
@@ -63,6 +67,8 @@ import { JobRepository } from "./repositories/jobRepository";
 import { JobService } from "./services/jobService";
 import { ScheduledActivityRepository } from "./repositories/scheduledActivityRepository";
 import { ScheduledActivityService } from "./services/scheduledActivityService";
+import { RecurringActivityRepository } from "./repositories/recurringActivityRepository";
+import { RecurringActivityService } from "./services/recurringActivityService";
 import { UsageRepository } from "./repositories/usageRepository";
 import { UsageService } from "./services/usageService";
 import { FileRepository } from "./repositories/fileRepository";
@@ -90,6 +96,8 @@ const jobRepository = new JobRepository(sql, "jobs");
 const jobService = new JobService(jobRepository);
 const scheduledActivityRepository = new ScheduledActivityRepository(sql, "scheduled_activities");
 const scheduledActivityService = new ScheduledActivityService(scheduledActivityRepository, jobService);
+const recurringActivityRepository = new RecurringActivityRepository(sql, "recurring_activities");
+const recurringActivityService = new RecurringActivityService(recurringActivityRepository, scheduledActivityRepository, jobService);
 const usageRepository = new UsageRepository(sql, "usage_logs");
 const usageService = new UsageService(usageRepository);
 const fileRepository = new FileRepository(sql, "files");
@@ -117,6 +125,8 @@ export {
   jobService,
   scheduledActivityRepository,
   scheduledActivityService,
+  recurringActivityRepository,
+  recurringActivityService,
   usageRepository,
   usageService,
   fileRepository,

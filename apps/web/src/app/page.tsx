@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import AppNavbar from "@/components/app-navbar";
-import WeeklyPlanning from "@/components/weekly-planning";
+import HomeDailyTimeline from "@/components/home-daily-timeline";
 import LiveMeetings from "@/components/live-meetings";
 import HomeNotifications from "@/components/home-notifications";
 
@@ -90,7 +90,7 @@ export default async function Home() {
           </div>
 
           <div className="rounded-lg bg-surface-primary border border-border-subtle shadow-elevated p-6">
-            <WeeklyPlanning />
+            <HomeDailyTimeline />
           </div>
         </div>
       </main>

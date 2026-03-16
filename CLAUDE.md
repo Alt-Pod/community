@@ -278,6 +278,46 @@ Meetings are the first activity type. A meeting is an automated multi-agent conv
 
 The `conversations` table has a `type` column: `'chat'` (default) or `'meeting'`. Meeting conversations are excluded from the chat sidebar (`findByUserId` filters `WHERE type = 'chat'`).
 
+## Recurring Activities
+
+Recurring activities allow any activity type (meeting, report, notification) to repeat on a schedule. A separate `recurring_activities` table stores recurrence rules; a daily Inngest cron materializes individual `scheduled_activities` instances up to 30 days ahead.
+
+### Architecture
+
+- **Recurrence rules**: Stored in `recurring_activities` table with frequency (daily/weekly/monthly), interval, days of week, day of month, time of day, timezone, and end conditions (after N occurrences or by date).
+- **Materialization**: The `recurrenceMaterializer` Inngest cron runs daily at midnight UTC. It finds all active recurring activities and creates `scheduled_activities` rows for the next 30 days. Each materialized instance has `recurring_activity_id` linking back to its parent rule.
+- **Execution**: Materialized instances are regular `scheduled_activities` — the existing `activityCron` picks them up unchanged.
+- **Statuses**: `active`, `paused`, `deleted`. Pausing stops future materialization; deleting can optionally cancel all future scheduled instances.
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `migrations/016_recurring_activities.sql` | Table schema + scheduled_activities FK |
+| `packages/shared/src/types/recurringActivity.ts` | RecurringActivity type |
+| `packages/backend/src/helpers/recurrenceHelper.ts` | Pure date math for computing occurrences |
+| `packages/backend/src/repositories/recurringActivityRepository.ts` | CRUD for recurring_activities |
+| `packages/backend/src/services/recurringActivityService.ts` | Business logic + materialization |
+| `packages/ai/src/tasks/recurrenceMaterializer.ts` | Daily Inngest cron |
+| `packages/ai/src/tools/planning/create-recurring-activity.ts` | AI tool: create |
+| `packages/ai/src/tools/planning/update-recurring-activity.ts` | AI tool: update |
+| `packages/ai/src/tools/planning/delete-recurring-activity.ts` | AI tool: delete |
+| `packages/ai/src/tools/planning/list-recurring-activities.ts` | AI tool: list |
+| `apps/web/src/app/api/recurring-activities/` | REST API routes |
+| `apps/web/src/components/recurrence-form.tsx` | Recurrence rule picker UI |
+| `apps/web/src/components/recurring-activity-list.tsx` | List with pause/resume/delete |
+
+### API Surface
+
+| Method | Route | Purpose |
+|--------|-------|---------|
+| `GET` | `/api/recurring-activities` | List recurring activities (optional `?status=`) |
+| `POST` | `/api/recurring-activities` | Create a recurring activity |
+| `GET` | `/api/recurring-activities/[id]` | Get a recurring activity |
+| `PUT` | `/api/recurring-activities/[id]` | Update recurrence rule |
+| `DELETE` | `/api/recurring-activities/[id]` | Soft-delete (optional `?cancel_future=false`) |
+| `POST` | `/api/recurring-activities/[id]/pause` | Pause/resume (`{ status: 'paused' \| 'active' }`) |
+
 ## File Storage (Cloudflare R2)
 
 Files and images are stored in **Cloudflare R2** (S3-compatible). No files are stored locally or in the database — only metadata is persisted in the `files` table.

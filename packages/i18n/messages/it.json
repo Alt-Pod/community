@@ -30,9 +30,10 @@
       "description": "Crea, configura e gestisci i tuoi agenti IA."
     },
     "planning": {
-      "title": "Questa settimana",
+      "title": "Agenda di oggi",
       "viewAll": "Vedi calendario completo",
-      "today": "Oggi"
+      "today": "Oggi",
+      "noActivities": "Nessuna attività prevista oggi"
     },
     "tools": {
       "title": "Strumenti",
@@ -108,6 +109,10 @@
       "uploading": "Caricamento...",
       "remove": "Rimuovi"
     },
+    "voice": {
+      "button": "Input vocale",
+      "listening": "In ascolto..."
+    },
     "agentPicker": {
       "title": "Inizia una conversazione",
       "subtitle": "Scegli con chi vuoi parlare",
@@ -162,6 +167,20 @@
   "planning": {
     "title": "Pianificazione",
     "subtitle": "Visualizza le attività pianificate",
+    "views": {
+      "daily": "Giorno",
+      "weekly": "Settimana",
+      "monthly": "Mese"
+    },
+    "navigation": {
+      "previous": "Precedente",
+      "next": "Successivo",
+      "today": "Oggi"
+    },
+    "daily": {
+      "noActivities": "Nessuna attività pianificata",
+      "now": "Ora"
+    },
     "calendar": {
       "today": "Oggi",
       "previousMonth": "Precedente",
@@ -187,7 +206,61 @@
     },
     "loading": "Caricamento attività...",
     "scheduleMeeting": "Programma riunione",
-    "hideMeetingForm": "Annulla"
+    "hideMeetingForm": "Annulla",
+    "recurring": "Ricorrente",
+    "recurrence": {
+      "frequencyLabel": "Frequenza",
+      "intervalLabel": "Ogni (in {unit})",
+      "daysOfWeekLabel": "Nei giorni",
+      "dayOfMonthLabel": "Giorno del mese",
+      "endConditionLabel": "Termina",
+      "units": {
+        "days": "giorni",
+        "weeks": "settimane",
+        "months": "mesi"
+      },
+      "frequency": {
+        "daily": "Giornaliero",
+        "weekly": "Settimanale",
+        "monthly": "Mensile"
+      },
+      "days": {
+        "sun": "Dom",
+        "mon": "Lun",
+        "tue": "Mar",
+        "wed": "Mer",
+        "thu": "Gio",
+        "fri": "Ven",
+        "sat": "Sab"
+      },
+      "endCondition": {
+        "never": "Mai",
+        "after": "Dopo occorrenze",
+        "byDate": "Fino alla data",
+        "datePlaceholder": "Seleziona data di fine"
+      },
+      "summary": {
+        "everyDay": "Ogni giorno alle {time}",
+        "everyNDays": "Ogni {count} giorni alle {time}",
+        "everyWeek": "Ogni settimana il {days} alle {time}",
+        "everyNWeeks": "Ogni {count} settimane il {days} alle {time}",
+        "everyMonth": "Mensile il giorno {day} alle {time}",
+        "everyNMonths": "Ogni {count} mesi il giorno {day} alle {time}"
+      }
+    },
+    "recurringActivities": {
+      "title": "Attività ricorrenti",
+      "empty": "Nessuna attività ricorrente.",
+      "occurrences": "{count} occorrenze create",
+      "status": {
+        "active": "Attiva",
+        "paused": "In pausa",
+        "deleted": "Eliminata"
+      },
+      "pause": "Pausa",
+      "resume": "Riprendi",
+      "delete": "Elimina"
+    }
   },
   "meetings": {
     "title": "Riunioni",
@@ -229,7 +302,9 @@
       "error": "Impossibile programmare la riunione. Riprova.",
       "supervisor": "Supervisore riunione",
       "supervisorNote": "(sempre incluso)",
-      "minAgents": "Almeno 2 agenti richiesti"
+      "minAgents": "Almeno 2 agenti richiesti",
+      "repeat": "Ripeti",
+      "submitRecurring": "Crea riunione ricorrente"
     },
     "summaries": {
       "title": "Riepiloghi riunioni",
@@ -369,6 +444,22 @@
       "scheduleMeeting": {
         "name": "Programma riunione",
         "description": "Programma una riunione tra più agenti"
+      },
+      "createRecurringActivity": {
+        "name": "Crea attività ricorrente",
+        "description": "Crea un'attività ricorrente secondo un calendario"
+      },
+      "updateRecurringActivity": {
+        "name": "Aggiorna attività ricorrente",
+        "description": "Aggiorna il calendario o i dettagli di un'attività ricorrente"
+      },
+      "deleteRecurringActivity": {
+        "name": "Elimina attività ricorrente",
+        "description": "Elimina un'attività ricorrente"
+      },
+      "listRecurringActivities": {
+        "name": "Elenco attività ricorrenti",
+        "description": "Elenco delle attività ricorrenti"
       }
     },
     "notifications": {
@@ -391,7 +482,8 @@
         "upload": "Carica",
         "uploading": "Caricamento...",
         "change": "Cambia",
-        "failed": "Caricamento fallito"
+        "failed": "Caricamento fallito",
+        "cancelled": "Annullato"
       },
       "listFiles": {
         "name": "Elenco file",

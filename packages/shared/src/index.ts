@@ -20,6 +20,11 @@ export type {
 } from "./types/prompt";
 export { PROMPT_TOOL_IDS } from "./types/prompt";
 export type { ScheduledActivity } from "./types/scheduledActivity";
+export type {
+  RecurringActivity,
+  RecurrenceFrequency,
+  RecurringActivityStatus,
+} from "./types/recurringActivity";
 export type { MeetingPayload } from "./types/meeting";
 export type { AuditLog } from "./types/auditLog";
 export type { ActivityDefinition, ActivityType } from "./activities";

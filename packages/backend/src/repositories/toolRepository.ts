@@ -36,6 +36,7 @@ export class ToolRepository {
       SELECT at.tool_id, at.agent_id, a.name AS agent_name
       FROM agent_tools at
       JOIN agents a ON a.id = at.agent_id
+      WHERE a.status = 'active'
       ORDER BY at.tool_id, a.name
     `;
     return rows;

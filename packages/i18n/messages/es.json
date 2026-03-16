@@ -30,9 +30,10 @@
       "description": "Crea, configura y gestiona tus agentes de IA."
     },
     "planning": {
-      "title": "Esta semana",
+      "title": "Agenda del día",
       "viewAll": "Ver calendario completo",
-      "today": "Hoy"
+      "today": "Hoy",
+      "noActivities": "No hay actividades programadas hoy"
     },
     "tools": {
       "title": "Herramientas",
@@ -108,6 +109,10 @@
       "uploading": "Subiendo...",
       "remove": "Eliminar"
     },
+    "voice": {
+      "button": "Entrada de voz",
+      "listening": "Escuchando..."
+    },
     "agentPicker": {
       "title": "Iniciar una conversación",
       "subtitle": "Elige con quién quieres hablar",
@@ -162,6 +167,20 @@
   "planning": {
     "title": "Planificación",
     "subtitle": "Ver actividades programadas",
+    "views": {
+      "daily": "Día",
+      "weekly": "Semana",
+      "monthly": "Mes"
+    },
+    "navigation": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "today": "Hoy"
+    },
+    "daily": {
+      "noActivities": "No hay actividades programadas",
+      "now": "Ahora"
+    },
     "calendar": {
       "today": "Hoy",
       "previousMonth": "Anterior",
@@ -187,7 +206,61 @@
     },
     "loading": "Cargando actividades...",
     "scheduleMeeting": "Programar reunión",
-    "hideMeetingForm": "Cancelar"
+    "hideMeetingForm": "Cancelar",
+    "recurring": "Recurrente",
+    "recurrence": {
+      "frequencyLabel": "Frecuencia",
+      "intervalLabel": "Cada (en {unit})",
+      "daysOfWeekLabel": "Los días",
+      "dayOfMonthLabel": "Día del mes",
+      "endConditionLabel": "Termina",
+      "units": {
+        "days": "días",
+        "weeks": "semanas",
+        "months": "meses"
+      },
+      "frequency": {
+        "daily": "Diario",
+        "weekly": "Semanal",
+        "monthly": "Mensual"
+      },
+      "days": {
+        "sun": "Dom",
+        "mon": "Lun",
+        "tue": "Mar",
+        "wed": "Mié",
+        "thu": "Jue",
+        "fri": "Vie",
+        "sat": "Sáb"
+      },
+      "endCondition": {
+        "never": "Nunca",
+        "after": "Después de ocurrencias",
+        "byDate": "Hasta la fecha",
+        "datePlaceholder": "Seleccionar fecha de fin"
+      },
+      "summary": {
+        "everyDay": "Cada día a las {time}",
+        "everyNDays": "Cada {count} días a las {time}",
+        "everyWeek": "Cada semana el {days} a las {time}",
+        "everyNWeeks": "Cada {count} semanas el {days} a las {time}",
+        "everyMonth": "Mensual el día {day} a las {time}",
+        "everyNMonths": "Cada {count} meses el día {day} a las {time}"
+      }
+    },
+    "recurringActivities": {
+      "title": "Actividades recurrentes",
+      "empty": "No hay actividades recurrentes.",
+      "occurrences": "{count} ocurrencias creadas",
+      "status": {
+        "active": "Activa",
+        "paused": "En pausa",
+        "deleted": "Eliminada"
+      },
+      "pause": "Pausar",
+      "resume": "Reanudar",
+      "delete": "Eliminar"
+    }
   },
   "meetings": {
     "title": "Reuniones",
@@ -229,7 +302,9 @@
       "error": "Error al programar la reunión. Inténtalo de nuevo.",
       "supervisor": "Supervisor de reunión",
       "supervisorNote": "(siempre incluido)",
-      "minAgents": "Se requieren al menos 2 agentes"
+      "minAgents": "Se requieren al menos 2 agentes",
+      "repeat": "Repetir",
+      "submitRecurring": "Crear reunión recurrente"
     },
     "summaries": {
       "title": "Resúmenes de reuniones",
@@ -369,6 +444,22 @@
       "scheduleMeeting": {
         "name": "Programar reunión",
         "description": "Programar una reunión entre varios agentes"
+      },
+      "createRecurringActivity": {
+        "name": "Crear actividad recurrente",
+        "description": "Crear una actividad recurrente según un calendario"
+      },
+      "updateRecurringActivity": {
+        "name": "Actualizar actividad recurrente",
+        "description": "Actualizar el calendario o los detalles de una actividad recurrente"
+      },
+      "deleteRecurringActivity": {
+        "name": "Eliminar actividad recurrente",
+        "description": "Eliminar una actividad recurrente"
+      },
+      "listRecurringActivities": {
+        "name": "Listar actividades recurrentes",
+        "description": "Listar actividades recurrentes"
       }
     },
     "notifications": {
@@ -391,7 +482,8 @@
         "upload": "Subir",
         "uploading": "Subiendo...",
         "change": "Cambiar",
-        "failed": "Error al subir"
+        "failed": "Error al subir",
+        "cancelled": "Cancelado"
       },
       "listFiles": {
         "name": "Listar archivos",

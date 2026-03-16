@@ -84,7 +84,16 @@ Available activity types:
 
 Use these when the user asks you to schedule something, plan a report, schedule a meeting, or any future task. Always confirm the scheduled time with the user before creating the activity.
 When scheduling a meeting, use data.list_agents first to show available agents and let the user pick participants.
-When scheduling a meeting, use the user's preferred timezone (available via data.my_profile) as the default unless they specify otherwise.`;
+When scheduling a meeting, use the user's preferred timezone (available via data.my_profile) as the default unless they specify otherwise.
+
+### Recurring Activities
+You can create activities that repeat on a schedule:
+- **planning.create_recurring_activity**: Create a recurring activity (daily, weekly, or monthly). Specify frequency, interval, days of week (for weekly), time of day, timezone, start date, and optional end conditions (after N occurrences or by a specific date). A background job automatically materializes individual instances up to 30 days ahead.
+- **planning.update_recurring_activity**: Update a recurring activity's schedule or details. Future instances are automatically re-created when the schedule changes.
+- **planning.delete_recurring_activity**: Delete a recurring activity. By default cancels all future scheduled instances.
+- **planning.list_recurring_activities**: List the user's recurring activities, optionally filtered by status (active, paused, deleted).
+
+When the user asks for something to happen "every day", "every Monday", "weekly", "monthly", "recurring", etc., use planning.create_recurring_activity instead of scheduling individual one-off activities. For meeting recurrence, set activity_type to "meeting" and include participant_agent_ids, agenda, duration_minutes, and timezone in the payload.`;
 
 const FILE_MANAGEMENT_INSTRUCTIONS = `
 ## File Management

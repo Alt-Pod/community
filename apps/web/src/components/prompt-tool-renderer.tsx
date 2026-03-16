@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+import { Card, StatusBadge } from "@community/ui";
 import PromptSelect from "@/components/prompt-select";
 import PromptMultiSelect from "@/components/prompt-multi-select";
 import PromptTextInput from "@/components/prompt-text-input";
@@ -21,7 +23,22 @@ export default function PromptToolRenderer({
   output,
   onSubmit,
 }: PromptToolRendererProps) {
+  const t = useTranslations("tools");
   const completed = state === "output-available";
+
+  if (state === "output-denied") {
+    const question = (input as any).question || (input as any).title || toolName;
+    return (
+      <Card variant="default" className="my-2 max-w-md">
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-text-secondary truncate mr-2">
+            {question}
+          </span>
+          <StatusBadge variant="rejected" label={t("status.rejected")} />
+        </div>
+      </Card>
+    );
+  }
 
   switch (toolName) {
     case "prompt.select":

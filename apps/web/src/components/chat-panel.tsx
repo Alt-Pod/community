@@ -24,7 +24,9 @@ import {
   SearchInput,
 } from "@community/ui";
 import { useFuzzySearch } from "@/hooks/use-fuzzy-search";
+import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
 import { useConversations } from "@/requests/useConversations";
+import { useProfile } from "@/requests/useProfile";
 import { useDeleteConversation } from "@/requests/useDeleteConversation";
 import { usePrefetchMessages } from "@/requests/useMessages";
 import { useAgents } from "@/requests/useAgents";
@@ -45,6 +47,7 @@ import { ALLOWED_MIME_TYPES } from "@community/shared";
 
 export default function ChatPanel({ conversationId }: { conversationId?: string }) {
   const t = useTranslations("chat");
+  const { data: profile } = useProfile();
   const router = useRouter();
   const queryClient = useQueryClient();
   const [input, setInput] = useState("");
@@ -56,6 +59,11 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
   const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { isListening, isSupported: isSpeechSupported, startListening, stopListening } = useSpeechRecognition(
+    profile?.lang ?? "en",
+    (text) => setInput((prev) => (prev ? prev + " " + text : text)),
+  );
 
   const activeConversationId = conversationId ?? null;
   const conversationIdRef = useRef(activeConversationId);
@@ -228,12 +236,42 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
     });
   }
 
+  function dismissPendingToolCards() {
+    setMessages((prev) =>
+      prev.map((msg) => ({
+        ...msg,
+        parts: msg.parts?.map((part) => {
+          if (typeof (part as any).type !== "string" || !(part as any).type.startsWith("tool-")) return part;
+          const tp = part as any;
+
+          // Dismiss approval-requested tools
+          if (tp.state === "approval-requested") {
+            return { ...tp, state: "output-denied" };
+          }
+
+          // Dismiss pending prompt tools and file upload
+          const toolName = (tp.type as string).replace(/^tool-/, "");
+          const isInteractive = toolName.startsWith("prompt.") || toolName === "files.upload_file";
+          const isTerminal = ["output-available", "output-error", "output-denied"].includes(tp.state);
+
+          if (isInteractive && !isTerminal) {
+            return { ...tp, state: "output-denied" };
+          }
+
+          return part;
+        }),
+      }))
+    );
+  }
+
   function onSubmit(e: FormEvent) {
     e.preventDefault();
     const text = input.trim();
     const readyFiles = attachedFiles.filter((f) => f.uploaded && !f.error);
     const hasContent = text || readyFiles.length > 0;
     if (!hasContent || isLoading) return;
+
+    dismissPendingToolCards();
 
     // Build document annotations for non-image files
     const docAnnotations = readyFiles
@@ -382,6 +420,26 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
                   <path d="M17.5 10.3l-7.78 7.78a4.5 4.5 0 0 1-6.36-6.36l7.78-7.78a3 3 0 0 1 4.24 4.24l-7.07 7.07a1.5 1.5 0 0 1-2.12-2.12L13.26 6" />
                 </svg>
               </button>
+              {isSpeechSupported && (
+                <button
+                  type="button"
+                  onClick={isListening ? stopListening : startListening}
+                  className={`flex-shrink-0 p-2 transition-colors rounded-md ${
+                    isListening
+                      ? "text-red-500 hover:text-red-600 animate-pulse"
+                      : "text-text-secondary hover:text-text-primary hover:bg-bg-secondary"
+                  }`}
+                  aria-label={isListening ? t("voice.listening") : t("voice.button")}
+                  disabled={isLoading}
+                >
+                  <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="7" y="1" width="6" height="11" rx="3" />
+                    <path d="M4 9a6 6 0 0 0 12 0" />
+                    <line x1="10" y1="15" x2="10" y2="19" />
+                    <line x1="7" y1="19" x2="13" y2="19" />
+                  </svg>
+                </button>
+              )}
               <Button
                 type="submit"
                 variant="primary"
@@ -487,6 +545,7 @@ export default function ChatPanel({ conversationId }: { conversationId?: string 
                           key={toolPart.toolCallId || i}
                           input={toolPart.input as any}
                           completed={toolPart.state === "output-available"}
+                          dismissed={toolPart.state === "output-denied"}
                           output={toolPart.output as any}
                           onSubmit={(output) =>
                             addToolOutput({
